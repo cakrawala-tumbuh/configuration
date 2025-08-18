@@ -1,0 +1,20 @@
+nama_entitas: Kanal Promosi
+nama_teknis: kanal_promosi
+penjelasan: Sumber atau kanal promosi yang diketahui calon siswa
+fields:
+- nama_field: id
+  penjelasan: ID unik kanal promosi
+  tipe_field: integer
+- nama_field: nama_kanal
+  penjelasan: Nama kanal promosi
+  tipe_field: string
+- nama_field: jenis_kanal
+  penjelasan: Jenis kanal promosi
+  tipe_field: selection
+  pilihan:
+  - Media Sosial
+  - Iklan Offline
+  - Rekomendasi
+  - Website
+  - Event
+  - Lainnya
