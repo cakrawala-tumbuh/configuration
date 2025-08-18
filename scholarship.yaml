@@ -1,0 +1,16 @@
+nama_entitas: Scholarship
+nama_teknis: scholarship
+penjelasan: Beasiswa yang diberikan kepada siswa
+fields:
+  - nama_field: id
+    penjelasan: ID unik beasiswa
+    tipe_field: integer
+  - nama_field: nama
+    penjelasan: Nama beasiswa
+    tipe_field: string
+  - nama_field: jumlah
+    penjelasan: Jumlah beasiswa
+    tipe_field: float
+  - nama_field: penerima_id
+    penjelasan: Relasi ke siswa penerima beasiswa
+    tipe_field: foreign_key
