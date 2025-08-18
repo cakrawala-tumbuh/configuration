@@ -1,0 +1,176 @@
+name: mv_monitoring_target_sekolah
+domain: manajemen
+description: Ringkasan pencapaian target (KPI) sekolah per periode dibandingkan realisasi.
+purpose:
+  - Memantau progres KPI sekolah secara periodik
+  - Mengidentifikasi deviasi dan status on/off-track
+  - Menyediakan sumber data untuk dashboard manajemen
+
+sources:
+  sekolah:
+    url: struktur_data/sekolah.yaml                 # ganti jika penamaan berbeda
+  target_kpi:
+    url: struktur_data/target_kpi.yaml              # target per indikator per periode
+  realisasi_kpi:
+    url: struktur_data/realisasi_kpi.yaml           # realisasi per indikator per periode
+
+primary_key:
+  - indikator_id
+  - periode
+  - sekolah_id
+
+columns:
+  - name: sekolah_id
+    type: uuid
+    nullable: true
+    description: ID unik sekolah (jika multi-unit).
+    source:
+      ref: sekolah
+      column: id
+    transform: "max(sekolah.id)"
+    example: "11111111-2222-3333-4444-555555555555"
+
+  - name: sekolah_name
+    type: text
+    nullable: true
+    description: Nama sekolah.
+    source:
+      ref: sekolah
+      column: nama
+    transform: "max(sekolah.nama)"
+    example: "SMA CANTUM"
+
+  - name: indikator_id
+    type: uuid
+    nullable: false
+    description: ID indikator KPI.
+    source:
+      ref: target_kpi
+      column: indikator_id
+    transform: "passthrough"
+    example: "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+
+  - name: indikator_name
+    type: text
+    nullable: false
+    description: Nama indikator (mis. Tingkat Kehadiran Siswa, NPS Orang Tua).
+    source:
+      ref: target_kpi
+      column: indikator_name
+    transform: "max(target_kpi.indikator_name)"
+    example: "Tingkat Kehadiran Siswa"
+
+  - name: satuan
+    type: text
+    nullable: true
+    description: Satuan indikator (%, siswa, rupiah, dsb).
+    source:
+      ref: target_kpi
+      column: satuan
+    transform: "max(target_kpi.satuan)"
+    example: "%"
+
+  - name: periode
+    type: date
+    nullable: false
+    description: Periode agregasi (awal bulan).
+    source:
+      ref: target_kpi
+      column: periode
+    transform: "date_trunc('month', target_kpi.periode)::date"
+    example: "2025-07-01"
+
+  - name: target_nilai
+    type: numeric(18,4)
+    nullable: true
+    description: Target KPI pada periode.
+    source:
+      ref: target_kpi
+      column: nilai_target
+    transform: "max(target_kpi.nilai_target)"
+    example: 95.00
+
+  - name: realisasi_nilai
+    type: numeric(18,4)
+    nullable: true
+    description: Realisasi KPI pada periode.
+    source:
+      ref: realisasi_kpi
+      column: nilai_realisasi
+    transform: "max(realisasi_kpi.nilai_realisasi)"
+    example: 92.30
+
+  - name: pencapaian_persen
+    type: numeric(18,4)
+    nullable: true
+    description: Persentase pencapaian terhadap target (realisasi/target * 100).
+    source:
+      ref: null
+      column: null
+    transform: "case when max(target_kpi.nilai_target) = 0 then null else (max(realisasi_kpi.nilai_realisasi) / max(target_kpi.nilai_target)) * 100 end"
+    example: 97.16
+
+  - name: deviasi
+    type: numeric(18,4)
+    nullable: true
+    description: Selisih realisasi terhadap target (realisasi - target).
+    source:
+      ref: null
+      column: null
+    transform: "max(realisasi_kpi.nilai_realisasi) - max(target_kpi.nilai_target)"
+    example: -2.70
+
+  - name: status
+    type: text
+    nullable: true
+    description: Status on-track/off-track berdasar ambang batas.
+    source:
+      ref: null
+      column: null
+    transform: "case when max(target_kpi.nilai_target) is null then null when (max(realisasi_kpi.nilai_realisasi) >= max(target_kpi.nilai_target)*0.98) then 'on_track' else 'off_track' end"
+    example: "off_track"
+
+dependencies:
+  base_entities:
+    - sekolah
+    - target_kpi
+    - realisasi_kpi
+  views: []
+  materialized_views: []
+
+refresh_policy:
+  strategy: scheduled
+  schedule_cron: "0 4 * * *"
+  with_data_on_create: true
+  concurrently_on_refresh: true
+  invalidate:
+    - Perubahan target KPI
+    - Input realisasi KPI baru
+
+indexes:
+  - name: mv_monitoring_target_sekolah_pk
+    type: unique
+    columns: [indikator_id, periode, sekolah_id]
+  - name: mv_monitoring_target_sekolah_idx_periode
+    type: btree
+    columns: [periode]
+  - name: mv_monitoring_target_sekolah_idx_sekolah
+    type: btree
+    columns: [sekolah_id]
+
+retention:
+  keep_history_months: 60
+  prune_policy: "hapus data > keep_history_months"
+
+security:
+  grant_read_to_roles:
+    - bi_analyst
+    - manajemen_reviewer
+  pii:
+    contains_pii: false
+    masking_policy: null
+
+notes:
+  - Jika hanya ada satu sekolah, `sekolah_id` bisa dibuat nullable atau dihilangkan dari PK.
+  - Ambang `on_track` (98%) dapat diubah sesuai kebijakan (mis. 95%).
+  - Pastikan ada *key* penghubung antara `target_kpi` dan `realisasi_kpi` (indikator_id, sekolah_id, periode).

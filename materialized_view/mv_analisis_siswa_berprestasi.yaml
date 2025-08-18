@@ -1,0 +1,117 @@
+name: mv_analisis_siswa_berprestasi
+domain: akademik
+description: Ringkasan siswa berprestasi berdasarkan hasil belajar dan penghargaan yang diperoleh.
+purpose:
+  - Mengidentifikasi siswa dengan prestasi akademik maupun non-akademik
+  - Menyediakan data agregat prestasi per periode
+  - Mendukung laporan penghargaan siswa
+sources:
+  siswa:
+    url: struktur_data/siswa.yaml
+  hasil_belajar:
+    url: struktur_data/hasil_belajar.yaml
+  penghargaan_siswa:
+    url: struktur_data/penghargaan_siswa.yaml
+primary_key:
+  - periode
+  - siswa_id
+columns:
+  - name: periode
+    type: date
+    nullable: false
+    description: Periode agregasi (bulanan).
+    source:
+      ref: hasil_belajar
+      column: tanggal
+    transform: "date_trunc('month', hasil_belajar.tanggal)::date"
+    example: 2025-07-01
+
+  - name: siswa_id
+    type: integer
+    nullable: false
+    description: ID unik siswa.
+    source:
+      ref: siswa
+      column: id
+    example: 101
+
+  - name: nama_siswa
+    type: text
+    nullable: false
+    description: Nama lengkap siswa.
+    source:
+      ref: siswa
+      column: nama
+    example: "Budi Santoso"
+
+  - name: nilai_rata_rata
+    type: numeric(5,2)
+    nullable: true
+    description: Nilai rata-rata hasil belajar siswa.
+    source:
+      ref: hasil_belajar
+      column: nilai
+    transform: "avg(hasil_belajar.nilai)"
+    example: 88.25
+
+  - name: jumlah_penghargaan
+    type: integer
+    nullable: true
+    description: Jumlah penghargaan yang diterima siswa pada periode tersebut.
+    source:
+      ref: penghargaan_siswa
+      column: id
+    transform: "count(distinct penghargaan_siswa.id)"
+    example: 2
+
+  - name: kategori_prestasi
+    type: text
+    nullable: true
+    description: Kategori prestasi tertinggi yang dicapai (akademik/non-akademik).
+    source:
+      ref: penghargaan_siswa
+      column: kategori
+    transform: "max(penghargaan_siswa.kategori)"
+    example: "Akademik"
+
+dependencies:
+  base_entities:
+    - siswa
+    - hasil_belajar
+    - penghargaan_siswa
+  views: []
+  materialized_views: []
+
+refresh_policy:
+  strategy: scheduled
+  schedule_cron: "0 6 * * *"
+  with_data_on_create: true
+  concurrently_on_refresh: true
+  invalidate:
+    - Update nilai hasil belajar
+    - Tambah data penghargaan siswa
+
+indexes:
+  - name: mv_analisis_siswa_berprestasi_pk
+    type: unique
+    columns:
+      - periode
+      - siswa_id
+
+retention:
+  keep_history_months: 60
+  prune_policy: hapus data > keep_history_months
+
+security:
+  grant_read_to_roles:
+    - bi_analyst
+    - akademik_reviewer
+  pii:
+    contains_pii: true
+    columns:
+      - siswa_id
+      - nama_siswa
+
+notes:
+  - Siswa berprestasi ditentukan berdasarkan kombinasi nilai rata-rata dan penghargaan.
+  - Data penghargaan bersifat opsional, jika tidak ada tetap dihitung dari nilai akademik.

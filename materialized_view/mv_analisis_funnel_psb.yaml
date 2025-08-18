@@ -1,0 +1,141 @@
+name: mv_analisis_funnel_psb
+domain: penerimaan_siswa_baru
+description: >
+  Ringkasan funnel PSB per kanal dan periode (bulanan): jumlah pendaftar,
+  siswa unik, accepted, dan enrolled untuk pemantauan efektivitas kanal akuisisi.
+
+purpose:
+  - Monitoring performa kanal akuisisi pendaftar PSB
+  - Sumber metrik funnel untuk dashboard Superset
+  - Menyederhanakan agregasi periodik dari formulir pendaftaran
+
+sources:
+  formulir_pendaftaran:
+    url: struktur_data/formulir_pendaftaran.yaml
+
+primary_key:
+  - channel
+  - periode
+
+columns:
+  - name: channel
+    type: text
+    nullable: true
+    description: "Nama/asal kanal akuisisi pendaftar (mis. online ads, referal, walk-in)."
+    source:
+      ref: formulir_pendaftaran
+      column: channel
+    transform: "max(formulir_pendaftaran.channel)"
+    example: "Instagram Ads"
+
+  - name: periode
+    type: date
+    nullable: false
+    description: "Periode agregasi (awal bulan) dari tanggal pendaftaran."
+    source:
+      ref: formulir_pendaftaran
+      column: tanggal_daftar
+    transform: "date_trunc('month', formulir_pendaftaran.tanggal_daftar)::date"
+    example: "2025-07-01"
+
+  - name: pendaftar_count
+    type: integer
+    nullable: true
+    description: "Jumlah formulir pendaftaran pada periode untuk kanal terkait."
+    source:
+      ref: formulir_pendaftaran
+      column: id
+    transform: "count(formulir_pendaftaran.id)"
+    example: 120
+
+  - name: siswa_unik_count
+    type: integer
+    nullable: true
+    description: "Jumlah siswa unik (berdasarkan siswa_id bila ada)."
+    source:
+      ref: formulir_pendaftaran
+      column: siswa_id
+    transform: "count(distinct formulir_pendaftaran.siswa_id)"
+    example: 118
+
+  - name: accepted_count
+    type: integer
+    nullable: true
+    description: "Jumlah pendaftar berstatus diterima pada periode."
+    source:
+      ref: formulir_pendaftaran
+      column: status
+    transform: "sum(CASE WHEN lower(formulir_pendaftaran.status) IN ('accepted','diterima') THEN 1 ELSE 0 END)"
+    example: 76
+
+  - name: enrolled_count
+    type: integer
+    nullable: true
+    description: "Jumlah pendaftar yang benar-benar daftar ulang/registrasi (enrolled) pada periode."
+    source:
+      ref: formulir_pendaftaran
+      column: is_enrolled
+    transform: "sum(CASE WHEN formulir_pendaftaran.is_enrolled THEN 1 ELSE 0 END)"
+    example: 63
+
+  - name: conversion_rate_accepted
+    type: numeric(6,2)
+    nullable: true
+    description: "Rasio accepted terhadap pendaftar (%)."
+    source:
+      ref: null
+      column: null
+    transform: "100.0 * nullif(sum(CASE WHEN lower(formulir_pendaftaran.status) IN ('accepted','diterima') THEN 1 ELSE 0 END),0)::numeric / nullif(count(formulir_pendaftaran.id),0)"
+    example: 63.33
+
+  - name: conversion_rate_enrolled
+    type: numeric(6,2)
+    nullable: true
+    description: "Rasio enrolled terhadap pendaftar (%)."
+    source:
+      ref: null
+      column: null
+    transform: "100.0 * nullif(sum(CASE WHEN formulir_pendaftaran.is_enrolled THEN 1 ELSE 0 END),0)::numeric / nullif(count(formulir_pendaftaran.id),0)"
+    example: 52.50
+
+dependencies:
+  base_entities:
+    - formulir_pendaftaran
+  views: []
+  materialized_views: []
+
+refresh_policy:
+  strategy: scheduled
+  schedule_cron: "0 2 * * *"
+  with_data_on_create: true
+  concurrently_on_refresh: true
+  invalidate:
+    - "Perubahan bulk pada data pendaftaran"
+
+indexes:
+  - name: mv_analisis_funnel_psb_pk
+    type: unique
+    columns: [channel, periode]
+  - name: mv_analisis_funnel_psb_idx_periode
+    type: btree
+    columns: [periode]
+  - name: mv_analisis_funnel_psb_idx_channel
+    type: btree
+    columns: [channel]
+
+retention:
+  keep_history_months: 36
+  prune_policy: "hapus data > keep_history_months"
+
+security:
+  grant_read_to_roles:
+    - bi_analyst
+    - data_reader
+  pii:
+    contains_pii: false
+    masking_policy: null
+
+notes:
+  - "Jika kolom kanal bernama lain (mis. `sumber_kanal`/`source`), sesuaikan `column` & transform."
+  - "Jika tidak ada `siswa_id` atau `is_enrolled`, hapus kolom terkait atau ganti logika sesuai field yang tersedia."
+  - "Tahap funnel lain (tes, wawancara, daftar ulang) dapat ditambah dengan pola CASE serupa."

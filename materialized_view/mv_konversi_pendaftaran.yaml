@@ -1,0 +1,182 @@
+name: mv_konversi_pendaftaran
+domain: penerimaan_siswa_baru
+description: Ringkasan konversi pendaftar PSB per kanal dan periode dari apply → tes → wawancara → diterima → daftar ulang (enrolled).
+purpose:
+  - Memantau performa funnel PSB per kanal
+  - Mengukur titik bottleneck dan efektivitas tiap tahap seleksi
+  - Menyediakan metrik konversi untuk optimasi proses PSB
+
+sources:
+  formulir_pendaftaran:
+    url: struktur_data/formulir_pendaftaran.yaml   # berisi kandidat/lead PSB
+  # Jika ada entitas terpisah untuk tahapan, sesuaikan & tambahkan di bawah:
+  # tes_seleksi:
+  #   url: struktur_data/tes_seleksi.yaml
+  # wawancara:
+  #   url: struktur_data/wawancara.yaml
+
+primary_key:
+  - channel
+  - periode
+
+columns:
+  - name: channel
+    type: text
+    nullable: true
+    description: Kanal akuisisi pendaftar (mis. iklan, referal, walk-in).
+    source:
+      ref: formulir_pendaftaran
+      column: channel
+    transform: "max(formulir_pendaftaran.channel)"
+    example: "Instagram Ads"
+
+  - name: periode
+    type: date
+    nullable: false
+    description: Periode agregasi (awal bulan) dari tanggal pendaftaran.
+    source:
+      ref: formulir_pendaftaran
+      column: tanggal_daftar
+    transform: "date_trunc('month', formulir_pendaftaran.tanggal_daftar)::date"
+    example: "2025-07-01"
+
+  - name: applied_count
+    type: integer
+    nullable: true
+    description: Jumlah pendaftar yang mengisi formulir (apply).
+    source:
+      ref: formulir_pendaftaran
+      column: id
+    transform: "count(formulir_pendaftaran.id)"
+    example: 280
+
+  - name: tested_count
+    type: integer
+    nullable: true
+    description: Jumlah pendaftar yang mengikuti tes (bila ditandai di formulir).
+    source:
+      ref: formulir_pendaftaran
+      column: status_tes
+    transform: "sum(CASE WHEN coalesce(lower(formulir_pendaftaran.status_tes),'') IN ('hadir','lulus','selesai') THEN 1 ELSE 0 END)"
+    example: 210
+
+  - name: interviewed_count
+    type: integer
+    nullable: true
+    description: Jumlah pendaftar yang mengikuti wawancara (bila ditandai di formulir).
+    source:
+      ref: formulir_pendaftaran
+      column: status_wawancara
+    transform: "sum(CASE WHEN coalesce(lower(formulir_pendaftaran.status_wawancara),'') IN ('hadir','lulus','selesai') THEN 1 ELSE 0 END)"
+    example: 160
+
+  - name: accepted_count
+    type: integer
+    nullable: true
+    description: Jumlah pendaftar berstatus diterima.
+    source:
+      ref: formulir_pendaftaran
+      column: status
+    transform: "sum(CASE WHEN lower(formulir_pendaftaran.status) IN ('accepted','diterima') THEN 1 ELSE 0 END)"
+    example: 120
+
+  - name: enrolled_count
+    type: integer
+    nullable: true
+    description: Jumlah pendaftar yang daftar ulang/registrasi (enrolled).
+    source:
+      ref: formulir_pendaftaran
+      column: is_enrolled
+    transform: "sum(CASE WHEN formulir_pendaftaran.is_enrolled THEN 1 ELSE 0 END)"
+    example: 95
+
+  - name: cr_applied_to_tested
+    type: numeric(6,2)
+    nullable: true
+    description: Conversion rate tested vs applied (%).
+    source:
+      ref: null
+      column: null
+    transform: "100.0 * nullif(sum(CASE WHEN coalesce(lower(formulir_pendaftaran.status_tes),'') IN ('hadir','lulus','selesai') THEN 1 ELSE 0 END),0)::numeric / nullif(count(formulir_pendaftaran.id),0)"
+    example: 75.00
+
+  - name: cr_tested_to_interviewed
+    type: numeric(6,2)
+    nullable: true
+    description: Conversion rate interviewed vs tested (%).
+    source:
+      ref: null
+      column: null
+    transform: "100.0 * nullif(sum(CASE WHEN coalesce(lower(formulir_pendaftaran.status_wawancara),'') IN ('hadir','lulus','selesai') THEN 1 ELSE 0 END),0)::numeric / nullif(sum(CASE WHEN coalesce(lower(formulir_pendaftaran.status_tes),'') IN ('hadir','lulus','selesai') THEN 1 ELSE 0 END),0)"
+    example: 76.19
+
+  - name: cr_interviewed_to_accepted
+    type: numeric(6,2)
+    nullable: true
+    description: Conversion rate accepted vs interviewed (%).
+    source:
+      ref: null
+      column: null
+    transform: "100.0 * nullif(sum(CASE WHEN lower(formulir_pendaftaran.status) IN ('accepted','diterima') THEN 1 ELSE 0 END),0)::numeric / nullif(sum(CASE WHEN coalesce(lower(formulir_pendaftaran.status_wawancara),'') IN ('hadir','lulus','selesai') THEN 1 ELSE 0 END),0)"
+    example: 75.00
+
+  - name: cr_accepted_to_enrolled
+    type: numeric(6,2)
+    nullable: true
+    description: Conversion rate enrolled vs accepted (%).
+    source:
+      ref: null
+      column: null
+    transform: "100.0 * nullif(sum(CASE WHEN formulir_pendaftaran.is_enrolled THEN 1 ELSE 0 END),0)::numeric / nullif(sum(CASE WHEN lower(formulir_pendaftaran.status) IN ('accepted','diterima') THEN 1 ELSE 0 END),0)"
+    example: 79.17
+
+  - name: cr_applied_to_enrolled
+    type: numeric(6,2)
+    nullable: true
+    description: Conversion rate akhir enrolled vs applied (%).
+    source:
+      ref: null
+      column: null
+    transform: "100.0 * nullif(sum(CASE WHEN formulir_pendaftaran.is_enrolled THEN 1 ELSE 0 END),0)::numeric / nullif(count(formulir_pendaftaran.id),0)"
+    example: 33.93
+
+dependencies:
+  base_entities:
+    - formulir_pendaftaran
+  views: []
+  materialized_views: []
+
+refresh_policy:
+  strategy: scheduled
+  schedule_cron: "0 2 * * *"
+  with_data_on_create: true
+  concurrently_on_refresh: true
+  invalidate:
+    - Perubahan bulk pada data pendaftaran
+
+indexes:
+  - name: mv_konversi_pendaftaran_pk
+    type: unique
+    columns: [channel, periode]
+  - name: mv_konversi_pendaftaran_idx_periode
+    type: btree
+    columns: [periode]
+  - name: mv_konversi_pendaftaran_idx_channel
+    type: btree
+    columns: [channel]
+
+retention:
+  keep_history_months: 36
+  prune_policy: "hapus data > keep_history_months"
+
+security:
+  grant_read_to_roles:
+    - bi_analyst
+    - marketing_reviewer
+  pii:
+    contains_pii: false
+    masking_policy: null
+
+notes:
+  - Jika tahapan tersimpan di tabel terpisah (`tes_seleksi`, `wawancara`), sesuaikan `sources` & `transform` dengan JOIN ke tabel tersebut.
+  - Jika tidak ada `status_tes`/`status_wawancara`, hapus kolom terkait dan fokuskan pada accepted/enrolled.

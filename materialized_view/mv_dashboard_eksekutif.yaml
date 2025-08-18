@@ -1,0 +1,178 @@
+name: mv_dashboard_eksekutif
+domain: manajemen
+description: Ringkasan metrik utama lintas fungsi (admissions, akademik, keuangan, operasional) untuk tampilan dashboard eksekutif per periode.
+purpose:
+  - Memberikan satu-layar KPI kunci untuk pimpinan sekolah
+  - Memantau tren bulanan lintas domain
+  - Menjadi sumber kartu KPI di Superset
+
+# Sumber master-only (mengacu ke entitas di struktur_data.zip; sesuaikan penamaan bila berbeda)
+sources:
+  formulir_pendaftaran:
+    url: struktur_data/formulir_pendaftaran.yaml          # admissions: leads/enrolled
+  siswa:
+    url: struktur_data/siswa.yaml                          # populasi aktif (opsional)
+  nilai:
+    url: struktur_data/nilai.yaml                          # akademik: skor
+  absensi_siswa:
+    url: struktur_data/absensi_siswa.yaml                  # operasional: kehadiran siswa
+  transaksi_keuangan:
+    url: struktur_data/transaksi_keuangan.yaml             # keuangan: pemasukan/pengeluaran
+  survei_orangtua:
+    url: struktur_data/survei_orangtua.yaml                # NPS/CSAT orang tua (opsional)
+
+primary_key:
+  - periode
+
+columns:
+  # ---- Periode ----
+  - name: periode
+    type: date
+    nullable: false
+    description: Periode agregasi bulanan.
+    source:
+      ref: transaksi_keuangan
+      column: tanggal
+    transform: "date_trunc('month', transaksi_keuangan.tanggal)::date"
+    example: "2025-07-01"
+
+  # ---- Admissions ----
+  - name: leads_psb
+    type: integer
+    nullable: true
+    description: Jumlah pendaftar (leads/applicants) PSB pada periode.
+    source:
+      ref: formulir_pendaftaran
+      column: id
+    transform: "count(formulir_pendaftaran.id)"
+    example: 320
+
+  - name: enrolled
+    type: integer
+    nullable: true
+    description: Jumlah pendaftar yang daftar ulang/registrasi (enrolled) pada periode.
+    source:
+      ref: formulir_pendaftaran
+      column: is_enrolled
+    transform: "sum(CASE WHEN formulir_pendaftaran.is_enrolled THEN 1 ELSE 0 END)"
+    example: 120
+
+  - name: enrollment_rate
+    type: numeric(6,2)
+    nullable: true
+    description: Rasio enrolled terhadap leads (%).
+    source:
+      ref: null
+      column: null
+    transform: "100.0 * sum(CASE WHEN formulir_pendaftaran.is_enrolled THEN 1 ELSE 0 END)::numeric / nullif(count(formulir_pendaftaran.id),0)"
+    example: 37.50
+
+  # ---- Akademik ----
+  - name: rata_rata_nilai
+    type: numeric(6,2)
+    nullable: true
+    description: Rata-rata nilai siswa pada periode (semua mapel/ujian yang tercatat pada bulan tersebut).
+    source:
+      ref: nilai
+      column: skor
+    transform: "avg(nilai.skor)"
+    example: 82.40
+
+  # ---- Operasional (Kehadiran) ----
+  - name: kehadiran_siswa_persen
+    type: numeric(6,2)
+    nullable: true
+    description: Persentase kehadiran siswa pada periode.
+    source:
+      ref: absensi_siswa
+      column: status
+    transform: "100.0 * (count(*) filter (where absensi_siswa.status='hadir'))::numeric / nullif(count(*),0)"
+    example: 93.10
+
+  # ---- Keuangan ----
+  - name: total_pemasukan
+    type: numeric(18,2)
+    nullable: true
+    description: Total pemasukan (debit) pada periode.
+    source:
+      ref: transaksi_keuangan
+      column: nominal
+    transform: "sum(CASE WHEN transaksi_keuangan.jenis in ('Debit','pemasukan') THEN transaksi_keuangan.nominal ELSE 0 END)"
+    example: 145000000.00
+
+  - name: total_pengeluaran
+    type: numeric(18,2)
+    nullable: true
+    description: Total pengeluaran (kredit) pada periode.
+    source:
+      ref: transaksi_keuangan
+      column: nominal
+    transform: "sum(CASE WHEN transaksi_keuangan.jenis in ('Kredit','pengeluaran') THEN transaksi_keuangan.nominal ELSE 0 END)"
+    example: 112000000.00
+
+  - name: saldo_bersih
+    type: numeric(18,2)
+    nullable: true
+    description: Selisih pemasukan dan pengeluaran pada periode (surplus/defisit bulan berjalan).
+    source:
+      ref: transaksi_keuangan
+      column: nominal
+    transform: "sum(CASE WHEN transaksi_keuangan.jenis in ('Debit','pemasukan') THEN transaksi_keuangan.nominal ELSE -transaksi_keuangan.nominal END)"
+    example: 33000000.00
+
+  # ---- Kepuasan Orang Tua (opsional) ----
+  - name: nps_orangtua
+    type: numeric(6,2)
+    nullable: true
+    description: Skor NPS/CSAT orang tua pada periode (jika tersedia).
+    source:
+      ref: survei_orangtua
+      column: skor_nps
+    transform: "avg(survei_orangtua.skor_nps)"
+    example: 56.00
+
+dependencies:
+  base_entities:
+    - formulir_pendaftaran
+    - siswa
+    - nilai
+    - absensi_siswa
+    - transaksi_keuangan
+    - survei_orangtua
+  views: []
+  materialized_views: []
+
+refresh_policy:
+  strategy: scheduled
+  schedule_cron: "0 5 * * *"
+  with_data_on_create: true
+  concurrently_on_refresh: true
+  invalidate:
+    - Data keuangan baru
+    - Data absensi baru
+    - Data pendaftaran/nilai/survei baru
+
+indexes:
+  - name: mv_dashboard_eksekutif_pk
+    type: unique
+    columns: [periode]
+  - name: mv_dashboard_eksekutif_idx_periode
+    type: btree
+    columns: [periode]
+
+retention:
+  keep_history_months: 60
+  prune_policy: "hapus data > keep_history_months"
+
+security:
+  grant_read_to_roles:
+    - manajemen_reviewer
+    - bi_analyst
+  pii:
+    contains_pii: false
+    masking_policy: null
+
+notes:
+  - Jika hanya ingin periode mengikuti domain lain (mis. pendaftaran), ganti sumber periode ke `formulir_pendaftaran.tanggal_daftar`.
+  - Jika `jenis` pada transaksi keuangan bukan ('Debit','Kredit'), sesuaikan enumerasi dengan nilai yang ada di sumber.
+  - NPS/CSAT bersifat opsional; jika tidak tersedia, kolom `nps_orangtua` dapat dihapus.

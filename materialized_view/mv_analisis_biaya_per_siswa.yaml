@@ -1,0 +1,131 @@
+name: mv_analisis_biaya_per_siswa
+domain: keuangan
+description: Ringkasan biaya per siswa per periode (bulanan), mencakup total tagihan,
+  total pembayaran (bila tersedia), outstanding, jumlah invoice, dan rata-rata tagihan.
+purpose:
+- Monitoring beban biaya dan kolektibilitas per siswa
+- Sumber metrik KPI keuangan sekolah untuk dashboard Superset
+- Menyederhanakan agregasi periodik dari invoice siswa
+sources:
+  siswa:
+    url: struktur_data/siswa.yaml
+  invoice:
+    url: struktur_data/invoice.yaml
+primary_key:
+- siswa_id
+- periode
+columns:
+- name: siswa_id
+  type: uuid
+  nullable: false
+  description: Identifier unik siswa.
+  source:
+    ref: siswa
+    column: id
+  transform: passthrough
+  example: 00000000-0000-0000-0000-000000000000
+- name: siswa_name
+  type: text
+  nullable: true
+  description: Nama siswa.
+  source:
+    ref: siswa
+    column: name
+  transform: max(siswa.name)
+  example: Andi Pratama
+- name: periode
+  type: date
+  nullable: false
+  description: Periode agregasi (awal bulan) diturunkan dari tanggal invoice.
+  source:
+    ref: invoice
+    column: tanggal
+  transform: date_trunc('month', invoice.tanggal)::date
+  example: '2025-07-01'
+- name: total_tagihan
+  type: numeric(18,2)
+  nullable: true
+  description: Total nilai tagihan pada periode.
+  source:
+    ref: invoice
+    column: total
+  transform: sum(invoice.total)
+  example: 2500000.0
+- name: total_terbayar
+  type: numeric(18,2)
+  nullable: true
+  description: Total pembayaran yang tercatat pada periode (jika tersedia di invoice).
+  source:
+    ref: invoice
+    column: paid_amount
+  transform: sum(invoice.paid_amount)
+  example: 2000000.0
+- name: outstanding
+  type: numeric(18,2)
+  nullable: true
+  description: Sisa piutang pada periode (total_tagihan - total_terbayar).
+  source:
+    ref: null
+    column: null
+  transform: coalesce(sum(invoice.total),0) - coalesce(sum(invoice.paid_amount),0)
+  example: 500000.0
+- name: invoice_count
+  type: integer
+  nullable: true
+  description: Jumlah invoice pada periode untuk siswa terkait.
+  source:
+    ref: invoice
+    column: id
+  transform: count(invoice.id)
+  example: 3
+- name: avg_tagihan
+  type: numeric(18,2)
+  nullable: true
+  description: Rata-rata nilai tagihan per invoice pada periode.
+  source:
+    ref: invoice
+    column: total
+  transform: avg(invoice.total)
+  example: 833333.33
+dependencies:
+  base_entities:
+  - siswa
+  - invoice
+  views: []
+  materialized_views: []
+refresh_policy:
+  strategy: scheduled
+  schedule_cron: 0 2 * * *
+  with_data_on_create: true
+  concurrently_on_refresh: true
+  invalidate:
+  - Perubahan bulk pada invoice siswa
+indexes:
+- name: mv_analisis_biaya_per_siswa_pk
+  type: unique
+  columns:
+  - siswa_id
+  - periode
+- name: mv_analisis_biaya_per_siswa_idx_periode
+  type: btree
+  columns:
+  - periode
+- name: mv_analisis_biaya_per_siswa_idx_siswa
+  type: btree
+  columns:
+  - siswa_id
+retention:
+  keep_history_months: 36
+  prune_policy: hapus data > keep_history_months
+security:
+  grant_read_to_roles:
+  - bi_analyst
+  - data_reader
+  pii:
+    contains_pii: false
+    masking_policy: null
+notes:
+- Jika `paid_amount` tidak tersedia di `invoice`, kolom `total_terbayar` & `outstanding`
+  perlu diganti dengan basis entitas pembayaran (mis. `payment`/`kwitansi`) bila ada.
+- Bila tersedia `komponen_biaya`, bisa dibuat varian MV per-komponen dengan menambah
+  join & kolom breakdown.

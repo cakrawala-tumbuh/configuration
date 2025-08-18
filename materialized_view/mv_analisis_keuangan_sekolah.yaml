@@ -1,0 +1,121 @@
+name: mv_analisis_keuangan_sekolah
+domain: keuangan
+description: Ringkasan posisi keuangan sekolah berdasarkan pemasukan, pengeluaran, dan saldo per periode akuntansi.
+purpose:
+  - Monitoring arus kas sekolah
+  - Evaluasi efisiensi keuangan
+  - Menyediakan data agregat untuk laporan manajemen dan dashboard
+sources:
+  invoice:
+    url: struktur_data/invoice.yaml
+  komponen_biaya:
+    url: struktur_data/komponen_biaya.yaml
+  transaksi_keuangan:
+    url: struktur_data/transaksi_keuangan.yaml
+  akun_keuangan:
+    url: struktur_data/akun_keuangan.yaml
+primary_key:
+  - periode
+columns:
+  - name: periode
+    type: date
+    nullable: false
+    description: Periode agregasi (bulanan).
+    source:
+      ref: transaksi_keuangan
+      column: tanggal
+    transform: "date_trunc('month', transaksi_keuangan.tanggal)::date"
+    example: 2025-07-01
+
+  - name: total_pemasukan
+    type: numeric(14,2)
+    nullable: true
+    description: Jumlah total pemasukan (debit) dalam periode.
+    source:
+      ref: transaksi_keuangan
+      column: nominal
+    transform: "sum(CASE WHEN transaksi_keuangan.jenis = 'Debit' THEN transaksi_keuangan.nominal ELSE 0 END)"
+    example: 125000000.00
+
+  - name: total_pengeluaran
+    type: numeric(14,2)
+    nullable: true
+    description: Jumlah total pengeluaran (kredit) dalam periode.
+    source:
+      ref: transaksi_keuangan
+      column: nominal
+    transform: "sum(CASE WHEN transaksi_keuangan.jenis = 'Kredit' THEN transaksi_keuangan.nominal ELSE 0 END)"
+    example: 98000000.00
+
+  - name: saldo_akhir
+    type: numeric(14,2)
+    nullable: true
+    description: Saldo akhir keuangan sekolah di akhir periode.
+    source:
+      ref: transaksi_keuangan
+      column: nominal
+    transform: "sum(CASE WHEN transaksi_keuangan.jenis = 'Debit' THEN transaksi_keuangan.nominal ELSE -transaksi_keuangan.nominal END)"
+    example: 27000000.00
+
+  - name: jumlah_invoice
+    type: integer
+    nullable: true
+    description: Jumlah invoice yang diterbitkan pada periode tersebut.
+    source:
+      ref: invoice
+      column: id
+    transform: "count(distinct invoice.id)"
+    example: 245
+
+  - name: jumlah_komponen_biaya
+    type: integer
+    nullable: true
+    description: Jumlah jenis komponen biaya yang aktif di periode tersebut.
+    source:
+      ref: komponen_biaya
+      column: id
+    transform: "count(distinct komponen_biaya.id)"
+    example: 15
+
+dependencies:
+  base_entities:
+    - invoice
+    - komponen_biaya
+    - transaksi_keuangan
+    - akun_keuangan
+  views: []
+  materialized_views: []
+
+refresh_policy:
+  strategy: scheduled
+  schedule_cron: "0 4 * * *"
+  with_data_on_create: true
+  concurrently_on_refresh: true
+  invalidate:
+    - Update transaksi keuangan
+    - Update invoice
+
+indexes:
+  - name: mv_analisis_keuangan_sekolah_pk
+    type: unique
+    columns:
+      - periode
+  - name: mv_analisis_keuangan_sekolah_idx_periode
+    type: btree
+    columns:
+      - periode
+
+retention:
+  keep_history_months: 120
+  prune_policy: hapus data > keep_history_months
+
+security:
+  grant_read_to_roles:
+    - bi_analyst
+    - finance_reviewer
+  pii:
+    contains_pii: false
+
+notes:
+  - Nilai saldo dihitung kumulatif berdasarkan transaksi debit dan kredit.
+  - Invoice dikaitkan dengan transaksi keuangan untuk validasi pemasukan.

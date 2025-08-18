@@ -1,0 +1,164 @@
+name: mv_efektivitas_promosi
+domain: marketing
+description: Ringkasan efektivitas kampanye promosi per periode: lead (pendaftar), enrollment, biaya, dan efisiensi.
+purpose:
+  - Mengukur performa kampanye promosi per bulan
+  - Membandingkan efisiensi biaya antar kampanye/channel
+  - Menjadi basis optimasi alokasi anggaran marketing
+
+sources:
+  kampanye_promosi:
+    url: struktur_data/kampanye_promosi.yaml        # ganti jika penamaan berbeda (mis. kampanye, campaign)
+  biaya_promosi:
+    url: struktur_data/biaya_promosi.yaml           # ganti jika penamaan berbeda (mis. biaya_marketing)
+  formulir_pendaftaran:
+    url: struktur_data/formulir_pendaftaran.yaml    # sumber lead/enrollment
+
+primary_key:
+  - campaign_id
+  - periode
+
+columns:
+  - name: campaign_id
+    type: uuid
+    nullable: false
+    description: ID unik kampanye promosi.
+    source:
+      ref: kampanye_promosi
+      column: id
+    transform: "passthrough"
+    example: "11111111-2222-3333-4444-555555555555"
+
+  - name: campaign_name
+    type: text
+    nullable: true
+    description: Nama kampanye promosi.
+    source:
+      ref: kampanye_promosi
+      column: nama
+    transform: "max(kampanye_promosi.nama)"
+    example: "Iklan PSB Gelombang 1"
+
+  - name: channel
+    type: text
+    nullable: true
+    description: Channel promosi (mis. Meta Ads, Google Ads, Referrals, Offline).
+    source:
+      ref: kampanye_promosi
+      column: channel
+    transform: "max(kampanye_promosi.channel)"
+    example: "Meta Ads"
+
+  - name: periode
+    type: date
+    nullable: false
+    description: Periode agregasi bulanan berdasarkan tanggal aktivitas/biaya.
+    source:
+      ref: kampanye_promosi
+      column: tanggal_mulai
+    transform: "date_trunc('month', kampanye_promosi.tanggal_mulai)::date"
+    example: "2025-07-01"
+
+  - name: biaya
+    type: numeric(18,2)
+    nullable: true
+    description: Total biaya promosi kampanye pada periode.
+    source:
+      ref: biaya_promosi
+      column: nominal
+    transform: "sum(biaya_promosi.nominal)"
+    example: 15000000.00
+
+  - name: leads
+    type: integer
+    nullable: true
+    description: Jumlah pendaftar (lead) yang dikaitkan ke kampanye pada periode.
+    source:
+      ref: formulir_pendaftaran
+      column: id
+    transform: "count(formulir_pendaftaran.id)"
+    example: 180
+
+  - name: enrolled
+    type: integer
+    nullable: true
+    description: Jumlah lead yang daftar ulang/menjadi siswa (enrolled) pada periode.
+    source:
+      ref: formulir_pendaftaran
+      column: is_enrolled
+    transform: "sum(CASE WHEN formulir_pendaftaran.is_enrolled THEN 1 ELSE 0 END)"
+    example: 54
+
+  - name: cpl
+    type: numeric(18,2)
+    nullable: true
+    description: Cost per Lead (biaya/leads).
+    source:
+      ref: null
+      column: null
+    transform: "sum(biaya_promosi.nominal) / nullif(count(formulir_pendaftaran.id),0)"
+    example: 83333.33
+
+  - name: cpe
+    type: numeric(18,2)
+    nullable: true
+    description: Cost per Enrollment (biaya/enrolled).
+    source:
+      ref: null
+      column: null
+    transform: "sum(biaya_promosi.nominal) / nullif(sum(CASE WHEN formulir_pendaftaran.is_enrolled THEN 1 ELSE 0 END),0)"
+    example: 277777.78
+
+  - name: conversion_rate
+    type: numeric(6,2)
+    nullable: true
+    description: Rasio enrolled terhadap leads (%).
+    source:
+      ref: null
+      column: null
+    transform: "100.0 * sum(CASE WHEN formulir_pendaftaran.is_enrolled THEN 1 ELSE 0 END)::numeric / nullif(count(formulir_pendaftaran.id),0)"
+    example: 30.00
+
+dependencies:
+  base_entities:
+    - kampanye_promosi
+    - biaya_promosi
+    - formulir_pendaftaran
+  views: []
+  materialized_views: []
+
+refresh_policy:
+  strategy: scheduled
+  schedule_cron: "0 3 * * *"
+  with_data_on_create: true
+  concurrently_on_refresh: true
+  invalidate:
+    - Update biaya marketing
+    - Update data pendaftaran PSB
+
+indexes:
+  - name: mv_efektivitas_promosi_pk
+    type: unique
+    columns: [campaign_id, periode]
+  - name: mv_efektivitas_promosi_idx_periode
+    type: btree
+    columns: [periode]
+  - name: mv_efektivitas_promosi_idx_channel
+    type: btree
+    columns: [channel]
+
+retention:
+  keep_history_months: 36
+  prune_policy: "hapus data > keep_history_months"
+
+security:
+  grant_read_to_roles:
+    - bi_analyst
+    - marketing_reviewer
+  pii:
+    contains_pii: false
+    masking_policy: null
+
+notes:
+  - Pastikan ada relasi `formulir_pendaftaran.campaign_id` (atau mapping via `channel`) agar atribusi lead valid.
+  - Jika biaya disimpan harian, agregasi akan tetap dihitung per bulan via `date_trunc`.

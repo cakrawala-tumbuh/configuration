@@ -1,0 +1,197 @@
+name: mv_analisis_hasil_belajar
+domain: belajar_mengajar
+description: >
+  Ringkasan hasil belajar (nilai) per mata pelajaran dan periode (bulanan),
+  mencakup rata-rata, jumlah ujian/penilaian, nilai tertinggi/terendah,
+  serta ketuntasan terhadap KKM bila tersedia.
+
+purpose:
+  - Monitoring performa akademik per mata pelajaran
+  - Sumber KPI akademik untuk dashboard Superset
+  - Menyederhanakan agregasi periodik dari entitas nilai/ujian
+
+sources:
+  nilai:
+    url: struktur_data/nilai.yaml
+  ujian:
+    url: struktur_data/ujian.yaml
+  mata_pelajaran:
+    url: struktur_data/mata_pelajaran.yaml
+  kelas:
+    url: struktur_data/kelas.yaml
+  siswa:
+    url: struktur_data/siswa.yaml
+  guru:
+    url: struktur_data/guru.yaml
+
+primary_key:
+  - mapel_id
+  - periode
+
+columns:
+  - name: mapel_id
+    type: uuid
+    nullable: false
+    description: "Identifier unik mata pelajaran."
+    source:
+      ref: mata_pelajaran
+      column: id
+    transform: "passthrough"
+    example: "00000000-0000-0000-0000-000000000000"
+
+  - name: mapel_name
+    type: text
+    nullable: true
+    description: "Nama mata pelajaran."
+    source:
+      ref: mata_pelajaran
+      column: name
+    transform: "max(mata_pelajaran.name)"
+    example: "Matematika"
+
+  - name: periode
+    type: date
+    nullable: false
+    description: "Periode agregasi (awal bulan) dari tanggal penilaian/ujian."
+    source:
+      ref: nilai
+      column: tanggal
+    transform: "date_trunc('month', nilai.tanggal)::date"
+    example: "2025-07-01"
+
+  - name: rata_rata_nilai
+    type: numeric(6,2)
+    nullable: true
+    description: "Rata-rata nilai pada periode."
+    source:
+      ref: nilai
+      column: skor
+    transform: "avg(nilai.skor)"
+    example: 84.25
+
+  - name: jumlah_penilaian
+    type: integer
+    nullable: true
+    description: "Jumlah catatan penilaian pada periode."
+    source:
+      ref: nilai
+      column: id
+    transform: "count(nilai.id)"
+    example: 240
+
+  - name: nilai_maks
+    type: numeric(6,2)
+    nullable: true
+    description: "Nilai tertinggi pada periode."
+    source:
+      ref: nilai
+      column: skor
+    transform: "max(nilai.skor)"
+    example: 100.00
+
+  - name: nilai_min
+    type: numeric(6,2)
+    nullable: true
+    description: "Nilai terendah pada periode."
+    source:
+      ref: nilai
+      column: skor
+    transform: "min(nilai.skor)"
+    example: 45.00
+
+  - name: kkm
+    type: numeric(6,2)
+    nullable: true
+    description: "Kriteria Ketuntasan Minimal (bila tersimpan di mata_pelajaran atau nilai)."
+    source:
+      ref: mata_pelajaran
+      column: kkm
+    transform: "max(mata_pelajaran.kkm)"
+    example: 75.00
+
+  - name: tuntas_count
+    type: integer
+    nullable: true
+    description: "Jumlah nilai yang memenuhi/di atas KKM pada periode."
+    source:
+      ref: nilai
+      column: skor
+    transform: "sum(CASE WHEN nilai.skor >= coalesce(max(mata_pelajaran.kkm), 75) THEN 1 ELSE 0 END)"
+    example: 182
+
+  - name: ketuntasan_persen
+    type: numeric(6,2)
+    nullable: true
+    description: "Persentase ketuntasan terhadap total penilaian (%)."
+    source:
+      ref: null
+      column: null
+    transform: "100.0 * sum(CASE WHEN nilai.skor >= coalesce(max(mata_pelajaran.kkm), 75) THEN 1 ELSE 0 END)::numeric / nullif(count(nilai.id),0)"
+    example: 75.83
+
+  - name: guru_id
+    type: uuid
+    nullable: true
+    description: "Guru pengampu (bila tersedia keterkaitan)."
+    source:
+      ref: guru
+      column: id
+    transform: "max(guru.id)"
+    example: "11111111-1111-1111-1111-111111111111"
+
+  - name: kelas_id
+    type: uuid
+    nullable: true
+    description: "Kelas/Rombel (bila tersedia keterkaitan)."
+    source:
+      ref: kelas
+      column: id
+    transform: "max(kelas.id)"
+    example: "22222222-2222-2222-2222-222222222222"
+
+dependencies:
+  base_entities:
+    - nilai
+    - ujian
+    - mata_pelajaran
+    - kelas
+    - siswa
+    - guru
+  views: []
+  materialized_views: []
+
+refresh_policy:
+  strategy: scheduled
+  schedule_cron: "0 2 * * *"
+  with_data_on_create: true
+  concurrently_on_refresh: true
+  invalidate:
+    - "Perubahan bulk pada data nilai/ujian"
+
+indexes:
+  - name: mv_analisis_hasil_belajar_pk
+    type: unique
+    columns: [mapel_id, periode]
+  - name: mv_analisis_hasil_belajar_idx_periode
+    type: btree
+    columns: [periode]
+  - name: mv_analisis_hasil_belajar_idx_mapel
+    type: btree
+    columns: [mapel_id]
+
+retention:
+  keep_history_months: 48
+  prune_policy: "hapus data > keep_history_months"
+
+security:
+  grant_read_to_roles:
+    - bi_analyst
+    - data_reader
+  pii:
+    contains_pii: false
+    masking_policy: null
+
+notes:
+  - "Jika tanggal berada pada entitas 'ujian', ganti sumber periode ke ujian.tanggal."
+  - "Jika nama kolom nilai bukan 'skor', sesuaikan transform di kolom terkait."
+  - "KKM diambil dari mata_pelajaran. Jika KKM per-ujian/per-topik, sesuaikan logic sesuai sumber."

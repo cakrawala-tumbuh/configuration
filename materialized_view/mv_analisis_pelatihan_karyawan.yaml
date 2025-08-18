@@ -1,0 +1,127 @@
+name: mv_analisis_pelatihan_karyawan
+domain: sdm
+description: Ringkasan partisipasi pelatihan karyawan untuk evaluasi pengembangan kompetensi.
+purpose:
+  - Mengukur tingkat partisipasi karyawan dalam pelatihan
+  - Mengidentifikasi efektivitas pelatihan
+  - Mendukung perencanaan pengembangan SDM
+sources:
+  karyawan:
+    url: struktur_data/karyawan.yaml
+  pelatihan:
+    url: struktur_data/pelatihan.yaml
+  kehadiran_pelatihan:
+    url: struktur_data/kehadiran_pelatihan.yaml
+primary_key:
+  - periode
+  - karyawan_id
+columns:
+  - name: periode
+    type: date
+    nullable: false
+    description: Periode pelatihan (bulanan/semesteran).
+    source:
+      ref: pelatihan
+      column: tanggal_mulai
+    transform: "date_trunc('month', pelatihan.tanggal_mulai)::date"
+    example: 2025-07-01
+
+  - name: karyawan_id
+    type: integer
+    nullable: false
+    description: ID unik karyawan.
+    source:
+      ref: karyawan
+      column: id
+    example: 305
+
+  - name: nama_karyawan
+    type: text
+    nullable: false
+    description: Nama lengkap karyawan.
+    source:
+      ref: karyawan
+      column: nama
+    example: "Dewi Lestari"
+
+  - name: jumlah_pelatihan_diikuti
+    type: integer
+    nullable: true
+    description: Jumlah pelatihan yang diikuti oleh karyawan dalam periode.
+    source:
+      ref: kehadiran_pelatihan
+      column: pelatihan_id
+    transform: "count(distinct kehadiran_pelatihan.pelatihan_id)"
+    example: 3
+
+  - name: total_jam_pelatihan
+    type: integer
+    nullable: true
+    description: Total jam pelatihan yang diikuti dalam periode.
+    source:
+      ref: pelatihan
+      column: durasi_jam
+    transform: "sum(pelatihan.durasi_jam)"
+    example: 24
+
+  - name: rata_rata_skor_pelatihan
+    type: numeric(5,2)
+    nullable: true
+    description: Rata-rata skor hasil evaluasi pelatihan yang diikuti.
+    source:
+      ref: kehadiran_pelatihan
+      column: skor_evaluasi
+    transform: "avg(kehadiran_pelatihan.skor_evaluasi)"
+    example: 4.5
+
+  - name: pelatihan_utama
+    type: text
+    nullable: true
+    description: Judul pelatihan yang paling berpengaruh atau paling banyak diikuti.
+    source:
+      ref: pelatihan
+      column: judul
+    transform: "mode() within group (order by pelatihan.judul)"
+    example: "Pelatihan Kepemimpinan Dasar"
+
+dependencies:
+  base_entities:
+    - karyawan
+    - pelatihan
+    - kehadiran_pelatihan
+  views: []
+  materialized_views: []
+
+refresh_policy:
+  strategy: scheduled
+  schedule_cron: "0 3 * * *"
+  with_data_on_create: true
+  concurrently_on_refresh: true
+  invalidate:
+    - Input data kehadiran pelatihan baru
+    - Input pelatihan baru
+
+indexes:
+  - name: mv_analisis_pelatihan_karyawan_pk
+    type: unique
+    columns:
+      - periode
+      - karyawan_id
+
+retention:
+  keep_history_months: 60
+  prune_policy: hapus data > keep_history_months
+
+security:
+  grant_read_to_roles:
+    - bi_analyst
+    - sdm_reviewer
+  pii:
+    contains_pii: true
+    columns:
+      - karyawan_id
+      - nama_karyawan
+
+notes:
+  - Periode pelatihan dapat dikategorikan bulanan atau semesteran.
+  - Dapat digunakan untuk melihat efektivitas program pelatihan.
