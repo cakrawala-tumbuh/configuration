@@ -6,11 +6,11 @@
       efektivitas kanal promosi
     data:
     - name: Pendaftar
-      url: ./struktur_data/pendaftar.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/pendaftar.yml
     - name: Sekolah Asal
-      url: ./struktur_data/sekolah_asal.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/sekolah_asal.yml
     - name: Kanal Promosi
-      url: ./struktur_data/kanal_promosi.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/kanal_promosi.yml
     materialized_view:
     - name: mv_analisis_tren_pendaftar_and_sumber_kanal
       target_entity: insight_analisis_tren_pendaftar_and_sumber_kanal
@@ -26,13 +26,13 @@
       kekuatan funnel
     data:
     - name: Pendaftar
-      url: ./struktur_data/pendaftar.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/pendaftar.yml
     - name: Tes Seleksi
-      url: ./struktur_data/tes_seleksi.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/tes_seleksi.yml
     - name: Hasil Seleksi
-      url: ./struktur_data/hasil_seleksi.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/hasil_seleksi.yml
     - name: Siswa
-      url: ./struktur_data/siswa.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/siswa.yml
     materialized_view:
     - name: mv_analisis_funnel_psb
       target_entity: insight_analisis_funnel_psb
@@ -47,11 +47,11 @@
     description: Evaluasi historis dampak promosi terhadap jumlah pendaftar
     data:
     - name: Kanal Promosi
-      url: ./struktur_data/kanal_promosi.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/kanal_promosi.yml
     - name: Pendaftar
-      url: ./struktur_data/pendaftar.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/pendaftar.yml
     - name: Biaya Promosi
-      url: ./struktur_data/biaya_promosi.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/biaya_promosi.yml
     materialized_view:
     - name: mv_efektivitas_promosi
       target_entity: insight_efektivitas_promosi
@@ -68,11 +68,11 @@
       akademik
     data:
     - name: Siswa
-      url: ./struktur_data/siswa.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/siswa.yml
     - name: Nilai
-      url: ./struktur_data/nilai.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/nilai.yml
     - name: Mata Pelajaran
-      url: ./struktur_data/mata_pelajaran.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/mata_pelajaran.yml
     materialized_view:
     - name: mv_analisis_hasil_belajar
       target_entity: insight_analisis_hasil_belajar
@@ -86,9 +86,9 @@
     description: Analisis data historis absensi siswa untuk mendeteksi pola kedisiplinan
     data:
     - name: Siswa
-      url: ./struktur_data/siswa.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/siswa.yml
     - name: Absensi Siswa
-      url: ./struktur_data/absensi_siswa.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/absensi_siswa.yml
     materialized_view:
     - name: mv_analisis_kehadiran_siswa
       target_entity: insight_analisis_kehadiran_siswa
@@ -101,13 +101,13 @@
     description: Analisis historis efektivitas guru dalam proses pembelajaran
     data:
     - name: Guru
-      url: ./struktur_data/guru.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/guru.yml
     - name: Nilai
-      url: ./struktur_data/nilai.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/nilai.yml
     - name: Mata Pelajaran
-      url: ./struktur_data/mata_pelajaran.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/mata_pelajaran.yml
     - name: Siswa
-      url: ./struktur_data/siswa.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/siswa.yml
     materialized_view:
     - name: mv_efektivitas_pengajaran_guru
       target_entity: insight_efektivitas_pengajaran_guru
@@ -124,11 +124,11 @@
     description: Analisis historis kinerja guru dan karyawan untuk pengembangan SDM
     data:
     - name: Guru
-      url: ./struktur_data/guru.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/guru.yml
     - name: Karyawan
-      url: ./struktur_data/karyawan.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/karyawan.yml
     - name: Penilaian Kinerja
-      url: ./struktur_data/penilaian_kinerja.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/penilaian_kinerja.yml
     materialized_view:
     - name: mv_analisis_kinerja_guru_and_karyawan
       target_entity: insight_analisis_kinerja_guru_and_karyawan
@@ -142,9 +142,9 @@
     description: Analisis data historis absensi guru dan karyawan
     data:
     - name: Karyawan
-      url: ./struktur_data/karyawan.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/karyawan.yml
     - name: Absensi Pegawai
-      url: ./struktur_data/absensi_pegawai.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/absensi_pegawai.yml
     materialized_view:
     - name: mv_pola_absensi_and_kehadiran_pegawai
       target_entity: insight_pola_absensi_and_kehadiran_pegawai
@@ -158,11 +158,11 @@
       diperlukan
     data:
     - name: Karyawan
-      url: ./struktur_data/karyawan.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/karyawan.yml
     - name: Kompetensi
-      url: ./struktur_data/kompetensi.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/kompetensi.yml
     - name: Pelatihan
-      url: ./struktur_data/pelatihan.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/pelatihan.yml
     materialized_view:
     - name: mv_analisis_kebutuhan_pelatihan
       target_entity: insight_analisis_kebutuhan_pelatihan
@@ -178,7 +178,7 @@
     description: Analisis historis kondisi keuangan sekolah berdasarkan laporan keuangan
     data:
     - name: Laporan Keuangan
-      url: ./struktur_data/laporan_keuangan.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/laporan_keuangan.yml
     materialized_view:
     - name: mv_analisis_laporan_keuangan
       target_entity: insight_analisis_laporan_keuangan
@@ -190,9 +190,9 @@
     description: Analisis historis arus kas untuk memantau stabilitas keuangan
     data:
     - name: Transaksi Keuangan
-      url: ./struktur_data/transaksi_keuangan.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/transaksi_keuangan.yml
     - name: Sumber Dana
-      url: ./struktur_data/sumber_dana.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/sumber_dana.yml
     materialized_view:
     - name: mv_analisis_arus_kas
       target_entity: insight_analisis_arus_kas
@@ -205,11 +205,11 @@
     description: Analisis historis total biaya pendidikan yang dikeluarkan per siswa
     data:
     - name: Siswa
-      url: ./struktur_data/siswa.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/siswa.yml
     - name: Transaksi Keuangan
-      url: ./struktur_data/transaksi_keuangan.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/transaksi_keuangan.yml
     - name: Komponen Biaya
-      url: ./struktur_data/komponen_biaya.yml
+      url: https://github.com/cakrawala-tumbuh/configuration/blob/main/struktur_data/komponen_biaya.yml
     materialized_view:
     - name: mv_analisis_biaya_per_siswa
       target_entity: insight_analisis_biaya_per_siswa
