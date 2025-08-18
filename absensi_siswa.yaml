@@ -1,0 +1,21 @@
+nama_entitas: Absensi Siswa
+nama_teknis: absensi_siswa
+penjelasan: Catatan kehadiran siswa dalam kegiatan belajar mengajar
+fields:
+  - nama_field: id
+    penjelasan: ID unik absensi
+    tipe_field: integer
+  - nama_field: siswa_id
+    penjelasan: Relasi ke entitas Siswa
+    tipe_field: foreign_key
+  - nama_field: tanggal
+    penjelasan: Tanggal absensi
+    tipe_field: date
+  - nama_field: status
+    penjelasan: Status kehadiran siswa
+    tipe_field: selection
+    pilihan:
+      - Hadir
+      - Izin
+      - Sakit
+      - Alfa
