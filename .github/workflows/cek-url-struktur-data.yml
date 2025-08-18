@@ -1,0 +1,65 @@
+name: Cek URL struktur_data (manual)
+
+on:
+    workflow_dispatch:
+
+jobs:
+    validate:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Install yq (v4)
+              run: |
+                  set -euo pipefail
+                  YQ_VER="v4.44.3"
+                  wget -q "https://github.com/mikefarah/yq/releases/download/${YQ_VER}/yq_linux_amd64" -O /usr/local/bin/yq
+                  chmod +x /usr/local/bin/yq
+                  yq --version
+
+            - name: Validasi URL → file
+              shell: bash
+              run: |
+                  set -euo pipefail
+
+                  FILE_JASA="daftar-jasa.yaml"
+                  BASE_DIR="struktur_data"
+
+                  if [[ ! -f "$FILE_JASA" ]]; then
+                      echo "::error file=$FILE_JASA::File $FILE_JASA tidak ditemukan di repo."
+                      exit 2
+                  fi
+
+                  # Ambil semua nilai field bernama 'URL' dari YAML
+                  mapfile -t URLS < <(yq -r '.. | .URL? // empty' "$FILE_JASA")
+
+                  if (( ${#URLS[@]} == 0 )); then
+                      echo "::warning title=Tidak ada URL::Tidak ditemukan key 'URL' di $FILE_JASA"
+                  fi
+
+                  echo "## Hasil Validasi" >> "$GITHUB_STEP_SUMMARY"
+                  echo "" >> "$GITHUB_STEP_SUMMARY"
+                  echo "| URL (relatif) | STATUS | Path yang dicek |" >> "$GITHUB_STEP_SUMMARY"
+                  echo "|---|---|---|" >> "$GITHUB_STEP_SUMMARY"
+
+                  missing=0
+                  for u in "${URLS[@]}"; do
+                      rel="$u"
+                      [[ "$rel" != $BASE_DIR/* ]] && rel="$BASE_DIR/$rel"
+                      if [[ -f "$rel" ]]; then
+                          echo "| $u | ADA | $rel |" >> "$GITHUB_STEP_SUMMARY"
+                      else
+                          echo "| $u | TIDAK | $rel |" >> "$GITHUB_STEP_SUMMARY"
+                          echo "::error title=File tidak ditemukan::URL '$u' → expected '$rel' tidak ada"
+                          missing=$((missing+1))
+                      fi
+                  done
+
+                  echo "" >> "$GITHUB_STEP_SUMMARY"
+                  if (( missing > 0 )); then
+                      echo "**Ada $missing file yang belum tersedia di \`$BASE_DIR\`.**" >> "$GITHUB_STEP_SUMMARY"
+                      exit 1
+                  else
+                      echo "✅ Semua URL di \`$FILE_JASA\` memiliki file di \`$BASE_DIR\`." >> "$GITHUB_STEP_SUMMARY"
+                  fi
