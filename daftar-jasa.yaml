@@ -1,129 +1,220 @@
-penerimaan_siswa_baru:
+- area: penerimaan_siswa_baru
+  jasa:
   - name: Analisis Tren Pendaftar & Sumber Kanal
     output: Laporan tren jumlah pendaftar dari tahun ke tahun berdasarkan sumber kanal
-    description: Analisis data historis pendaftar untuk melihat pola pertumbuhan dan efektivitas kanal promosi
+    description: Analisis data historis pendaftar untuk melihat pola pertumbuhan dan
+      efektivitas kanal promosi
     data:
-      - name: Pendaftar
-        url: ./struktur_data/pendaftar.yml
-      - name: Sekolah Asal
-        url: ./struktur_data/sekolah_asal.yml
-      - name: Kanal Promosi
-        url: ./struktur_data/kanal_promosi.yml
-
+    - name: Pendaftar
+      url: ./struktur_data/pendaftar.yml
+    - name: Sekolah Asal
+      url: ./struktur_data/sekolah_asal.yml
+    - name: Kanal Promosi
+      url: ./struktur_data/kanal_promosi.yml
+    materialized_view:
+    - name: mv_analisis_tren_pendaftar_and_sumber_kanal
+      target_entity: insight_analisis_tren_pendaftar_and_sumber_kanal
+      depends_on:
+      - pendaftar
+      - sekolah_asal
+      - kanal_promosi
+      description: Laporan tren jumlah pendaftar dari tahun ke tahun berdasarkan sumber
+        kanal
   - name: Analisis Funnel PSB
     output: Visualisasi konversi dari pendaftar hingga siswa yang diterima
-    description: Analisis data historis proses PSB untuk mengetahui titik lemah dan kekuatan funnel
+    description: Analisis data historis proses PSB untuk mengetahui titik lemah dan
+      kekuatan funnel
     data:
-      - name: Pendaftar
-        url: ./struktur_data/pendaftar.yml
-      - name: Tes Seleksi
-        url: ./struktur_data/tes_seleksi.yml
-      - name: Hasil Seleksi
-        url: ./struktur_data/hasil_seleksi.yml
-      - name: Siswa
-        url: ./struktur_data/siswa.yml
-
+    - name: Pendaftar
+      url: ./struktur_data/pendaftar.yml
+    - name: Tes Seleksi
+      url: ./struktur_data/tes_seleksi.yml
+    - name: Hasil Seleksi
+      url: ./struktur_data/hasil_seleksi.yml
+    - name: Siswa
+      url: ./struktur_data/siswa.yml
+    materialized_view:
+    - name: mv_analisis_funnel_psb
+      target_entity: insight_analisis_funnel_psb
+      depends_on:
+      - pendaftar
+      - tes_seleksi
+      - hasil_seleksi
+      - siswa
+      description: Visualisasi konversi dari pendaftar hingga siswa yang diterima
   - name: Efektivitas Promosi
     output: Laporan efektivitas promosi per kanal
     description: Evaluasi historis dampak promosi terhadap jumlah pendaftar
     data:
-      - name: Kanal Promosi
-        url: ./struktur_data/kanal_promosi.yml
-      - name: Pendaftar
-        url: ./struktur_data/pendaftar.yml
-      - name: Biaya Promosi
-        url: ./struktur_data/biaya_promosi.yml
-
-pengajaran:
+    - name: Kanal Promosi
+      url: ./struktur_data/kanal_promosi.yml
+    - name: Pendaftar
+      url: ./struktur_data/pendaftar.yml
+    - name: Biaya Promosi
+      url: ./struktur_data/biaya_promosi.yml
+    materialized_view:
+    - name: mv_efektivitas_promosi
+      target_entity: insight_efektivitas_promosi
+      depends_on:
+      - kanal_promosi
+      - pendaftar
+      - biaya_promosi
+      description: Laporan efektivitas promosi per kanal
+- area: pengajaran
+  jasa:
   - name: Analisis Hasil Belajar
     output: Laporan pencapaian siswa berdasarkan nilai dan tren kelas
-    description: Analisis historis hasil belajar siswa untuk melihat perkembangan akademik
+    description: Analisis historis hasil belajar siswa untuk melihat perkembangan
+      akademik
     data:
-      - name: Siswa
-        url: ./struktur_data/siswa.yml
-      - name: Nilai
-        url: ./struktur_data/nilai.yml
-      - name: Mata Pelajaran
-        url: ./struktur_data/mata_pelajaran.yml
-
+    - name: Siswa
+      url: ./struktur_data/siswa.yml
+    - name: Nilai
+      url: ./struktur_data/nilai.yml
+    - name: Mata Pelajaran
+      url: ./struktur_data/mata_pelajaran.yml
+    materialized_view:
+    - name: mv_analisis_hasil_belajar
+      target_entity: insight_analisis_hasil_belajar
+      depends_on:
+      - siswa
+      - nilai
+      - mata_pelajaran
+      description: Laporan pencapaian siswa berdasarkan nilai dan tren kelas
   - name: Analisis Kehadiran Siswa
     output: Laporan pola kehadiran siswa dan tingkat ketidakhadiran
     description: Analisis data historis absensi siswa untuk mendeteksi pola kedisiplinan
     data:
-      - name: Siswa
-        url: ./struktur_data/siswa.yml
-      - name: Absensi Siswa
-        url: ./struktur_data/absensi_siswa.yml
-
+    - name: Siswa
+      url: ./struktur_data/siswa.yml
+    - name: Absensi Siswa
+      url: ./struktur_data/absensi_siswa.yml
+    materialized_view:
+    - name: mv_analisis_kehadiran_siswa
+      target_entity: insight_analisis_kehadiran_siswa
+      depends_on:
+      - siswa
+      - absensi_siswa
+      description: Laporan pola kehadiran siswa dan tingkat ketidakhadiran
   - name: Efektivitas Pengajaran Guru
     output: Ringkasan performa guru berdasarkan hasil belajar siswa
     description: Analisis historis efektivitas guru dalam proses pembelajaran
     data:
-      - name: Guru
-        url: ./struktur_data/guru.yml
-      - name: Nilai
-        url: ./struktur_data/nilai.yml
-      - name: Mata Pelajaran
-        url: ./struktur_data/mata_pelajaran.yml
-      - name: Siswa
-        url: ./struktur_data/siswa.yml
-
-sdm:
+    - name: Guru
+      url: ./struktur_data/guru.yml
+    - name: Nilai
+      url: ./struktur_data/nilai.yml
+    - name: Mata Pelajaran
+      url: ./struktur_data/mata_pelajaran.yml
+    - name: Siswa
+      url: ./struktur_data/siswa.yml
+    materialized_view:
+    - name: mv_efektivitas_pengajaran_guru
+      target_entity: insight_efektivitas_pengajaran_guru
+      depends_on:
+      - guru
+      - nilai
+      - mata_pelajaran
+      - siswa
+      description: Ringkasan performa guru berdasarkan hasil belajar siswa
+- area: sdm
+  jasa:
   - name: Analisis Kinerja Guru & Karyawan
     output: Laporan evaluasi kinerja tahunan
     description: Analisis historis kinerja guru dan karyawan untuk pengembangan SDM
     data:
-      - name: Guru
-        url: ./struktur_data/guru.yml
-      - name: Karyawan
-        url: ./struktur_data/karyawan.yml
-      - name: Penilaian Kinerja
-        url: ./struktur_data/penilaian_kinerja.yml
-
+    - name: Guru
+      url: ./struktur_data/guru.yml
+    - name: Karyawan
+      url: ./struktur_data/karyawan.yml
+    - name: Penilaian Kinerja
+      url: ./struktur_data/penilaian_kinerja.yml
+    materialized_view:
+    - name: mv_analisis_kinerja_guru_and_karyawan
+      target_entity: insight_analisis_kinerja_guru_and_karyawan
+      depends_on:
+      - guru
+      - karyawan
+      - penilaian_kinerja
+      description: Laporan evaluasi kinerja tahunan
   - name: Pola Absensi & Kehadiran Pegawai
     output: Laporan absensi pegawai
     description: Analisis data historis absensi guru dan karyawan
     data:
-      - name: Karyawan
-        url: ./struktur_data/karyawan.yml
-      - name: Absensi Pegawai
-        url: ./struktur_data/absensi_pegawai.yml
-
+    - name: Karyawan
+      url: ./struktur_data/karyawan.yml
+    - name: Absensi Pegawai
+      url: ./struktur_data/absensi_pegawai.yml
+    materialized_view:
+    - name: mv_pola_absensi_and_kehadiran_pegawai
+      target_entity: insight_pola_absensi_and_kehadiran_pegawai
+      depends_on:
+      - karyawan
+      - absensi_pegawai
+      description: Laporan absensi pegawai
   - name: Analisis Kebutuhan Pelatihan
     output: Rekomendasi program pelatihan
-    description: Analisis historis kompetensi pegawai untuk menentukan pelatihan yang diperlukan
+    description: Analisis historis kompetensi pegawai untuk menentukan pelatihan yang
+      diperlukan
     data:
-      - name: Karyawan
-        url: ./struktur_data/karyawan.yml
-      - name: Kompetensi
-        url: ./struktur_data/kompetensi.yml
-      - name: Pelatihan
-        url: ./struktur_data/pelatihan.yml
-
-keuangan:
+    - name: Karyawan
+      url: ./struktur_data/karyawan.yml
+    - name: Kompetensi
+      url: ./struktur_data/kompetensi.yml
+    - name: Pelatihan
+      url: ./struktur_data/pelatihan.yml
+    materialized_view:
+    - name: mv_analisis_kebutuhan_pelatihan
+      target_entity: insight_analisis_kebutuhan_pelatihan
+      depends_on:
+      - karyawan
+      - kompetensi
+      - pelatihan
+      description: Rekomendasi program pelatihan
+- area: keuangan
+  jasa:
   - name: Analisis Laporan Keuangan
     output: Laporan ringkasan posisi keuangan
     description: Analisis historis kondisi keuangan sekolah berdasarkan laporan keuangan
     data:
-      - name: Laporan Keuangan
-        url: ./struktur_data/laporan_keuangan.yml
-
+    - name: Laporan Keuangan
+      url: ./struktur_data/laporan_keuangan.yml
+    materialized_view:
+    - name: mv_analisis_laporan_keuangan
+      target_entity: insight_analisis_laporan_keuangan
+      depends_on:
+      - laporan_keuangan
+      description: Laporan ringkasan posisi keuangan
   - name: Analisis Arus Kas
     output: Laporan pola pemasukan dan pengeluaran
     description: Analisis historis arus kas untuk memantau stabilitas keuangan
     data:
-      - name: Transaksi Keuangan
-        url: ./struktur_data/transaksi_keuangan.yml
-      - name: Sumber Dana
-        url: ./struktur_data/sumber_dana.yml
-
+    - name: Transaksi Keuangan
+      url: ./struktur_data/transaksi_keuangan.yml
+    - name: Sumber Dana
+      url: ./struktur_data/sumber_dana.yml
+    materialized_view:
+    - name: mv_analisis_arus_kas
+      target_entity: insight_analisis_arus_kas
+      depends_on:
+      - transaksi_keuangan
+      - sumber_dana
+      description: Laporan pola pemasukan dan pengeluaran
   - name: Analisis Biaya per Siswa
     output: Laporan biaya pendidikan per siswa
     description: Analisis historis total biaya pendidikan yang dikeluarkan per siswa
     data:
-      - name: Siswa
-        url: ./struktur_data/siswa.yml
-      - name: Transaksi Keuangan
-        url: ./struktur_data/transaksi_keuangan.yml
-      - name: Komponen Biaya
-        url: ./struktur_data/komponen_biaya.yml
+    - name: Siswa
+      url: ./struktur_data/siswa.yml
+    - name: Transaksi Keuangan
+      url: ./struktur_data/transaksi_keuangan.yml
+    - name: Komponen Biaya
+      url: ./struktur_data/komponen_biaya.yml
+    materialized_view:
+    - name: mv_analisis_biaya_per_siswa
+      target_entity: insight_analisis_biaya_per_siswa
+      depends_on:
+      - siswa
+      - transaksi_keuangan
+      - komponen_biaya
+      description: Laporan biaya pendidikan per siswa
