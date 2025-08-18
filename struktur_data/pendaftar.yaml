@@ -1,0 +1,37 @@
+nama_entitas: Pendaftar
+nama_teknis: pendaftar
+penjelasan: Data calon siswa yang mendaftar ke sekolah, berisi informasi identitas,
+  asal sekolah, dan jalur pendaftaran
+fields:
+- nama_field: id
+  penjelasan: ID unik pendaftar
+  tipe_field: integer
+- nama_field: nama_lengkap
+  penjelasan: Nama lengkap calon siswa
+  tipe_field: string
+- nama_field: tanggal_lahir
+  penjelasan: Tanggal lahir calon siswa
+  tipe_field: date
+- nama_field: jenis_kelamin
+  penjelasan: Jenis kelamin calon siswa
+  tipe_field: selection
+  pilihan:
+  - Laki-laki
+  - Perempuan
+- nama_field: sekolah_asal_id
+  penjelasan: Relasi ke entitas Sekolah Asal
+  tipe_field: foreign_key
+- nama_field: kanal_promosi_id
+  penjelasan: Relasi ke entitas Kanal Promosi
+  tipe_field: foreign_key
+- nama_field: tahun_ajaran
+  penjelasan: Tahun ajaran pendaftaran
+  tipe_field: string
+- nama_field: status_pendaftaran
+  penjelasan: Status proses pendaftaran calon siswa
+  tipe_field: selection
+  pilihan:
+  - Daftar
+  - Tes
+  - Diterima
+  - Ditolak
