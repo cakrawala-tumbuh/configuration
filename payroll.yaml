@@ -1,0 +1,25 @@
+nama_entitas: Payroll
+nama_teknis: payroll
+penjelasan: Data penggajian pegawai per periode
+fields:
+  - nama_field: id
+    penjelasan: ID unik payroll
+    tipe_field: integer
+  - nama_field: pegawai_id
+    penjelasan: Relasi ke entitas Guru/Karyawan
+    tipe_field: foreign_key
+  - nama_field: periode
+    penjelasan: Periode penggajian
+    tipe_field: string
+  - nama_field: gaji_pokok
+    penjelasan: Gaji pokok
+    tipe_field: float
+  - nama_field: tunjangan
+    penjelasan: Total tunjangan
+    tipe_field: float
+  - nama_field: potongan
+    penjelasan: Total potongan
+    tipe_field: float
+  - nama_field: dibayarkan
+    penjelasan: Jumlah bersih yang dibayarkan
+    tipe_field: float
