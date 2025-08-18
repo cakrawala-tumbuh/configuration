@@ -1,0 +1,450 @@
+jasa_cantum:
+  penerimaan_siswa_baru:
+    - nama: Analisis Tren Pendaftar & Sumber Kanal
+      deskripsi: Analisis data historis pendaftar untuk melihat pola jumlah dan kanal asal.
+      output:
+        - Dashboard tren (historis)
+        - Laporan eksekutif (PDF)
+        - Rekomendasi promosi
+      data:
+        - Applicant
+        - Application Form
+        - Marketing Channel
+        - Previous School
+        - Parent
+
+    - nama: Segmentasi Demografi Pendaftar
+      deskripsi: Pemetaan karakteristik pendaftar (jenis kelamin, usia, domisili).
+      output:
+        - Profil demografi
+        - Grafik distribusi
+        - Laporan ringkas
+      data:
+        - Applicant
+        - Application Form
+        - Parent
+
+    - nama: Analisis Efektivitas Promosi Sekolah
+      deskripsi: Menilai kontribusi tiap kanal promosi terhadap jumlah pendaftar (historis).
+      output:
+        - Analisis kontribusi kanal
+        - Grafik kontribusi kanal
+        - Laporan evaluasi promosi
+      data:
+        - Applicant
+        - Marketing Channel
+
+    - nama: Identifikasi Sekolah Asal Pendaftar (Feeder)
+      deskripsi: Mengidentifikasi sekolah asal yang konsisten mengirimkan siswa.
+      output:
+        - Daftar feeder utama
+        - Peta asal sekolah
+        - Laporan peluang kerja sama
+      data:
+        - Applicant
+        - Previous School
+
+    - nama: Analisis Konversi Pendaftar ke Siswa Aktif
+      deskripsi: Mengukur konversi dari pendaftar hingga menjadi siswa aktif.
+      output:
+        - Funnel konversi
+        - Tabel perbandingan
+        - Laporan insight
+      data:
+        - Applicant
+        - Selection Result
+        - Enrollment
+        - Admission Test
+        - Interview
+        - Document Submission
+        - Marketing Channel
+
+    - nama: Perbandingan Penerimaan per Tahun
+      deskripsi: Membandingkan tren penerimaan antar tahun ajaran.
+      output:
+        - Grafik perbandingan YoY
+        - Laporan tren historis
+      data:
+        - Applicant
+        - Enrollment
+
+    - nama: Identifikasi Faktor Penentu Pemilihan Sekolah
+      deskripsi: Analisis faktor utama yang memengaruhi pilihan siswa/ortu (berbasis data tersedia).
+      output:
+        - Ranking faktor
+        - Ringkasan wawasan
+        - Rekomendasi strategi
+      data:
+        - Applicant
+        - Application Form
+        - Marketing Channel
+        - Previous School
+
+    - nama: Analisis Biaya Akuisisi Siswa
+      deskripsi: Menghitung biaya per pendaftar/siswa dari sudut pandang historis.
+      output:
+        - CPA historis
+        - Laporan keuangan promosi
+      data:
+        - Applicant
+        - Marketing Channel
+        - Expense
+
+    - nama: Analisis Jalur Masuk (Prestasi, Zonasi, Umum)
+      deskripsi: Melihat distribusi penerimaan siswa berdasarkan jalur masuk.
+      output:
+        - Grafik distribusi jalur
+        - Laporan evaluasi kebijakan
+      data:
+        - Applicant
+        - Selection Result
+        - Enrollment
+        - Admission Test
+        - Interview
+
+    - nama: Pemetaan Geografis Pendaftar
+      deskripsi: Visualisasi lokasi domisili pendaftar secara historis.
+      output:
+        - Peta sebaran
+        - Laporan ringkas
+      data:
+        - Applicant
+        - Application Form
+        - Previous School
+
+  pengajaran:
+    - nama: Analisis Distribusi Nilai per Mata Pelajaran
+      deskripsi: Menganalisis penyebaran nilai siswa untuk tiap mata pelajaran.
+      output:
+        - Grafik distribusi nilai
+        - Laporan per mapel
+      data:
+        - Grade
+        - Subject
+        - Class
+        - Student
+
+    - nama: Identifikasi Mata Pelajaran dengan Capaian Rendah
+      deskripsi: Menemukan mata pelajaran dengan tingkat ketuntasan rendah.
+      output:
+        - Daftar mapel prioritas
+        - Rekomendasi remedial
+      data:
+        - Grade
+        - Subject
+        - Class
+        - Curriculum
+
+    - nama: Analisis Kesesuaian Kurikulum dengan Hasil Belajar
+      deskripsi: Mengevaluasi ketercapaian kurikulum vs hasil belajar historis.
+      output:
+        - Gap analysis kurikulum
+        - Laporan evaluasi
+      data:
+        - Curriculum
+        - Subject
+        - Grade
+        - Exam
+
+    - nama: Analisis Keterlibatan Siswa dalam Proses Belajar
+      deskripsi: Menilai partisipasi siswa dari kehadiran dan aktivitas.
+      output:
+        - Laporan keterlibatan
+        - Grafik partisipasi
+      data:
+        - Attendance
+        - Schedule
+        - Class
+        - Student
+
+    - nama: Analisis Perbandingan Kinerja antar Kelas/Angkatan
+      deskripsi: Membandingkan hasil belajar antar kelas/angkatan.
+      output:
+        - Grafik komparatif
+        - Laporan perbandingan
+      data:
+        - Grade
+        - Class
+        - Subject
+        - Student
+
+    - nama: Evaluasi Program Remedial dan Pengayaan
+      deskripsi: Mengukur efektivitas remedial/pengayaan terhadap capaian.
+      output:
+        - Laporan efektivitas
+        - Rekomendasi tindak lanjut
+      data:
+        - Grade
+        - Subject
+        - Class
+        - Student
+        - Attendance
+
+    - nama: Analisis Hubungan Kehadiran dengan Prestasi
+      deskripsi: Melihat korelasi kehadiran siswa dengan capaian akademik.
+      output:
+        - Grafik korelasi
+        - Laporan ringkas
+      data:
+        - Attendance
+        - Grade
+        - Student
+        - Class
+
+    - nama: Analisis Pemanfaatan Sumber Belajar
+      deskripsi: Evaluasi penggunaan fasilitas/materi belajar (berdasarkan data tersedia).
+      output:
+        - Statistik pemakaian
+        - Laporan efisiensi
+      data:
+        - Curriculum
+        - Subject
+        - Schedule
+        - Class
+
+    - nama: Analisis Feedback Siswa terhadap Pengajaran
+      deskripsi: Analisis umpan balik siswa terhadap kualitas pengajaran (jika tersedia).
+      output:
+        - Laporan kepuasan
+        - Ringkasan rekomendasi
+      data:
+        - Exam
+        - Grade
+        - Class
+        - Student
+
+    - nama: Analisis Hasil Ujian Nasional/Sumatif
+      deskripsi: Evaluasi performa ujian sumatif antar periode.
+      output:
+        - Grafik capaian
+        - Laporan komparatif
+      data:
+        - Exam
+        - Grade
+        - Subject
+        - Class
+        - Student
+
+  sdm:
+    - nama: Analisis Kualifikasi Guru
+      deskripsi: Memetakan kualifikasi akademik & sertifikasi guru.
+      output:
+        - Profil kualifikasi
+        - Gap kompetensi
+      data:
+        - Employee
+        - Position
+        - Department
+        - Training
+
+    - nama: Analisis Kinerja Guru berbasis Penilaian
+      deskripsi: Menilai kinerja guru dari penilaian/performance review historis.
+      output:
+        - Skor kinerja
+        - Laporan evaluasi
+      data:
+        - Employee
+        - Performance Review
+        - Department
+        - Position
+
+    - nama: Analisis Rasio Guru-Siswa
+      deskripsi: Menghitung jumlah siswa per guru dan efektivitas pengajaran.
+      output:
+        - Rasio guru-siswa
+        - Laporan ringkas
+      data:
+        - Employee
+        - Teacher
+        - Class
+        - Student
+
+    - nama: Analisis Tingkat Kehadiran Guru
+      deskripsi: Mengukur kehadiran guru per periode historis.
+      output:
+        - Statistik kehadiran
+        - Laporan tren
+      data:
+        - Attendance (Employee)
+        - Employee
+        - Department
+
+    - nama: Identifikasi Kebutuhan Pelatihan Guru
+      deskripsi: Menentukan kebutuhan pengembangan kompetensi guru.
+      output:
+        - Daftar pelatihan prioritas
+        - Rekomendasi
+      data:
+        - Training
+        - Performance Review
+        - Employee
+        - Department
+
+    - nama: Analisis Beban Kerja Guru
+      deskripsi: Melihat distribusi jam mengajar dan tugas tambahan.
+      output:
+        - Grafik beban kerja
+        - Laporan analisis
+      data:
+        - Teacher
+        - Schedule
+        - Class
+        - Employee
+        - Department
+
+    - nama: Analisis Retensi & Turnover Guru
+      deskripsi: Mengukur stabilitas tenaga pengajar.
+      output:
+        - Statistik turnover
+        - Laporan insight
+      data:
+        - Employee
+        - Contract
+        - Department
+        - Payroll
+
+    - nama: Analisis Kepuasan Kerja Guru & Staff
+      deskripsi: Analisis hasil survei kepuasan (jika tersedia) dan indikator SDM terkait.
+      output:
+        - Laporan kepuasan
+        - Rekomendasi perbaikan
+      data:
+        - Performance Review
+        - Training
+        - Employee
+        - Department
+
+    - nama: Analisis Distribusi Tugas & Jabatan
+      deskripsi: Pemetaan jabatan struktural/fungsional dan distribusi tugas.
+      output:
+        - Struktur distribusi
+        - Laporan efisiensi
+      data:
+        - Position
+        - Department
+        - Employee
+        - Contract
+
+    - nama: Analisis Efektivitas Program Pengembangan SDM
+      deskripsi: Mengukur hasil program pengembangan staf/guru.
+      output:
+        - Laporan evaluasi
+        - Rekomendasi lanjutan
+      data:
+        - Training
+        - Performance Review
+        - Employee
+        - Department
+        - Payroll
+
+  keuangan:
+    - nama: Analisis Arus Kas Sekolah
+      deskripsi: Melacak arus masuk dan keluar kas historis.
+      output:
+        - Cash flow (historis)
+        - Laporan tren
+      data:
+        - Cashflow
+        - Payment
+        - Expense
+
+    - nama: Analisis Kesehatan Keuangan Sekolah
+      deskripsi: Mengukur stabilitas dan likuiditas keuangan sekolah.
+      output:
+        - Indeks kesehatan finansial
+        - Laporan ringkas
+      data:
+        - Cashflow
+        - Invoice
+        - Payment
+        - Expense
+        - Budget
+
+    - nama: Analisis Efisiensi Penggunaan Anggaran
+      deskripsi: Evaluasi penggunaan anggaran terhadap realisasi historis.
+      output:
+        - Realisasi vs anggaran
+        - Laporan efisiensi
+      data:
+        - Budget
+        - Expense
+        - Journal Entry
+        - Account
+
+    - nama: Analisis Kecukupan Dana Operasional
+      deskripsi: Menilai kecukupan dana untuk operasional rutin.
+      output:
+        - Laporan kecukupan dana
+        - Rekomendasi finansial
+      data:
+        - Cashflow
+        - Expense
+        - Budget
+        - Payment
+
+    - nama: Analisis Sumber Dana Sekolah
+      deskripsi: Identifikasi kontribusi sumber dana (SPP, donasi, dsb.).
+      output:
+        - Grafik kontribusi sumber
+        - Laporan ringkas
+      data:
+        - Invoice
+        - Payment
+        - Donation
+        - Scholarship
+
+    - nama: Analisis Biaya per Siswa
+      deskripsi: Menghitung rata-rata biaya operasional per siswa (historis).
+      output:
+        - Statistik biaya per siswa
+        - Laporan evaluasi
+      data:
+        - Expense
+        - Student
+        - Class
+        - Budget
+
+    - nama: Analisis Tren Penerimaan & Pengeluaran
+      deskripsi: Pola historis penerimaan dan pengeluaran sekolah.
+      output:
+        - Grafik tren
+        - Laporan eksekutif
+      data:
+        - Invoice
+        - Payment
+        - Expense
+        - Cashflow
+
+    - nama: Analisis Hutang & Piutang Sekolah
+      deskripsi: Evaluasi kondisi piutang (SPP) dan kewajiban.
+      output:
+        - Neraca AP/AR
+        - Laporan analisis
+      data:
+        - Invoice
+        - Payment
+        - Account
+        - Journal Entry
+
+    - nama: Analisis Penggunaan Dana BOS/Donasi
+      deskripsi: Evaluasi pemanfaatan dana BOS & donasi secara historis.
+      output:
+        - Laporan penggunaan dana
+        - Rekomendasi transparansi
+      data:
+        - Donation
+        - Expense
+        - Journal Entry
+        - Account
+
+    - nama: Analisis Perbandingan Keuangan antar Tahun
+      deskripsi: Membandingkan indikator keuangan antar periode.
+      output:
+        - Grafik komparatif YoY
+        - Laporan historis
+      data:
+        - Invoice
+        - Payment
+        - Expense
+        - Budget
+        - Cashflow
