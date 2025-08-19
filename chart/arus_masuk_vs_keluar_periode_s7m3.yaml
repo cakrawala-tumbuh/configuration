@@ -1,0 +1,24 @@
+technical_name: arus_masuk_vs_keluar_periode_s7m3
+title: "Arus Masuk vs Keluar per Periode"
+description: >
+  Perbandingan arus_masuk dan arus_keluar per periode (bulan).
+type:
+  kind: stacked_bar
+  mv: mv_analisis_arus_kas
+dataset:
+  schema: public
+  table: mv_analisis_arus_kas
+query:
+  group_by: [periode]
+  metrics:
+    - { name: arus_masuk,  expr: "SUM(arus_masuk)" }
+    - { name: arus_keluar, expr: "SUM(arus_keluar)" }
+  row_limit: 5000
+encoding:
+  x: { field: periode, type: temporal }
+  y: { field: value, type: quantitative }
+  color: { field: series, type: nominal }
+presentation:
+  legend: true
+assets:
+  png_url: "./sample/arus_masuk_vs_keluar_periode_s7m3.png"

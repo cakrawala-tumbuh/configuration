@@ -1,0 +1,27 @@
+technical_name: arus_masuk_per_akun_t2a7
+title: "Arus Masuk per Akun (Top 25)"
+description: >
+  Total arus_masuk per akun pada periode terpilih.
+type:
+  kind: bar
+  mv: mv_analisis_arus_kas
+dataset:
+  schema: public
+  table: mv_analisis_arus_kas
+query:
+  group_by: [account_name]
+  metrics:
+    - { name: arus_masuk, expr: "SUM(arus_masuk)" }
+  order_by:
+    - column: arus_masuk
+      ascending: false
+  row_limit: 25
+encoding:
+  x: { field: account_name, type: nominal }
+  y: { field: arus_masuk, type: quantitative }
+  tooltip: [account_name, arus_masuk]
+presentation:
+  show_data_labels: true
+  legend: false
+assets:
+  png_url: "./sample/arus_masuk_per_akun_t2a7.png"

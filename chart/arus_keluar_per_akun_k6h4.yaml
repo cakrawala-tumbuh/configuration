@@ -1,0 +1,27 @@
+technical_name: arus_keluar_per_akun_k6h4
+title: "Arus Keluar per Akun (Top 25)"
+description: >
+  Total arus_keluar per akun pada periode terpilih.
+type:
+  kind: bar
+  mv: mv_analisis_arus_kas
+dataset:
+  schema: public
+  table: mv_analisis_arus_kas
+query:
+  group_by: [account_name]
+  metrics:
+    - { name: arus_keluar, expr: "SUM(arus_keluar)" }
+  order_by:
+    - column: arus_keluar
+      ascending: false
+  row_limit: 25
+encoding:
+  x: { field: account_name, type: nominal }
+  y: { field: arus_keluar, type: quantitative }
+  tooltip: [account_name, arus_keluar]
+presentation:
+  show_data_labels: true
+  legend: false
+assets:
+  png_url: "./sample/arus_keluar_per_akun_k6h4.png"

@@ -1,0 +1,27 @@
+technical_name: tren_saldo_bersih_bulanan_f2k1
+title: "Tren Saldo Bersih Bulanan"
+description: >
+  Pergerakan saldo bersih (arus_masuk - arus_keluar) per periode (bulan).
+type:
+  kind: line
+  mv: mv_analisis_arus_kas
+dataset:
+  schema: public
+  table: mv_analisis_arus_kas
+query:
+  group_by: [periode]
+  metrics:
+    - name: saldo_bersih
+      expr: "SUM(saldo_bersih)"
+  order_by:
+    - column: periode
+      ascending: true
+  row_limit: 10000
+encoding:
+  x: { field: periode, type: temporal }
+  y: { field: saldo_bersih, type: quantitative }
+presentation:
+  show_data_labels: false
+  legend: false
+assets:
+  png_url: "./sample/tren_saldo_bersih_bulanan_f2k1.png"

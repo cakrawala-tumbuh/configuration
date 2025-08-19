@@ -1,0 +1,22 @@
+technical_name: pivot_saldo_bersih_akun_periode_v8q2
+title: "Pivot Saldo Bersih: Akun x Periode"
+description: >
+  Tabel pivot saldo bersih per akun per periode untuk analisis perbandingan.
+type:
+  kind: table
+  mv: mv_analisis_arus_kas
+dataset:
+  schema: public
+  table: mv_analisis_arus_kas
+query:
+  group_by: [account_name, periode]
+  metrics:
+    - { name: saldo_bersih, expr: "SUM(saldo_bersih)" }
+  pivot: periode
+  row_limit: 10000
+encoding:
+  columns: [account_name, saldo_bersih]
+presentation:
+  show_totals: true
+assets:
+  png_url: "./sample/pivot_saldo_bersih_akun_periode_v8q2.png"

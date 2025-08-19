@@ -1,0 +1,27 @@
+technical_name: top_akun_saldo_bersih_b3p9
+title: "Top Akun berdasarkan Saldo Bersih"
+description: >
+  Peringkat akun berdasarkan saldo_bersih pada periode terpilih (gunakan filter periode di dashboard).
+type:
+  kind: bar
+  mv: mv_analisis_arus_kas
+dataset:
+  schema: public
+  table: mv_analisis_arus_kas
+query:
+  group_by: [account_name]
+  metrics:
+    - { name: saldo_bersih, expr: "SUM(saldo_bersih)" }
+  order_by:
+    - column: saldo_bersih
+      ascending: false
+  row_limit: 25
+encoding:
+  x: { field: account_name, type: nominal }
+  y: { field: saldo_bersih, type: quantitative }
+  tooltip: [account_name, saldo_bersih]
+presentation:
+  show_data_labels: true
+  legend: false
+assets:
+  png_url: "./sample/top_akun_saldo_bersih_b3p9.png"
