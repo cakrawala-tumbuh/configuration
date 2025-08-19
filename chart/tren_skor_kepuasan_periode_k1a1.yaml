@@ -1,0 +1,28 @@
+technical_name: tren_skor_kepuasan_periode_k1a1
+title: "Tren Skor Kepuasan per Periode"
+description: >
+  Pergerakan rata-rata skor kepuasan karyawan dari waktu ke waktu.
+type:
+  kind: line
+  mv: mv_analisis_kepuasan_karyawan
+dataset:
+  schema: public
+  table: mv_analisis_kepuasan_karyawan
+query:
+  group_by: [periode]
+  metrics:
+    - { name: avg_skor, expr: "AVG(skor_kepuasan)" }
+    - { name: responden, expr: "SUM(responden_count)" }
+  order_by:
+    - column: periode
+      ascending: true
+  row_limit: 240
+encoding:
+  x: { field: periode, type: temporal }
+  y: { field: avg_skor, type: quantitative }
+presentation:
+  number_format: "0.0"
+  show_data_labels: false
+  legend: false
+assets:
+  png_url: "./sample/tren_skor_kepuasan_periode_k1a1.png"

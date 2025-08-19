@@ -1,0 +1,20 @@
+technical_name: kpi_skor_kepuasan_terkini_k6f6
+title: "KPI: Skor Kepuasan Terkini"
+description: >
+  Skor kepuasan rata-rata pada periode terbaru (terpengaruh filter).
+type:
+  kind: big_number
+  mv: mv_analisis_kepuasan_karyawan
+dataset:
+  schema: public
+  table: mv_analisis_kepuasan_karyawan
+query:
+  metrics:
+    - { name: avg_skor, expr: "AVG(skor_kepuasan)" }
+  row_limit: 1
+encoding:
+  value: { field: avg_skor, type: quantitative }
+presentation:
+  number_format: "0.0"
+assets:
+  png_url: "./sample/kpi_skor_kepuasan_terkini_k6f6.png"

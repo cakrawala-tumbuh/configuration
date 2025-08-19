@@ -1,0 +1,22 @@
+technical_name: distribusi_kategori_kepuasan_k4d4
+title: "Distribusi Kategori Kepuasan (Satisfied/Neutral/Unsatisfied)"
+description: >
+  Proporsi kategori kepuasan pada periode terpilih.
+type:
+  kind: pie
+  mv: mv_analisis_kepuasan_karyawan
+dataset:
+  schema: public
+  table: mv_analisis_kepuasan_karyawan
+query:
+  group_by: [kategori]
+  metrics:
+    - { name: jumlah, expr: "SUM(responden_count)" }
+  row_limit: 1000
+encoding:
+  theta: { field: jumlah, type: quantitative }
+  color: { field: kategori, type: nominal }
+presentation:
+  number_format: "0"
+assets:
+  png_url: "./sample/distribusi_kategori_kepuasan_k4d4.png"

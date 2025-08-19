@@ -1,0 +1,26 @@
+technical_name: nps_trend_periode_k5e5
+title: "Tren NPS per Periode"
+description: >
+  Pergerakan Net Promoter Score (NPS) dari waktu ke waktu.
+type:
+  kind: line
+  mv: mv_analisis_kepuasan_karyawan
+dataset:
+  schema: public
+  table: mv_analisis_kepuasan_karyawan
+query:
+  group_by: [periode]
+  metrics:
+    - { name: nps, expr: "AVG(nps)" }
+  order_by:
+    - column: periode
+      ascending: true
+  row_limit: 240
+encoding:
+  x: { field: periode, type: temporal }
+  y: { field: nps, type: quantitative }
+presentation:
+  number_format: "0.0"
+  show_data_labels: false
+assets:
+  png_url: "./sample/nps_trend_periode_k5e5.png"

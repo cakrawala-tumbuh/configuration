@@ -1,0 +1,29 @@
+technical_name: skor_rata_rata_per_departemen_k2b2
+title: "Skor Kepuasan Rata-rata per Departemen"
+description: >
+  Perbandingan rata-rata skor kepuasan antar departemen untuk periode terpilih.
+type:
+  kind: bar
+  mv: mv_analisis_kepuasan_karyawan
+dataset:
+  schema: public
+  table: mv_analisis_kepuasan_karyawan
+query:
+  group_by: [departemen]
+  metrics:
+    - { name: avg_skor, expr: "AVG(skor_kepuasan)" }
+    - { name: responden, expr: "SUM(responden_count)" }
+  order_by:
+    - column: avg_skor
+      ascending: false
+  row_limit: 100
+encoding:
+  x: { field: departemen, type: nominal }
+  y: { field: avg_skor, type: quantitative }
+  tooltip: [departemen, avg_skor, responden]
+presentation:
+  number_format: "0.0"
+  show_data_labels: true
+  legend: false
+assets:
+  png_url: "./sample/skor_rata_rata_per_departemen_k2b2.png"
