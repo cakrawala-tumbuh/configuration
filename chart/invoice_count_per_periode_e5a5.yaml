@@ -1,0 +1,26 @@
+technical_name: invoice_count_per_periode_e5a5
+title: "Jumlah Invoice per Periode"
+description: >
+  Total invoice yang diterbitkan per periode (bulanan).
+type:
+  kind: bar
+  mv: mv_analisis_biaya_per_siswa
+dataset:
+  schema: public
+  table: mv_analisis_biaya_per_siswa
+query:
+  group_by: [periode]
+  metrics:
+    - { name: invoice_count, expr: "SUM(invoice_count)" }
+  order_by:
+    - column: periode
+      ascending: true
+  row_limit: 120
+encoding:
+  x: { field: periode, type: temporal }
+  y: { field: invoice_count, type: quantitative }
+presentation:
+  show_data_labels: true
+  legend: false
+assets:
+  png_url: "./sample/invoice_count_per_periode_e5a5.png"

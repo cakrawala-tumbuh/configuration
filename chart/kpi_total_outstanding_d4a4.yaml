@@ -1,0 +1,20 @@
+technical_name: kpi_total_outstanding_d4a4
+title: "KPI: Total Outstanding"
+description: >
+  Total outstanding sesuai filter periode/kelas/siswa pada dashboard.
+type:
+  kind: big_number
+  mv: mv_analisis_biaya_per_siswa
+dataset:
+  schema: public
+  table: mv_analisis_biaya_per_siswa
+query:
+  metrics:
+    - { name: total_outstanding, expr: "SUM(outstanding)" }
+  row_limit: 1
+encoding:
+  value: { field: total_outstanding, type: quantitative }
+presentation:
+  number_format: "0,0"
+assets:
+  png_url: "./sample/kpi_total_outstanding_d4a4.png"

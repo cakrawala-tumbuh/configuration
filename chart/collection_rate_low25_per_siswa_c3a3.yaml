@@ -1,0 +1,31 @@
+technical_name: collection_rate_low25_per_siswa_c3a3
+title: "Collection Rate (%) per Siswa (25 Terendah)"
+description: >
+  25 siswa dengan collection rate terendah pada periode terpilih.
+type:
+  kind: bar
+  mv: mv_analisis_biaya_per_siswa
+dataset:
+  schema: public
+  table: mv_analisis_biaya_per_siswa
+query:
+  group_by: [siswa_name]
+  metrics:
+    - name: collection_rate
+      expr: "CASE WHEN SUM(total_tagihan)=0 THEN 0 ELSE 100.0*SUM(total_terbayar)/SUM(total_tagihan) END"
+    - { name: total_tagihan,  expr: "SUM(total_tagihan)" }
+    - { name: total_terbayar, expr: "SUM(total_terbayar)" }
+  order_by:
+    - column: collection_rate
+      ascending: true
+  row_limit: 25
+encoding:
+  x: { field: siswa_name, type: nominal }
+  y: { field: collection_rate, type: quantitative }
+  tooltip: [siswa_name, collection_rate, total_tagihan, total_terbayar]
+presentation:
+  number_format: "0.0'%'" 
+  show_data_labels: true
+  legend: false
+assets:
+  png_url: "./sample/collection_rate_low25_per_siswa_c3a3.png"

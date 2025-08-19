@@ -1,0 +1,27 @@
+technical_name: top25_siswa_outstanding_tinggi_b2a2
+title: "Top 25 Siswa dengan Outstanding Tertinggi"
+description: >
+  25 siswa dengan nilai outstanding tertinggi pada periode yang dipilih (gunakan filter periode di dashboard).
+type:
+  kind: bar
+  mv: mv_analisis_biaya_per_siswa
+dataset:
+  schema: public
+  table: mv_analisis_biaya_per_siswa
+query:
+  group_by: [siswa_name]
+  metrics:
+    - { name: outstanding, expr: "SUM(outstanding)" }
+  order_by:
+    - column: outstanding
+      ascending: false
+  row_limit: 25
+encoding:
+  x: { field: siswa_name, type: nominal }
+  y: { field: outstanding, type: quantitative }
+  tooltip: [siswa_name, outstanding]
+presentation:
+  show_data_labels: true
+  legend: false
+assets:
+  png_url: "./sample/top25_siswa_outstanding_tinggi_b2a2.png"

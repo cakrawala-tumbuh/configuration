@@ -1,0 +1,24 @@
+technical_name: pivot_biaya_siswa_periode_f6a6
+title: "Pivot: Tagihan/Terbayar/Outstanding per Siswa x Periode"
+description: >
+  Ringkasan nilai tagihan, terbayar, dan outstanding per siswa per periode untuk analisis kolektibilitas.
+type:
+  kind: table
+  mv: mv_analisis_biaya_per_siswa
+dataset:
+  schema: public
+  table: mv_analisis_biaya_per_siswa
+query:
+  group_by: [siswa_name, periode]
+  metrics:
+    - { name: total_tagihan,   expr: "SUM(total_tagihan)" }
+    - { name: total_terbayar,  expr: "SUM(total_terbayar)" }
+    - { name: outstanding,     expr: "SUM(outstanding)" }
+  pivot: periode
+  row_limit: 20000
+encoding:
+  columns: [siswa_name, total_tagihan, total_terbayar, outstanding]
+presentation:
+  show_totals: true
+assets:
+  png_url: "./sample/pivot_biaya_siswa_periode_f6a6.png"
