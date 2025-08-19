@@ -1,0 +1,28 @@
+technical_name: tren_funnel_psb_counts_periode_g1a1
+title: "Tren Funnel PSB: Pendaftar vs Accepted vs Enrolled"
+description: >
+  Pergerakan jumlah pendaftar, accepted, dan enrolled per periode (bulanan).
+type:
+  kind: line
+  mv: mv_analisis_funnel_psb
+dataset:
+  schema: public
+  table: mv_analisis_funnel_psb
+query:
+  group_by: [periode]
+  metrics:
+    - { name: pendaftar_count, expr: "SUM(pendaftar_count)" }
+    - { name: accepted_count,  expr: "SUM(accepted_count)" }
+    - { name: enrolled_count,  expr: "SUM(enrolled_count)" }
+  order_by:
+    - column: periode
+      ascending: true
+  row_limit: 240
+encoding:
+  x: { field: periode, type: temporal }
+  y: { field: value, type: quantitative }
+  color: { field: series, type: nominal }
+presentation:
+  legend: true
+assets:
+  png_url: "./sample/tren_funnel_psb_counts_periode_g1a1.png"

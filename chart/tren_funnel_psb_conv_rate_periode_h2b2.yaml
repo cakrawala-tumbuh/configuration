@@ -1,0 +1,28 @@
+technical_name: tren_funnel_psb_conv_rate_periode_h2b2
+title: "Tren Conversion Rate: Accepted% & Enrolled%"
+description: >
+  Pergerakan conversion rate accepted dan enrolled per periode (bulanan).
+type:
+  kind: line
+  mv: mv_analisis_funnel_psb
+dataset:
+  schema: public
+  table: mv_analisis_funnel_psb
+query:
+  group_by: [periode]
+  metrics:
+    - { name: conversion_rate_accepted,  expr: "AVG(conversion_rate_accepted)" }
+    - { name: conversion_rate_enrolled,  expr: "AVG(conversion_rate_enrolled)" }
+  order_by:
+    - column: periode
+      ascending: true
+  row_limit: 240
+encoding:
+  x: { field: periode, type: temporal }
+  y: { field: value, type: quantitative }
+  color: { field: series, type: nominal }
+presentation:
+  number_format: "0.0'%'" 
+  legend: true
+assets:
+  png_url: "./sample/tren_funnel_psb_conv_rate_periode_h2b2.png"

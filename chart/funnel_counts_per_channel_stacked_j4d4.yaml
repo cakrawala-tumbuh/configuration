@@ -1,0 +1,25 @@
+technical_name: funnel_counts_per_channel_stacked_j4d4
+title: "Funnel per Channel: Pendaftar / Accepted / Enrolled"
+description: >
+  Perbandingan jumlah pendaftar, accepted, dan enrolled per channel pada periode terpilih.
+type:
+  kind: stacked_bar
+  mv: mv_analisis_funnel_psb
+dataset:
+  schema: public
+  table: mv_analisis_funnel_psb
+query:
+  group_by: [channel]
+  metrics:
+    - { name: pendaftar_count, expr: "SUM(pendaftar_count)" }
+    - { name: accepted_count,  expr: "SUM(accepted_count)" }
+    - { name: enrolled_count,  expr: "SUM(enrolled_count)" }
+  row_limit: 1000
+encoding:
+  x: { field: channel, type: nominal }
+  y: { field: value, type: quantitative }
+  color: { field: series, type: nominal }
+presentation:
+  legend: true
+assets:
+  png_url: "./sample/funnel_counts_per_channel_stacked_j4d4.png"

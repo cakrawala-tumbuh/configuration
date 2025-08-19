@@ -1,0 +1,23 @@
+technical_name: heatmap_conv_rate_enrolled_channel_periode_k5e5
+title: "Heatmap: Enrolled% per Channel x Periode"
+description: >
+  Peta panas conversion rate enrolled per channel per periode.
+type:
+  kind: heatmap
+  mv: mv_analisis_funnel_psb
+dataset:
+  schema: public
+  table: mv_analisis_funnel_psb
+query:
+  group_by: [channel, periode]
+  metrics:
+    - { name: conversion_rate_enrolled, expr: "AVG(conversion_rate_enrolled)" }
+  row_limit: 20000
+encoding:
+  x: { field: periode, type: temporal }
+  y: { field: channel, type: nominal }
+  color: { field: conversion_rate_enrolled, type: quantitative }
+presentation:
+  number_format: "0.0'%'" 
+assets:
+  png_url: "./sample/heatmap_conv_rate_enrolled_channel_periode_k5e5.png"

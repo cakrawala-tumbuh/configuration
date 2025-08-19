@@ -1,0 +1,20 @@
+technical_name: kpi_overall_enrolled_conversion_l6f6
+title: "KPI: Overall Enrolled Conversion Rate"
+description: >
+  Rata-rata conversion rate enrolled (terpengaruh filter periode/channel).
+type:
+  kind: big_number
+  mv: mv_analisis_funnel_psb
+dataset:
+  schema: public
+  table: mv_analisis_funnel_psb
+query:
+  metrics:
+    - { name: conversion_rate_enrolled, expr: "AVG(conversion_rate_enrolled)" }
+  row_limit: 1
+encoding:
+  value: { field: conversion_rate_enrolled, type: quantitative }
+presentation:
+  number_format: "0.0'%'" 
+assets:
+  png_url: "./sample/kpi_overall_enrolled_conversion_l6f6.png"

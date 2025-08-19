@@ -1,0 +1,27 @@
+technical_name: pendaftar_per_channel_top15_i3c3
+title: "Pendaftar per Channel (Top 15)"
+description: >
+  Kanal akuisisi dengan jumlah pendaftar terbanyak pada periode terpilih.
+type:
+  kind: bar
+  mv: mv_analisis_funnel_psb
+dataset:
+  schema: public
+  table: mv_analisis_funnel_psb
+query:
+  group_by: [channel]
+  metrics:
+    - { name: pendaftar_count, expr: "SUM(pendaftar_count)" }
+  order_by:
+    - column: pendaftar_count
+      ascending: false
+  row_limit: 15
+encoding:
+  x: { field: channel, type: nominal }
+  y: { field: pendaftar_count, type: quantitative }
+  tooltip: [channel, pendaftar_count]
+presentation:
+  show_data_labels: true
+  legend: false
+assets:
+  png_url: "./sample/pendaftar_per_channel_top15_i3c3.png"
