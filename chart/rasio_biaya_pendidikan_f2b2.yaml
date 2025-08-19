@@ -1,0 +1,22 @@
+technical_name: rasio_biaya_pendidikan_f2b2
+title: "Rasio Biaya Pendidikan terhadap Total Biaya"
+description: >
+  Persentase biaya pendidikan dibandingkan dengan total biaya operasional sekolah.
+type:
+  kind: pie
+  mv: mv_analisis_keuangan_sekolah
+dataset:
+  schema: public
+  table: mv_analisis_keuangan_sekolah
+query:
+  group_by: [jenis_biaya]
+  metrics:
+    - { name: total_biaya, expr: "SUM(nilai)" }
+  row_limit: 1000
+encoding:
+  theta: { field: total_biaya, type: quantitative }
+  color: { field: jenis_biaya, type: nominal }
+presentation:
+  number_format: "0.0a"
+assets:
+  png_url: "./sample/rasio_biaya_pendidikan_f2b2.png"

@@ -1,0 +1,29 @@
+technical_name: arus_kas_periode_f1a1
+title: "Tren Arus Kas per Periode"
+description: >
+  Pergerakan arus kas masuk dan keluar sekolah dari waktu ke waktu.
+type:
+  kind: line
+  mv: mv_analisis_keuangan_sekolah
+dataset:
+  schema: public
+  table: mv_analisis_keuangan_sekolah
+query:
+  group_by: [periode]
+  metrics:
+    - { name: kas_masuk, expr: "SUM(kas_masuk)" }
+    - { name: kas_keluar, expr: "SUM(kas_keluar)" }
+  order_by:
+    - column: periode
+      ascending: true
+  row_limit: 240
+encoding:
+  x: { field: periode, type: temporal }
+  y: 
+    - { field: kas_masuk, type: quantitative }
+    - { field: kas_keluar, type: quantitative }
+presentation:
+  number_format: "0.0a"
+  show_data_labels: false
+assets:
+  png_url: "./sample/arus_kas_periode_f1a1.png"

@@ -1,0 +1,28 @@
+technical_name: trend_pendapatan_vs_biaya_f4d4
+title: "Tren Pendapatan vs Biaya"
+description: >
+  Perbandingan tren pendapatan dan total biaya operasional sekolah dari waktu ke waktu.
+type:
+  kind: area
+  mv: mv_analisis_keuangan_sekolah
+dataset:
+  schema: public
+  table: mv_analisis_keuangan_sekolah
+query:
+  group_by: [periode]
+  metrics:
+    - { name: pendapatan, expr: "SUM(pendapatan)" }
+    - { name: total_biaya, expr: "SUM(total_biaya)" }
+  order_by:
+    - column: periode
+      ascending: true
+  row_limit: 240
+encoding:
+  x: { field: periode, type: temporal }
+  y: 
+    - { field: pendapatan, type: quantitative }
+    - { field: total_biaya, type: quantitative }
+presentation:
+  number_format: "0.0a"
+assets:
+  png_url: "./sample/trend_pendapatan_vs_biaya_f4d4.png"

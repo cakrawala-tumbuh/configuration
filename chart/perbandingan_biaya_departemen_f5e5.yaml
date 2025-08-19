@@ -1,0 +1,25 @@
+technical_name: perbandingan_biaya_departemen_f5e5
+title: "Perbandingan Biaya per Departemen"
+description: >
+  Besaran biaya operasional pada masing-masing departemen.
+type:
+  kind: bar
+  mv: mv_analisis_keuangan_sekolah
+dataset:
+  schema: public
+  table: mv_analisis_keuangan_sekolah
+query:
+  group_by: [departemen]
+  metrics:
+    - { name: total_biaya, expr: "SUM(nilai)" }
+  order_by:
+    - column: total_biaya
+      ascending: false
+  row_limit: 100
+encoding:
+  x: { field: departemen, type: nominal }
+  y: { field: total_biaya, type: quantitative }
+presentation:
+  number_format: "0.0a"
+assets:
+  png_url: "./sample/perbandingan_biaya_departemen_f5e5.png"

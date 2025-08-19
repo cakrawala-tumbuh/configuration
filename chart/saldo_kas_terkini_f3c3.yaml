@@ -1,0 +1,20 @@
+technical_name: saldo_kas_terkini_f3c3
+title: "KPI: Saldo Kas Terkini"
+description: >
+  Nilai saldo kas terbaru dari laporan keuangan sekolah.
+type:
+  kind: big_number
+  mv: mv_analisis_keuangan_sekolah
+dataset:
+  schema: public
+  table: mv_analisis_keuangan_sekolah
+query:
+  metrics:
+    - { name: saldo, expr: "SUM(saldo_kas)" }
+  row_limit: 1
+encoding:
+  value: { field: saldo, type: quantitative }
+presentation:
+  number_format: "0.0a"
+assets:
+  png_url: "./sample/saldo_kas_terkini_f3c3.png"
