@@ -1,0 +1,20 @@
+technical_name: kpi_rata_rata_skor_total_g6f6
+title: "KPI: Rata-rata Skor Kinerja Total"
+description: >
+  Satu angka besar yang menunjukkan rata-rata skor kinerja total (terpengaruh filter).
+type:
+  kind: big_number
+  mv: mv_analisis_kinerja_guru
+dataset:
+  schema: public
+  table: mv_analisis_kinerja_guru
+query:
+  metrics:
+    - { name: skor_total, expr: "AVG(skor_total)" }  # jika tidak ada, gunakan (AVG(skor_observasi)+AVG(skor_evaluasi_siswa))/2
+  row_limit: 1
+encoding:
+  value: { field: skor_total, type: quantitative }
+presentation:
+  number_format: "0.0"
+assets:
+  png_url: "./sample/kpi_rata_rata_skor_total_g6f6.png"

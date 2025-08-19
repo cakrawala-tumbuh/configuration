@@ -1,0 +1,28 @@
+technical_name: jam_mengajar_per_guru_g4d4
+title: "Jam Mengajar per Guru"
+description: >
+  Total jam mengajar per guru pada periode terpilih.
+type:
+  kind: bar
+  mv: mv_analisis_kinerja_guru
+dataset:
+  schema: public
+  table: mv_analisis_kinerja_guru
+query:
+  group_by: [nama_guru]
+  metrics:
+    - { name: jam_mengajar, expr: "SUM(jam_mengajar)" }
+  order_by:
+    - column: jam_mengajar
+      ascending: false
+  row_limit: 50
+encoding:
+  x: { field: nama_guru, type: nominal }
+  y: { field: jam_mengajar, type: quantitative }
+  tooltip: [nama_guru, jam_mengajar]
+presentation:
+  number_format: "0"
+  show_data_labels: true
+  legend: false
+assets:
+  png_url: "./sample/jam_mengajar_per_guru_g4d4.png"

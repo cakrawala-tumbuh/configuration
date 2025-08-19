@@ -1,0 +1,23 @@
+technical_name: heatmap_skor_guru_periode_g3c3
+title: "Heatmap: Skor Kinerja per Guru x Periode"
+description: >
+  Peta panas skor evaluasi siswa per guru per periode.
+type:
+  kind: heatmap
+  mv: mv_analisis_kinerja_guru
+dataset:
+  schema: public
+  table: mv_analisis_kinerja_guru
+query:
+  group_by: [nama_guru, periode]
+  metrics:
+    - { name: avg_skor_evaluasi, expr: "AVG(skor_evaluasi_siswa)" }
+  row_limit: 20000
+encoding:
+  x: { field: periode, type: temporal }
+  y: { field: nama_guru, type: nominal }
+  color: { field: avg_skor_evaluasi, type: quantitative }
+presentation:
+  number_format: "0.0"
+assets:
+  png_url: "./sample/heatmap_skor_guru_periode_g3c3.png"

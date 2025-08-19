@@ -1,0 +1,28 @@
+technical_name: skor_total_per_guru_g2b2
+title: "Skor Kinerja Total per Guru"
+description: >
+  Rata-rata skor kinerja total per guru pada periode terpilih.
+type:
+  kind: bar
+  mv: mv_analisis_kinerja_guru
+dataset:
+  schema: public
+  table: mv_analisis_kinerja_guru
+query:
+  group_by: [nama_guru]
+  metrics:
+    - { name: skor_total, expr: "AVG(skor_total)" }  # jika tidak ada kolom skor_total, ganti dengan (AVG(skor_observasi)+AVG(skor_evaluasi_siswa))/2
+  order_by:
+    - column: skor_total
+      ascending: false
+  row_limit: 50
+encoding:
+  x: { field: nama_guru, type: nominal }
+  y: { field: skor_total, type: quantitative }
+  tooltip: [nama_guru, skor_total]
+presentation:
+  number_format: "0.0"
+  show_data_labels: true
+  legend: false
+assets:
+  png_url: "./sample/skor_total_per_guru_g2b2.png"

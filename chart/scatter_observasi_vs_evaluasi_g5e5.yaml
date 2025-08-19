@@ -1,0 +1,24 @@
+technical_name: scatter_observasi_vs_evaluasi_g5e5
+title: "Scatter: Observasi vs Evaluasi Siswa per Guru"
+description: >
+  Hubungan antara skor observasi (oleh pengawas) dan skor evaluasi siswa per guru.
+type:
+  kind: scatter
+  mv: mv_analisis_kinerja_guru
+dataset:
+  schema: public
+  table: mv_analisis_kinerja_guru
+query:
+  group_by: [nama_guru]
+  metrics:
+    - { name: skor_observasi,       expr: "AVG(skor_observasi)" }
+    - { name: skor_evaluasi_siswa,  expr: "AVG(skor_evaluasi_siswa)" }
+  row_limit: 1000
+encoding:
+  x: { field: skor_observasi, type: quantitative }
+  y: { field: skor_evaluasi_siswa, type: quantitative }
+  series: { field: nama_guru, type: nominal }   # optional: untuk tooltip/legend
+presentation:
+  number_format: "0.0"
+assets:
+  png_url: "./sample/scatter_observasi_vs_evaluasi_g5e5.png"

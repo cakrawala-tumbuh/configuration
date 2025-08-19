@@ -1,0 +1,26 @@
+technical_name: tren_skor_evaluasi_periode_g1a1
+title: "Tren Skor Evaluasi Siswa per Periode"
+description: >
+  Pergerakan rata-rata skor evaluasi siswa terhadap guru dari waktu ke waktu.
+type:
+  kind: line
+  mv: mv_analisis_kinerja_guru
+dataset:
+  schema: public
+  table: mv_analisis_kinerja_guru
+query:
+  group_by: [periode]
+  metrics:
+    - { name: avg_skor_evaluasi, expr: "AVG(skor_evaluasi_siswa)" }
+  order_by:
+    - column: periode
+      ascending: true
+  row_limit: 240
+encoding:
+  x: { field: periode, type: temporal }
+  y: { field: avg_skor_evaluasi, type: quantitative }
+presentation:
+  number_format: "0.0"
+  show_data_labels: false
+assets:
+  png_url: "./sample/tren_skor_evaluasi_periode_g1a1.png"
