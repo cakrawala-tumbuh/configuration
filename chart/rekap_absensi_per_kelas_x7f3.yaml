@@ -1,0 +1,54 @@
+# Superset Chart Definition
+# Technical name doubles as filename (keep it short, single underscores, with a short suffix for uniqueness)
+technical_name: rekap_absensi_per_kelas_x7f3
+title: "Rekap Absensi per Kelas"
+description: >
+  Menampilkan tingkat kehadiran (%) per kelas pada periode terpilih. Gunakan untuk
+  membandingkan kelas dengan kehadiran rendah agar intervensi dapat diprioritaskan.
+type:
+  kind: bar
+  mv: mv_absensi_siswa
+dataset:
+  database: cantum_project_db
+  schema: public
+  table: mv_absensi_siswa
+query:
+  time_column: tanggal
+  time_range: "No filter"
+  group_by:
+    - kelas
+  metrics:
+    - name: total_hadir
+      expr: "SUM(jumlah_hadir)"
+    - name: total_siswa
+      expr: "SUM(total_siswa)"
+    - name: rate_hadir
+      expr: "CASE WHEN SUM(total_siswa) = 0 THEN 0 ELSE 100.0*SUM(jumlah_hadir)/SUM(total_siswa) END"
+  filters: []
+  order_by:
+    - column: rate_hadir
+      ascending: false
+  row_limit: 5000
+encoding:
+  x:
+    field: kelas
+    type: nominal
+  y:
+    field: rate_hadir
+    type: quantitative
+    aggregate: none
+  tooltip:
+    - kelas
+    - rate_hadir
+    - total_hadir
+    - total_siswa
+  axis:
+    y:
+      format: ".0f%"
+presentation:
+  number_format: "0%"
+  show_data_labels: true
+  legend: false
+assets:
+  # Relative path from this YAML file to the PNG preview
+  png_url: "./rekap_absensi_per_kelas_x7f3.png"
