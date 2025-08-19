@@ -1,0 +1,23 @@
+technical_name: heatmap_kehadiran_karyawan_periode_v7e5
+title: "Heatmap Kehadiran per Karyawan x Periode"
+description: >
+  Peta panas persentase kehadiran per karyawan per periode.
+type:
+  kind: heatmap
+  mv: mv_analisis_absensi_karyawan
+dataset:
+  schema: public
+  table: mv_analisis_absensi_karyawan
+query:
+  group_by: [nama_karyawan, periode]
+  metrics:
+    - { name: persen_hadir, expr: "AVG(persen_hadir)" }
+  row_limit: 20000
+encoding:
+  x: { field: periode, type: temporal }
+  y: { field: nama_karyawan, type: nominal }
+  color: { field: persen_hadir, type: quantitative }
+presentation:
+  number_format: "0'%'" 
+assets:
+  png_url: "./sample/heatmap_kehadiran_karyawan_periode_v7e5.png"

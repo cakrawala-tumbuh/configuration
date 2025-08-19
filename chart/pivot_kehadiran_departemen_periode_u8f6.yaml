@@ -1,0 +1,22 @@
+technical_name: pivot_kehadiran_departemen_periode_u8f6
+title: "Pivot Kehadiran: Departemen x Periode"
+description: >
+  Ringkasan rata-rata persentase kehadiran per departemen per periode.
+type:
+  kind: table
+  mv: mv_analisis_absensi_karyawan
+dataset:
+  schema: public
+  table: mv_analisis_absensi_karyawan
+query:
+  group_by: [departemen, periode]
+  metrics:
+    - { name: persen_hadir, expr: "AVG(persen_hadir)" }
+  pivot: periode
+  row_limit: 10000
+encoding:
+  columns: [departemen, persen_hadir]
+presentation:
+  show_totals: true
+assets:
+  png_url: "./sample/pivot_kehadiran_departemen_periode_u8f6.png"

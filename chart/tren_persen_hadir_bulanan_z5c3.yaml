@@ -1,0 +1,27 @@
+technical_name: tren_persen_hadir_bulanan_z5c3
+title: "Tren Persentase Kehadiran Bulanan"
+description: >
+  Pergerakan persentase kehadiran rata-rata seluruh karyawan per bulan.
+type:
+  kind: line
+  mv: mv_analisis_absensi_karyawan
+dataset:
+  schema: public
+  table: mv_analisis_absensi_karyawan
+query:
+  group_by: [periode]
+  metrics:
+    - { name: persen_hadir, expr: "AVG(persen_hadir)" }
+  order_by:
+    - column: periode
+      ascending: true
+  row_limit: 120
+encoding:
+  x: { field: periode, type: temporal }
+  y: { field: persen_hadir, type: quantitative }
+presentation:
+  number_format: "0'%'" 
+  show_data_labels: false
+  legend: false
+assets:
+  png_url: "./sample/tren_persen_hadir_bulanan_z5c3.png"

@@ -1,0 +1,28 @@
+technical_name: persen_hadir_per_jabatan_y4b2
+title: "Persentase Kehadiran per Jabatan"
+description: >
+  Rata-rata persentase kehadiran karyawan per jabatan pada periode terpilih.
+type:
+  kind: bar
+  mv: mv_analisis_absensi_karyawan
+dataset:
+  schema: public
+  table: mv_analisis_absensi_karyawan
+query:
+  group_by: [jabatan]
+  metrics:
+    - { name: persen_hadir, expr: "AVG(persen_hadir)" }
+  order_by:
+    - column: persen_hadir
+      ascending: false
+  row_limit: 50
+encoding:
+  x: { field: jabatan, type: nominal }
+  y: { field: persen_hadir, type: quantitative }
+  tooltip: [jabatan, persen_hadir]
+presentation:
+  number_format: "0'%'" 
+  show_data_labels: true
+  legend: false
+assets:
+  png_url: "./sample/persen_hadir_per_jabatan_y4b2.png"

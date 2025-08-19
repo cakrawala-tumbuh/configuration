@@ -1,0 +1,26 @@
+technical_name: distribusi_status_absensi_periode_w6d4
+title: "Distribusi Status Absensi per Periode"
+description: >
+  Distribusi jumlah Hadir, Izin, Sakit, dan Alpha per periode.
+type:
+  kind: stacked_bar
+  mv: mv_analisis_absensi_karyawan
+dataset:
+  schema: public
+  table: mv_analisis_absensi_karyawan
+query:
+  group_by: [periode]
+  metrics:
+    - { name: hadir,  expr: "SUM(jumlah_hadir)" }
+    - { name: izin,   expr: "SUM(jumlah_izin)" }
+    - { name: sakit,  expr: "SUM(jumlah_sakit)" }
+    - { name: alpha,  expr: "SUM(jumlah_alpha)" }
+  row_limit: 5000
+encoding:
+  x: { field: periode, type: temporal }
+  y: { field: value, type: quantitative }
+  color: { field: series, type: nominal }
+presentation:
+  legend: true
+assets:
+  png_url: "./sample/distribusi_status_absensi_periode_w6d4.png"
