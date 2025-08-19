@@ -1,0 +1,17 @@
+technical_name: kpi_rata_rata_nilai_m5e5
+title: "KPI: Nilai Rata-rata Seluruh Siswa"
+description: >
+  Menampilkan nilai rata-rata keseluruhan siswa (1 angka besar).
+type:
+  kind: big_number
+  mv: mv_analisis_hasil_belajar
+dataset:
+  schema: public
+  table: mv_analisis_hasil_belajar
+query:
+  metrics:
+    - { name: avg_nilai, expr: "AVG(nilai)" }
+encoding:
+  value: { field: avg_nilai, type: quantitative }
+assets:
+  png_url: "./sample/kpi_rata_rata_nilai_m5e5.png"

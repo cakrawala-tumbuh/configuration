@@ -1,0 +1,19 @@
+technical_name: distribusi_nilai_histogram_m2b2
+title: "Distribusi Nilai (Histogram)"
+description: >
+  Menampilkan distribusi frekuensi nilai siswa.
+type:
+  kind: histogram
+  mv: mv_analisis_hasil_belajar
+dataset:
+  schema: public
+  table: mv_analisis_hasil_belajar
+query:
+  metrics:
+    - { name: nilai, expr: "nilai" }
+  row_limit: 100000
+encoding:
+  x: { field: nilai, type: quantitative, bin: true }
+  y: { aggregate: count, type: quantitative }
+assets:
+  png_url: "./sample/distribusi_nilai_histogram_m2b2.png"

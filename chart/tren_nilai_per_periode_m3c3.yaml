@@ -1,0 +1,22 @@
+technical_name: tren_nilai_per_periode_m3c3
+title: "Tren Nilai Rata-rata per Periode"
+description: >
+  Menampilkan perkembangan nilai rata-rata siswa dari waktu ke waktu.
+type:
+  kind: line
+  mv: mv_analisis_hasil_belajar
+dataset:
+  schema: public
+  table: mv_analisis_hasil_belajar
+query:
+  group_by: [periode]
+  metrics:
+    - { name: avg_nilai, expr: "AVG(nilai)" }
+  order_by:
+    - column: periode
+      ascending: true
+encoding:
+  x: { field: periode, type: temporal }
+  y: { field: avg_nilai, type: quantitative }
+assets:
+  png_url: "./sample/tren_nilai_per_periode_m3c3.png"

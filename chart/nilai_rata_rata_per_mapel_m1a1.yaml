@@ -1,0 +1,22 @@
+technical_name: nilai_rata_rata_per_mapel_m1a1
+title: "Nilai Rata-rata per Mata Pelajaran"
+description: >
+  Menampilkan rata-rata nilai per mata pelajaran untuk seluruh siswa.
+type:
+  kind: bar
+  mv: mv_analisis_hasil_belajar
+dataset:
+  schema: public
+  table: mv_analisis_hasil_belajar
+query:
+  group_by: [mapel]
+  metrics:
+    - { name: avg_nilai, expr: "AVG(nilai)" }
+  order_by:
+    - column: avg_nilai
+      ascending: false
+encoding:
+  x: { field: mapel, type: nominal }
+  y: { field: avg_nilai, type: quantitative }
+assets:
+  png_url: "./sample/nilai_rata_rata_per_mapel_m1a1.png"

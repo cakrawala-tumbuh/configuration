@@ -1,0 +1,23 @@
+technical_name: top10_siswa_nilai_tertinggi_m4d4
+title: "Top 10 Siswa dengan Nilai Tertinggi"
+description: >
+  Menampilkan daftar 10 siswa dengan nilai rata-rata tertinggi.
+type:
+  kind: bar
+  mv: mv_analisis_hasil_belajar
+dataset:
+  schema: public
+  table: mv_analisis_hasil_belajar
+query:
+  group_by: [siswa]
+  metrics:
+    - { name: avg_nilai, expr: "AVG(nilai)" }
+  order_by:
+    - column: avg_nilai
+      ascending: false
+  row_limit: 10
+encoding:
+  x: { field: siswa, type: nominal }
+  y: { field: avg_nilai, type: quantitative }
+assets:
+  png_url: "./sample/top10_siswa_nilai_tertinggi_m4d4.png"
