@@ -1,0 +1,25 @@
+technical_name: heatmap_kehadiran_hari_jam_h7c4
+title: "Heatmap Kehadiran per Hari & Jam"
+description: >
+  Sebaran hadir per tanggal dan jam pelajaran.
+type:
+  kind: heatmap
+  mv: mv_absensi_siswa
+dataset:
+  database: cantum_project_db
+  schema: public
+  table: mv_absensi_siswa
+query:
+  time_column: tanggal
+  time_range: "Last 14 days"
+  group_by: [tanggal, jam_pelajaran]
+  metrics:
+    - name: hadir
+      expr: "SUM(jumlah_hadir)"
+  row_limit: 20000
+encoding:
+  x: { field: tanggal, type: temporal }
+  y: { field: jam_pelajaran, type: ordinal }
+  color: { field: hadir, type: quantitative }
+assets:
+  png_url: "./sample/heatmap_kehadiran_hari_jam_h7c4.png"

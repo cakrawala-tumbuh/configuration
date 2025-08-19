@@ -1,0 +1,26 @@
+technical_name: pivot_kehadiran_per_kelas_bulan_q4v2
+title: "Pivot Kehadiran per Kelas & Bulan"
+description: >
+  Ringkasan hadir per kelas per bulan.
+type:
+  kind: table
+  mv: mv_absensi_siswa
+dataset:
+  database: cantum_project_db
+  schema: public
+  table: mv_absensi_siswa
+query:
+  time_column: tanggal
+  time_range: "No filter"
+  group_by: [kelas, bulan]
+  metrics:
+    - name: total_hadir
+      expr: "SUM(jumlah_hadir)"
+  pivot: bulan
+  row_limit: 10000
+encoding:
+  columns: [kelas, total_hadir]
+presentation:
+  show_totals: true
+assets:
+  png_url: "./sample/pivot_kehadiran_per_kelas_bulan_q4v2.png"

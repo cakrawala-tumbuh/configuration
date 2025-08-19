@@ -1,0 +1,28 @@
+technical_name: distribusi_status_per_kelas_s1k2
+title: "Distribusi Status Absensi per Kelas"
+description: >
+  Komposisi Hadir/Izin/Sakit/Alpha per kelas.
+type:
+  kind: stacked_bar
+  mv: mv_absensi_siswa
+dataset:
+  database: cantum_project_db
+  schema: public
+  table: mv_absensi_siswa
+query:
+  time_column: tanggal
+  time_range: "No filter"
+  group_by: [kelas, status]
+  metrics:
+    - name: jumlah
+      expr: "SUM(jumlah)"
+  pivot: status
+  row_limit: 5000
+encoding:
+  x: { field: kelas, type: nominal }
+  y: { field: jumlah, type: quantitative }
+  color: { field: status, type: nominal }
+presentation:
+  legend: true
+assets:
+  png_url: "./sample/distribusi_status_per_kelas_s1k2.png"

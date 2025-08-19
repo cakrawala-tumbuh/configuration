@@ -1,0 +1,30 @@
+technical_name: tren_kehadiran_harian_p9a1
+title: "Tren Kehadiran Harian"
+description: >
+  Tren total hadir harian.
+type:
+  kind: line
+  mv: mv_absensi_siswa
+dataset:
+  database: cantum_project_db
+  schema: public
+  table: mv_absensi_siswa
+query:
+  time_column: tanggal
+  time_range: "Last 90 days"
+  group_by: [tanggal]
+  metrics:
+    - name: total_hadir
+      expr: "SUM(jumlah_hadir)"
+  order_by:
+    - column: tanggal
+      ascending: true
+  row_limit: 10000
+encoding:
+  x: { field: tanggal, type: temporal }
+  y: { field: total_hadir, type: quantitative }
+presentation:
+  show_data_labels: false
+  legend: false
+assets:
+  png_url: "./sample/tren_kehadiran_harian_p9a1.png"

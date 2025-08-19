@@ -1,0 +1,24 @@
+technical_name: proporsi_status_absensi_z3b9
+title: "Proporsi Status Absensi"
+description: >
+  Proporsi Hadir/Izin/Sakit/Alpha.
+type:
+  kind: pie
+  mv: mv_absensi_siswa
+dataset:
+  database: cantum_project_db
+  schema: public
+  table: mv_absensi_siswa
+query:
+  time_column: tanggal
+  time_range: "Last 30 days"
+  group_by: [status]
+  metrics:
+    - name: jumlah
+      expr: "SUM(jumlah)"
+  row_limit: 1000
+encoding:
+  theta: { field: jumlah, type: quantitative }
+  color: { field: status, type: nominal }
+assets:
+  png_url: "./sample/proporsi_status_absensi_z3b9.png"
