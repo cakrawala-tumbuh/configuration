@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: karyawan
 fields:
@@ -5,53 +6,40 @@ fields:
   technical_name: id
   type: bigint
   pk: true
-  not_null: true
   unique: false
+  not_null: true
   default: generated always as identity
   comment: ID unik karyawan
 - name: Nama lengkap karyawan
   technical_name: nama_lengkap
   type: text
-  pk: false
   not_null: false
-  unique: false
-  comment: Nama lengkap karyawan
-- name: Nomor induk karyawan (jika ada)
-  technical_name: nik
-  type: text
-  pk: false
-  not_null: false
-  unique: false
-  comment: Nomor induk karyawan (jika ada)
 - name: Relasi ke Departemen
   technical_name: departemen_id
   type: bigint
-  pk: false
   not_null: false
-  unique: false
-  comment: Relasi ke Departemen
   fk:
     ref_table: departemen
-    ref_field: id
-- name: Relasi ke Jabatan/Posisi
-  technical_name: relasi_ke_jabatan_posisi
-  type: text
+    on_delete: NO ACTION
+    on_update: NO ACTION
+- name: Relasi ke Posisi
+  technical_name: posisi_id
+  type: bigint
+  not_null: false
   fk:
     ref_table: posisi
-    ref_field: id
-constraints:
-- name: fk_karyawan_departemen
-  expression: foreign key (departemen_id) references departemen(id)
-- name: fk_karyawan_posisi
-  expression: foreign key (posisi_id) references posisi(id)
+    on_delete: NO ACTION
+    on_update: NO ACTION
+- name: Tanggal masuk
+  technical_name: tanggal_masuk
+  type: date
+  not_null: false
+- name: Status karyawan
+  technical_name: status_karyawan
+  type: varchar(100)
+  not_null: false
+constraints: []
 indexes:
-- name: idx_karyawan_departemen_id
-  columns:
-  - departemen_id
-  unique: false
-- name: idx_karyawan_posisi_id
-  columns:
-  - posisi_id
-  unique: false
-comment: Data karyawan non-guru di lingkungan sekolah
-spec_version: '1.0'
+- columns: [departemen_id]
+- columns: [posisi_id]
+comment: Data master karyawan

@@ -14,12 +14,15 @@ fields:
   technical_name: nama
   type: text
   not_null: false
+- name: Jenis beasiswa
+  technical_name: jenis
+  type: varchar(100)
   pk: false
   unique: false
-  comment: Nama beasiswa
+  not_null: false
+  comment: Jenis beasiswa
 - name: Jumlah beasiswa
   technical_name: jumlah
-  not_null: false
   type: numeric(12,2)
   pk: false
   unique: false
@@ -31,7 +34,10 @@ fields:
   pk: false
   unique: false
   comment: Relasi ke siswa penerima beasiswa
-  fk: ''
+  fk:
+    ref_table: siswa
+    on_delete: NO ACTION
+    on_update: NO ACTION
 constraints: []
 indexes: []
 comment: ID unik beasiswa

@@ -14,31 +14,38 @@ fields:
   technical_name: nama_lengkap
   type: text
   not_null: false
-  pk: false
-  unique: false
-  comment: Nama lengkap calon siswa
 - name: Tanggal lahir calon siswa
   technical_name: tanggal_lahir
-  not_null: false
   type: date
   pk: false
+  not_null: false
   unique: false
   comment: Tanggal lahir calon siswa
-- name: 'Jenis kelamin calon siswa | Pilihan: Laki-laki, Perempuan'
-  not_null: false
+- name: Jenis kelamin
   technical_name: jenis_kelamin
   type: varchar(100)
   pk: false
   unique: false
-  comment: 'Jenis kelamin calon siswa | Pilihan: Laki-laki, Perempuan'
+  not_null: false
+  comment: 'Jenis kelamin | Pilihan: Laki-laki, Perempuan'
+- name: Alamat rumah calon siswa
+  technical_name: alamat
+  type: text
+  pk: false
+  unique: false
+  not_null: false
+  comment: Alamat rumah calon siswa
 - name: Relasi ke entitas Sekolah Asal
+  not_null: false
   technical_name: sekolah_asal_id
   type: bigint
   pk: false
   unique: false
-  not_null: false
   comment: Relasi ke entitas Sekolah Asal
-  fk: ''
+  fk:
+    ref_table: sekolah_asal
+    on_delete: NO ACTION
+    on_update: NO ACTION
 - name: Relasi ke entitas Kanal Promosi
   technical_name: kanal_promosi_id
   type: bigint
@@ -46,7 +53,10 @@ fields:
   unique: false
   not_null: false
   comment: Relasi ke entitas Kanal Promosi
-  fk: ''
+  fk:
+    ref_table: kanal_promosi
+    on_delete: NO ACTION
+    on_update: NO ACTION
 - name: Tahun ajaran pendaftaran
   technical_name: tahun_ajaran
   type: text

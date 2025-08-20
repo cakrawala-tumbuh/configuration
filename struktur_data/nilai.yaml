@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: nilai
 fields:
@@ -5,62 +6,45 @@ fields:
   technical_name: id
   type: bigint
   pk: true
-  not_null: true
   unique: false
+  not_null: true
   default: generated always as identity
   comment: ID unik nilai
-- name: Relasi ke entitas Siswa
+- name: Relasi ke siswa
   technical_name: siswa_id
   type: bigint
-  pk: false
   not_null: false
-  unique: false
-  comment: Relasi ke entitas Siswa
   fk:
     ref_table: siswa
-    ref_field: id
-- name: Relasi ke entitas Mata Pelajaran
+    on_delete: NO ACTION
+    on_update: NO ACTION
+- name: Relasi ke mata pelajaran
   technical_name: mata_pelajaran_id
   type: bigint
-  pk: false
   not_null: false
-  unique: false
-  comment: Relasi ke entitas Mata Pelajaran
   fk:
     ref_table: mata_pelajaran
-    ref_field: id
-- name: Relasi ke entitas Ujian
+    on_delete: NO ACTION
+    on_update: NO ACTION
+- name: Relasi ke ujian
   technical_name: ujian_id
   type: bigint
-  pk: false
   not_null: false
-  unique: false
-  comment: Relasi ke entitas Ujian
   fk:
     ref_table: ujian
-    ref_field: id
-- name: Nilai yang diperoleh siswa
-  technical_name: nilai_yang_diperoleh_siswa
+    on_delete: NO ACTION
+    on_update: NO ACTION
+- name: Nilai
+  technical_name: nilai
+  type: numeric(12,2)
+  not_null: false
+- name: Catatan
+  technical_name: catatan
   type: text
-constraints:
-- name: fk_nilai_siswa
-  expression: foreign key (siswa_id) references siswa(id)
-- name: fk_nilai_mata_pelajaran
-  expression: foreign key (mata_pelajaran_id) references mata_pelajaran(id)
-- name: fk_nilai_ujian
-  expression: foreign key (ujian_id) references ujian(id)
+  not_null: false
+constraints: []
 indexes:
-- name: idx_nilai_siswa_id
-  columns:
-  - siswa_id
-  unique: false
-- name: idx_nilai_mata_pelajaran_id
-  columns:
-  - mata_pelajaran_id
-  unique: false
-- name: idx_nilai_ujian_id
-  columns:
-  - ujian_id
-  unique: false
-comment: Data nilai siswa dari berbagai mata pelajaran dan ujian
-spec_version: '1.0'
+- columns: [siswa_id]
+- columns: [mata_pelajaran_id]
+- columns: [ujian_id]
+comment: Nilai ujian per siswa dan mata pelajaran

@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: journal_entry
 fields:
@@ -5,44 +6,35 @@ fields:
   technical_name: id
   type: bigint
   pk: true
-  not_null: true
   unique: false
+  not_null: true
   default: generated always as identity
   comment: ID unik jurnal
-- name: Tanggal pencatatan jurnal
+- name: Tanggal transaksi
   technical_name: tanggal
   type: date
-  pk: false
   not_null: false
-  unique: false
-  comment: Tanggal pencatatan jurnal
-- name: Relasi ke akun
+- name: Relasi ke akun (account)
   technical_name: akun_id
   type: bigint
-  pk: false
   not_null: false
-  unique: false
-  comment: Relasi ke akun
   fk:
-    ref_table: akun
-    ref_field: id
-- name: Jumlah debit
+    ref_table: account   # per entitas yang ada di repo kamu
+    on_delete: NO ACTION
+    on_update: NO ACTION
+- name: Debit
   technical_name: debit
   type: numeric(12,2)
-  pk: false
   not_null: false
-  unique: false
-  comment: Jumlah debit
-- name: Jumlah kredit
-  technical_name: jumlah_kredit
+- name: Kredit
+  technical_name: kredit
+  type: numeric(12,2)
+  not_null: false
+- name: Deskripsi
+  technical_name: deskripsi
   type: text
-constraints:
-- name: fk_journal_entry_akun
-  expression: foreign key (akun_id) references akun(id)
+  not_null: false
+constraints: []
 indexes:
-- name: idx_journal_entry_akun_id
-  columns:
-  - akun_id
-  unique: false
-comment: Pencatatan jurnal akuntansi
-spec_version: '1.0'
+- columns: [akun_id]
+comment: Jurnal akuntansi

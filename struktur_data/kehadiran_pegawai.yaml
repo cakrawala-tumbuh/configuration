@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: kehadiran_pegawai
 fields:
@@ -5,38 +6,27 @@ fields:
   technical_name: id
   type: bigint
   pk: true
+  unique: false
   not_null: true
-  unique: false
   default: generated always as identity
-  comment: ID unik kehadiran
-- name: Relasi ke entitas Guru/Karyawan
-  technical_name: karyawan_id
+  comment: ID unik kehadiran pegawai
+- name: Relasi ke karyawan (pegawai)
+  technical_name: pegawai_id
   type: bigint
-  pk: false
   not_null: false
-  unique: false
-  comment: Relasi ke entitas Guru/Karyawan
   fk:
     ref_table: karyawan
-    ref_field: id
-- name: Tanggal kehadiran
+    on_delete: NO ACTION
+    on_update: NO ACTION
+- name: Tanggal
   technical_name: tanggal
   type: date
-  pk: false
   not_null: false
-  unique: false
-  comment: Tanggal kehadiran
-- name: 'Status kehadiran | Pilihan: Hadir, Izin, Sakit, Alfa, Cuti'
+- name: Status
   technical_name: status
-  type: text
+  type: varchar(100)
   not_null: false
-constraints:
-- name: fk_kehadiran_pegawai_karyawan
-  expression: foreign key (pegawai_id) references karyawan(id)
+constraints: []
 indexes:
-- name: idx_kehadiran_pegawai_pegawai_id
-  columns:
-  - pegawai_id
-  unique: false
-comment: Catatan kehadiran guru dan karyawan
-spec_version: '1.0'
+- columns: [pegawai_id]
+comment: Catatan kehadiran pegawai

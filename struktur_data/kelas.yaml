@@ -14,15 +14,19 @@ fields:
   technical_name: nama_kelas
   type: text
   not_null: false
+- name: Tahun ajaran
+  technical_name: tahun_ajaran
+  type: text
   pk: false
   unique: false
-  comment: Nama kelas
-- name: Tingkat kelas (misalnya 1, 2, 3)
-  technical_name: tingkat
   not_null: false
-  type: int
+  comment: Tahun ajaran kelas
+- name: Tingkat
+  technical_name: tingkat
+  type: integer
   pk: false
   unique: false
+  not_null: false
   comment: Tingkat kelas (misalnya 1, 2, 3)
 - name: Relasi ke Guru yang menjadi wali kelas
   not_null: false
@@ -31,7 +35,10 @@ fields:
   pk: false
   unique: false
   comment: Relasi ke Guru yang menjadi wali kelas
-  fk: ''
+  fk:
+    ref_table: guru
+    on_delete: NO ACTION
+    on_update: NO ACTION
 constraints: []
 indexes: []
 comment: ID unik kelas

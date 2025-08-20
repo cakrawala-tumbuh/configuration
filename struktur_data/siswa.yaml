@@ -14,9 +14,6 @@ fields:
   technical_name: nama_lengkap
   type: text
   not_null: false
-  pk: false
-  unique: false
-  comment: Nama lengkap siswa
 - name: Tanggal lahir siswa
   technical_name: tanggal_lahir
   not_null: false
@@ -45,7 +42,10 @@ fields:
   unique: false
   not_null: false
   comment: Relasi ke entitas Orang Tua
-  fk: ''
+  fk:
+    ref_table: orang_tua
+    on_delete: NO ACTION
+    on_update: NO ACTION
 constraints: []
 indexes: []
 comment: ID unik siswa

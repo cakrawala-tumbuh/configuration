@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: payroll
 fields:
@@ -5,54 +6,37 @@ fields:
   technical_name: id
   type: bigint
   pk: true
-  not_null: true
   unique: false
+  not_null: true
   default: generated always as identity
   comment: ID unik payroll
-- name: Relasi ke entitas Guru/Karyawan
+- name: Relasi ke karyawan
   technical_name: karyawan_id
   type: bigint
-  pk: false
   not_null: false
-  unique: false
-  comment: Relasi ke entitas Guru/Karyawan
   fk:
     ref_table: karyawan
-    ref_field: id
+    on_delete: NO ACTION
+    on_update: NO ACTION
 - name: Periode penggajian
   technical_name: periode
   type: text
-  pk: false
   not_null: false
-  unique: false
-  comment: Periode penggajian
 - name: Gaji pokok
   technical_name: gaji_pokok
   type: numeric(12,2)
-  pk: false
   not_null: false
-  unique: false
-  comment: Gaji pokok
-- name: Total tunjangan
+- name: Tunjangan
   technical_name: tunjangan
   type: numeric(12,2)
-  pk: false
   not_null: false
-  unique: false
-  comment: Total tunjangan
-- name: Total potongan
+- name: Potongan
   technical_name: potongan
   type: numeric(12,2)
-  pk: false
   not_null: false
-  unique: false
-constraints:
-- name: fk_payroll_karyawan
-  expression: foreign key (pegawai_id) references karyawan(id)
+constraints: []
 indexes:
-- name: idx_payroll_pegawai_id
-  columns:
-  - pegawai_id
+- name: idx_payroll_karyawan_id
+  columns: [karyawan_id]
   unique: false
-comment: Data penggajian pegawai per periode
-spec_version: '1.0'
+comment: Penggajian karyawan

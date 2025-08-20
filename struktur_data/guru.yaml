@@ -14,25 +14,43 @@ fields:
   technical_name: nama_lengkap
   type: text
   not_null: false
-  pk: false
-  unique: false
-  comment: Nama lengkap guru
-- name: Nomor induk pegawai (jika ada)
-  technical_name: nip
-  not_null: false
-  type: text
-  pk: false
-  unique: false
-  comment: Nomor induk pegawai (jika ada)
-- name: 'Pendidikan terakhir guru | Pilihan: D3, S1, S2, S3'
-  not_null: false
-  technical_name: pendidikan_terakhir
+- name: NIK
+  technical_name: nik
   type: varchar(100)
   pk: false
   unique: false
-  comment: 'Pendidikan terakhir guru | Pilihan: D3, S1, S2, S3'
-- name: 'Status sertifikasi guru | Pilihan: Tersertifikasi, Belum Tersertifikasi'
-  technical_name: sertifikasi_guru
+  not_null: false
+  comment: Nomor Induk Kependudukan
+- name: NUPTK
+  technical_name: nuptk
+  type: varchar(100)
+  pk: false
+  unique: false
+  not_null: false
+  comment: Nomor Unik Pendidik dan Tenaga Kependidikan
+- name: Tanggal lahir
+  technical_name: tanggal_lahir
+  type: date
+  pk: false
+  unique: false
+  not_null: false
+  comment: Tanggal lahir guru
+- name: Jenis kelamin
+  technical_name: jenis_kelamin
+  type: varchar(100)
+  pk: false
+  unique: false
+  not_null: false
+  comment: 'Jenis kelamin | Pilihan: Laki-laki, Perempuan'
+- name: Alamat
+  technical_name: alamat
+  type: text
+  pk: false
+  unique: false
+  not_null: false
+  comment: Alamat guru
+- name: Status sertifikasi
+  technical_name: status_sertifikasi
   type: varchar(100)
   pk: false
   unique: false
@@ -45,7 +63,10 @@ fields:
   unique: false
   not_null: false
   comment: Relasi ke Departemen
-  fk: ''
+  fk:
+    ref_table: departemen
+    on_delete: NO ACTION
+    on_update: NO ACTION
 constraints: []
 indexes: []
 comment: ID unik guru

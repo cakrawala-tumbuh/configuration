@@ -1,42 +1,35 @@
+spec_version: '1.0'
 entity:
   technical_name: formulir_pendaftaran
 fields:
-- name: ID unik formulir
+- name: ID unik formulir pendaftaran
   technical_name: id
   type: bigint
   pk: true
-  not_null: true
   unique: false
+  not_null: true
   default: generated always as identity
-  comment: ID unik formulir
-- name: Relasi ke Pendaftar
+  comment: ID unik formulir pendaftaran
+- name: Relasi ke entitas Pendaftar
   technical_name: pendaftar_id
   type: bigint
   pk: false
-  not_null: false
   unique: false
-  comment: Relasi ke Pendaftar
+  not_null: false
+  comment: Relasi ke entitas Pendaftar
   fk:
     ref_table: pendaftar
-    ref_field: id
-- name: Tanggal formulir diisi
+    on_delete: NO ACTION
+    on_update: NO ACTION
+- name: Tanggal pengisian formulir
   technical_name: tanggal_pengisian
   type: date
-  pk: false
   not_null: false
-  unique: false
-  comment: Tanggal formulir diisi
-- name: 'Status formulir | Pilihan: Draft, Lengkap, Diverifikasi'
-  technical_name: status_formulir
-  type: text
+- name: Status formulir
+  technical_name: status
+  type: varchar(100)
   not_null: false
-constraints:
-- name: fk_formulir_pendaftaran_pendaftar
-  expression: foreign key (pendaftar_id) references pendaftar(id)
+constraints: []
 indexes:
-- name: idx_formulir_pendaftaran_pendaftar_id
-  columns:
-  - pendaftar_id
-  unique: false
-comment: Data formulir yang diisi oleh calon siswa saat melakukan pendaftaran
-spec_version: '1.0'
+- columns: [pendaftar_id]
+comment: Data formulir pendaftaran siswa

@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: absensi_siswa
 fields:
@@ -5,38 +6,35 @@ fields:
   technical_name: id
   type: bigint
   pk: true
-  not_null: true
   unique: false
+  not_null: true
   default: generated always as identity
-  comment: ID unik absensi
+  comment: ID unik absensi siswa
 - name: Relasi ke entitas Siswa
   technical_name: siswa_id
   type: bigint
   pk: false
-  not_null: false
   unique: false
+  not_null: false
   comment: Relasi ke entitas Siswa
   fk:
     ref_table: siswa
-    ref_field: id
+    on_delete: NO ACTION
+    on_update: NO ACTION
 - name: Tanggal absensi
   technical_name: tanggal
   type: date
   pk: false
-  not_null: false
   unique: false
-  comment: Tanggal absensi
-- name: 'Status kehadiran siswa | Pilihan: Hadir, Izin, Sakit, Alfa'
+  not_null: false
+- name: Status absensi
   technical_name: status
   type: text
-  not_null: false
-constraints:
-- name: fk_absensi_siswa_siswa
-  expression: foreign key (siswa_id) references siswa(id)
-indexes:
-- name: idx_absensi_siswa_siswa_id
-  columns:
-  - siswa_id
+  pk: false
   unique: false
+  not_null: false
+  comment: Status kehadiran (Hadir, Izin, Sakit, Alfa)
+constraints: []   # ← kosongkan, FK sudah di level field
+indexes:
+- columns: [siswa_id]
 comment: Catatan kehadiran siswa dalam kegiatan belajar mengajar
-spec_version: '1.0'

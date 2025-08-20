@@ -1,76 +1,54 @@
+spec_version: '1.0'
 entity:
   technical_name: jadwal_mengajar
 fields:
-- name: ID unik jadwal
+- name: ID unik jadwal mengajar
   technical_name: id
   type: bigint
   pk: true
-  not_null: true
   unique: false
+  not_null: true
   default: generated always as identity
-  comment: ID unik jadwal
-- name: Relasi ke entitas Guru
+  comment: ID unik jadwal mengajar
+- name: Relasi ke Guru
   technical_name: guru_id
   type: bigint
-  pk: false
   not_null: false
-  unique: false
-  comment: Relasi ke entitas Guru
   fk:
     ref_table: guru
-    ref_field: id
-- name: Relasi ke entitas Mata Pelajaran
+    on_delete: NO ACTION
+    on_update: NO ACTION
+- name: Relasi ke Mata Pelajaran
   technical_name: mata_pelajaran_id
   type: bigint
-  pk: false
   not_null: false
-  unique: false
-  comment: Relasi ke entitas Mata Pelajaran
   fk:
     ref_table: mata_pelajaran
-    ref_field: id
-- name: Relasi ke entitas Kelas
+    on_delete: NO ACTION
+    on_update: NO ACTION
+- name: Relasi ke Kelas
   technical_name: kelas_id
   type: bigint
-  pk: false
   not_null: false
-  unique: false
-  comment: Relasi ke entitas Kelas
   fk:
     ref_table: kelas
-    ref_field: id
-- name: 'Hari mengajar | Pilihan: Senin, Selasa, Rabu, Kamis, Jumat, Sabtu'
+    on_delete: NO ACTION
+    on_update: NO ACTION
+- name: Hari
   technical_name: hari
-  type: varchar(100)
-  pk: false
+  type: varchar(20)
   not_null: false
-  unique: false
-  comment: 'Hari mengajar | Pilihan: Senin, Selasa, Rabu, Kamis, Jumat, Sabtu'
-- name: Jam mulai pelajaran
+- name: Jam mulai
   technical_name: jam_mulai
   type: time
-  pk: false
   not_null: false
-  unique: false
-constraints:
-- name: fk_jadwal_mengajar_guru
-  expression: foreign key (guru_id) references guru(id)
-- name: fk_jadwal_mengajar_mata_pelajaran
-  expression: foreign key (mata_pelajaran_id) references mata_pelajaran(id)
-- name: fk_jadwal_mengajar_kelas
-  expression: foreign key (kelas_id) references kelas(id)
+- name: Jam selesai
+  technical_name: jam_selesai
+  type: time
+  not_null: false
+constraints: []
 indexes:
-- name: idx_jadwal_mengajar_guru_id
-  columns:
-  - guru_id
-  unique: false
-- name: idx_jadwal_mengajar_mata_pelajaran_id
-  columns:
-  - mata_pelajaran_id
-  unique: false
-- name: idx_jadwal_mengajar_kelas_id
-  columns:
-  - kelas_id
-  unique: false
-comment: Jadwal guru mengajar di kelas
-spec_version: '1.0'
+- columns: [guru_id]
+- columns: [mata_pelajaran_id]
+- columns: [kelas_id]
+comment: Jadwal mengajar per kelas dan mata pelajaran

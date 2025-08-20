@@ -1,48 +1,38 @@
+spec_version: '1.0'
 entity:
   technical_name: penilaian_kinerja
 fields:
-- name: ID unik penilaian
+- name: ID unik penilaian kinerja
   technical_name: id
   type: bigint
   pk: true
-  not_null: true
   unique: false
+  not_null: true
   default: generated always as identity
-  comment: ID unik penilaian
-- name: Relasi ke entitas Guru/Karyawan
+  comment: ID unik penilaian kinerja
+- name: Relasi ke karyawan
   technical_name: karyawan_id
   type: bigint
-  pk: false
   not_null: false
-  unique: false
-  comment: Relasi ke entitas Guru/Karyawan
   fk:
     ref_table: karyawan
-    ref_field: id
-- name: Periode penilaian (misal Semester 1/2025)
+    on_delete: NO ACTION
+    on_update: NO ACTION
+- name: Periode penilaian
   technical_name: periode
   type: text
-  pk: false
   not_null: false
-  unique: false
-  comment: Periode penilaian (misal Semester 1/2025)
-- name: Skor penilaian total
+- name: Skor penilaian
   technical_name: skor
-  type: numeric(12,2)
-  pk: false
+  type: integer
   not_null: false
-  unique: false
-  comment: Skor penilaian total
-- name: 'Kategori hasil penilaian | Pilihan: Sangat Baik, Baik, Cukup, Perlu Perbaikan'
-  technical_name: kategori_hasil_penilaian_pilihan_sangat_baik_baik_cukup_perlu_perbaikan
+- name: Catatan penilaian
+  technical_name: catatan
   type: text
-constraints:
-- name: fk_penilaian_kinerja_karyawan
-  expression: foreign key (pegawai_id) references karyawan(id)
+  not_null: false
+constraints: []
 indexes:
-- name: idx_penilaian_kinerja_pegawai_id
-  columns:
-  - pegawai_id
+- name: idx_penilaian_kinerja_karyawan_id
+  columns: [karyawan_id]
   unique: false
-comment: Rekam penilaian kinerja pegawai per periode
-spec_version: '1.0'
+comment: Penilaian kinerja karyawan per periode

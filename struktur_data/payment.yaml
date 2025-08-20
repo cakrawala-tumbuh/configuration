@@ -1,48 +1,36 @@
+spec_version: '1.0'
 entity:
   technical_name: payment
 fields:
-- name: ID unik pembayaran
+- name: ID unik payment
   technical_name: id
   type: bigint
   pk: true
-  not_null: true
   unique: false
+  not_null: true
   default: generated always as identity
-  comment: ID unik pembayaran
-- name: Relasi ke invoice terkait
+  comment: ID unik payment
+- name: Relasi ke invoice
   technical_name: invoice_id
   type: bigint
-  pk: false
   not_null: false
-  unique: false
-  comment: Relasi ke invoice terkait
   fk:
     ref_table: invoice
-    ref_field: id
+    on_delete: NO ACTION
+    on_update: NO ACTION
 - name: Tanggal pembayaran
   technical_name: tanggal
   type: date
-  pk: false
   not_null: false
-  unique: false
-  comment: Tanggal pembayaran
-- name: Jumlah yang dibayar
+- name: Jumlah pembayaran
   technical_name: jumlah
   type: numeric(12,2)
-  pk: false
   not_null: false
-  unique: false
-  comment: Jumlah yang dibayar
-- name: 'Metode pembayaran | Pilihan: Transfer Bank, Tunai, Virtual Account'
-  technical_name: metode_pembayaran_pilihan_transfer_bank_tunai_virtual_account
-  type: text
-constraints:
-- name: fk_payment_invoice
-  expression: foreign key (invoice_id) references invoice(id)
+- name: Metode pembayaran
+  technical_name: metode
+  type: varchar(100)
+  not_null: false
+constraints: []
 indexes:
-- name: idx_payment_invoice_id
-  columns:
-  - invoice_id
-  unique: false
-comment: Pencatatan pembayaran dari invoice
-spec_version: '1.0'
+- columns: [invoice_id]
+comment: Pembayaran atas invoice

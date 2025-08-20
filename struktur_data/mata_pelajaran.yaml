@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: mata_pelajaran
 fields:
@@ -5,38 +6,27 @@ fields:
   technical_name: id
   type: bigint
   pk: true
-  not_null: true
   unique: false
+  not_null: true
   default: generated always as identity
   comment: ID unik mata pelajaran
 - name: Nama mata pelajaran
-  technical_name: nama_mapel
+  technical_name: nama
   type: text
-  pk: false
   not_null: false
-  unique: false
-  comment: Nama mata pelajaran
-- name: Kode singkat mata pelajaran
-  technical_name: kode_mapel
-  type: text
-  pk: false
-  not_null: false
-  unique: false
-  comment: Kode singkat mata pelajaran
-- name: Relasi ke entitas Kurikulum
+- name: Relasi ke Kurikulum
   technical_name: kurikulum_id
-  type: text
+  type: bigint
   not_null: false
   fk:
     ref_table: kurikulum
-    ref_field: id
-constraints:
-- name: fk_mata_pelajaran_kurikulum
-  expression: foreign key (kurikulum_id) references kurikulum(id)
+    on_delete: NO ACTION
+    on_update: NO ACTION
+- name: Tingkat
+  technical_name: tingkat
+  type: integer
+  not_null: false
+constraints: []
 indexes:
-- name: idx_mata_pelajaran_kurikulum_id
-  columns:
-  - kurikulum_id
-  unique: false
-comment: Data mata pelajaran yang diajarkan di sekolah
-spec_version: '1.0'
+- columns: [kurikulum_id]
+comment: Data master mata pelajaran
