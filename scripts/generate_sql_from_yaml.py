@@ -1,492 +1,341 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""
+Generator SQL PostgreSQL dari YAML struktur_data yang mengikuti panduan_struktur_data.md.
+
+Skema YAML (ringkas):
+- spec_version: "1.x" (opsional)
+- entity:
+    name: "Guru"                         # Nama human readable
+    technical_name: "guru"               # snake_case; default dari nama file
+    schema: "public"                     # override schema (opsional)
+    comment: "..."                       # komentar tabel (opsional)
+- fields:                                # Wajib: list
+  - name: "Nama Lengkap"                 # label human
+    technical_name: "name"               # snake_case kolom; wajib
+    type: "text|uuid|integer|varchar|..."# wajib; 'serial' dilarang
+    length: 255                          # opsional untuk varchar/char
+    not_null: true|false                 # default false
+    unique: true|false                   # default false
+    pk: true|false                       # maks 1 kolom pk atau gunakan 'primary_key' root (opsional)
+    default: "..."                       # literal default
+    generated: "uuid_v4"                 # jika uuid otomatis
+    fk:                                  # opsional (untuk *_id disarankan)
+      ref_table: "siswa"                 # wajib untuk fk
+      ref_field: "id"                    # default "id"
+      on_delete: "cascade|restrict|set null|no action|set default"
+      on_update: "cascade|restrict|no action|set null|set default"
+      deferrable: "deferrable initially deferred|deferrable|not deferrable"
+    comment: "..."                       # komentar kolom
+- constraints:                           # opsional
+  - name: "ck_positive"
+    expression: "check (nilai >= 0)"
+- indexes:                               # opsional
+  - name: "idx_guru_name"
+    columns: ["name"]
+    unique: false
+    method: "btree"                      # btree/hash/gin/gist/brin
+    where: "..."                         # partial index
+"""
+
 import argparse
-import os
 import sys
+import os
 import glob
-import re
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 import yaml
 
-# ---------------------------------------------------------------------------
-# Utilities
-# ---------------------------------------------------------------------------
+ALLOWED_TYPES = {
+    "integer","bigint","smallint",
+    "uuid",
+    "text","varchar","char",
+    "date","timestamp","timestamptz","time","timetz",
+    "boolean",
+    "numeric","decimal","float","double","real",
+    "json","jsonb",
+}
 
-def to_bool(val: Any, default: bool = False) -> bool:
-    if isinstance(val, bool):
-        return val
-    if val is None:
-        return default
-    s = str(val).strip().lower()
-    return s in {"1", "true", "yes", "y", "on"}
+def snake(s: str) -> str:
+    return s
+
+def to_bool(v: Any, default: bool=False) -> bool:
+    if v is None: return default
+    if isinstance(v, bool): return v
+    s = str(v).strip().lower()
+    return s in {"1","true","yes","y","on"}
 
 def qident(name: str) -> str:
-    """
-    Quote identifier if needed; keep simple to avoid edge cases.
-    """
-    if re.fullmatch(r"[a-z_][a-z0-9_]*", name or ""):
+    # quote identifier if needed
+    if not name:
         return name
-    return '"' + name.replace('"', '""') + '"'
+    if not name.isidentifier() or any(c in name for c in ('-', ' ', '.')):
+        return f'"{name}"'
+    return name
 
 def qliteral(val: Any) -> str:
-    if val is None:
-        return "NULL"
-    if isinstance(val, (int, float)):
-        return str(val)
-    s = str(val)
-    return "'" + s.replace("'", "''") + "'"
+    if val is None: return "NULL"
+    if isinstance(val, bool): return "TRUE" if val else "FALSE"
+    if isinstance(val, (int, float)): return str(val)
+    s = str(val).replace("'", "''")
+    return f"'{s}'"
 
-def normalize_pg_type(col: Dict[str, Any], default_varchar_len: int) -> str:
-    """
-    Normalize YAML type declarations to PostgreSQL SQL types.
-    Supports:
-      - "varchar", optional "length"
-      - "text", "uuid", "int"/"integer", "bigint", "numeric", "boolean"/"bool",
-        "date", "timestamp", "timestamptz"
-      - enum:<name>  (handled as "enum::<name>" marker; actual CREATE TYPE generated elsewhere)
-      - json, jsonb
-    """
-    t = (col.get("type") or "").strip().lower()
-
-    if t.startswith("enum:"):
-        enum_name = t.split(":", 1)[1].strip()
-        return f"enum::{enum_name}"
-
-    if t in {"varchar", "character varying"}:
-        length = col.get("length")
-        if isinstance(length, int) and length > 0:
-            return f"varchar({length})"
-        return f"varchar({default_varchar_len})"
-    if t in {"text"}:
-        return "text"
-    if t in {"uuid"}:
-        return "uuid"
-    if t in {"int", "integer"}:
-        return "integer"
-    if t in {"bigint"}:
-        return "bigint"
-    if t in {"numeric", "decimal"}:
-        precision = col.get("precision")
-        scale = col.get("scale")
-        if isinstance(precision, int) and isinstance(scale, int):
-            return f"numeric({precision},{scale})"
-        return "numeric"
-    if t in {"boolean", "bool"}:
-        return "boolean"
-    if t in {"date"}:
-        return "date"
-    if t in {"timestamp"}:
-        return "timestamp"
-    if t in {"timestamptz", "timestamp with time zone"}:
-        return "timestamptz"
-    if t in {"jsonb"}:
-        return "jsonb"
-    if t in {"json"}:
-        return "json"
-
-    # fallback: return as-is
-    return t or f"varchar({default_varchar_len})"
-
-def parse_yaml_file(path: str) -> Dict[str, Any]:
+def load_yaml(path: str) -> Dict[str, Any]:
     with open(path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f) or {}
 
-def collect_yaml_files(root: str) -> List[str]:
-    files = []
-    for ext in ("*.yaml", "*.yml"):
-        files.extend(glob.glob(os.path.join(root, "**", ext), recursive=True))
-    return sorted(files)
+def detect_table_name(yaml_path: str, entity_block: Dict[str, Any]) -> str:
+    # technical_name > file stem
+    tech = (entity_block or {}).get("technical_name")
+    if isinstance(tech, str) and tech.strip():
+        return tech.strip()
+    return os.path.splitext(os.path.basename(yaml_path))[0]
 
-# ---------------------------------------------------------------------------
-# SQL generators
-# ---------------------------------------------------------------------------
+def uuid_default_function(extensions: List[str]) -> str:
+    # Pilih fungsi default UUID berdasar ekstensi
+    ext = [e.strip().lower() for e in (extensions or [])]
+    if "uuid-ossp" in ext:
+        return "uuid_generate_v4()"
+    # default ke pgcrypto jika ada
+    return "gen_random_uuid()"
 
-def gen_drop_stmt(object_type: str, fqname: str) -> str:
-    return f"DROP {object_type} IF EXISTS {fqname} CASCADE;"
-
-def gen_create_enum(enum_name: str, values: List[str], with_drop: bool, schema: str, owner: Optional[str]) -> str:
-    fqname = f"{qident(schema)}.{qident(enum_name)}"
-    stmts = []
-    if with_drop:
-        stmts.append(gen_drop_stmt("TYPE", fqname))
-    vals = ", ".join(qliteral(v) for v in values)
-    stmts.append(f"CREATE TYPE {fqname} AS ENUM ({vals});")
-    if owner:
-        stmts.append(f"ALTER TYPE {fqname} OWNER TO {qident(owner)};")
-    return "\n".join(stmts)
-
-def column_line(col: Dict[str, Any], default_varchar_len: int) -> Tuple[str, Optional[str]]:
-    """
-    Return (column_ddl, generated_constraint) where generated_constraint may be inline (None if not).
-    """
-    name = col.get("name")
+def render_column(col: Dict[str, Any], default_varchar_len: int, uuid_func: str) -> Dict[str, Any]:
+    name = col.get("technical_name") or col.get("name")
     if not name:
-        raise ValueError("Kolom tanpa 'name' terdeteksi.")
-    t = normalize_pg_type(col, default_varchar_len)
-    nullable = col.get("nullable", True)
-    default = col.get("default")
-    comment = col.get("comment")
+        raise ValueError("Field tanpa technical_name/name")
+    typ = (col.get("type") or "").lower()
+    if not typ:
+        raise ValueError(f"Field {name}: 'type' wajib diisi")
+    if typ == "serial":
+        raise ValueError(f"Field {name}: 'serial' tidak diperbolehkan")
+    if typ not in ALLOWED_TYPES:
+        # izinkan varchar(N)/char(N)
+        if typ.startswith("varchar") or typ.startswith("char"):
+            pass
+        else:
+            raise ValueError(f"Field {name}: tipe '{typ}' tidak dikenal")
 
-    line = f"{qident(name)} "
-
-    if t.startswith("enum::"):
-        # Refer to enum type in schema-qualified form later; placeholder type name will be replaced upstream.
-        enum_name = t.split("::", 1)[1]
-        line += f"{qident(enum_name)}"
+    pieces = []
+    # length handling
+    length = col.get("length")
+    if typ in {"varchar","char"}:
+        n = int(length) if length is not None else int(default_varchar_len)
+        type_sql = f"{typ}({n})"
     else:
-        line += t
+        type_sql = typ
 
-    if not nullable:
-        line += " NOT NULL"
+    pieces.append(f"{qident(name)} {type_sql}")
 
-    if default is not None:
-        # allow raw function default with marker :raw (e.g. {default: "now():raw"})
-        sdef = str(default)
-        if sdef.endswith(":raw"):
-            line += f" DEFAULT {sdef[:-4]}"
-        else:
-            line += f" DEFAULT {qliteral(default)}"
+    # generated uuid
+    gen = (col.get("generated") or "").lower()
+    if gen == "uuid_v4":
+        pieces.append(f"DEFAULT {uuid_func}")
 
-    return line, comment
+    # default literal
+    if col.get("default") is not None and not gen:
+        pieces.append(f"DEFAULT {qliteral(col['default'])}")
 
-def gen_table_sql(obj: Dict[str, Any], schema: str, owner: Optional[str], with_drop: bool,
-                  default_varchar_len: int, tablespace: Optional[str]) -> Tuple[str, List[str]]:
-    """
-    Returns (SQL, enum_decls_needed) for a table object.
-    Expected keys in obj:
-      - name (str)  -> table name
-      - schema (str, optional)
-      - columns (list of {name, type, ...})
-      - primary_key (list of column names) OR per-column primary_key: true
-      - uniques (list of list-of-cols OR list of names)
-      - indexes (list of {name?, columns, using?, unique?})
-      - checks (list of raw check expressions)
-      - references / foreign_keys: list of {columns, ref_table, ref_columns?, on_delete?, on_update?, deferrable?, initially_deferred?}
-      - comment (str)
-    """
-    enum_needed: List[str] = []
+    if to_bool(col.get("not_null")):
+        pieces.append("NOT NULL")
+    if to_bool(col.get("unique")):
+        pieces.append("UNIQUE")
 
-    # Resolve schema
-    sch = (obj.get("schema") or schema).strip()
-    tname = obj.get("name")
-    if not tname:
-        raise ValueError("Objek table tanpa 'name'.")
+    return {
+        "name": name,
+        "sql": " ".join(pieces),
+        "pk": to_bool(col.get("pk")),
+        "fk": col.get("fk"),
+        "comment": col.get("comment"),
+    }
 
-    fqname = f"{qident(sch)}.{qident(tname)}"
-    columns = obj.get("columns") or []
-    if not isinstance(columns, list) or not columns:
-        raise ValueError(f"Tabel {tname}: 'columns' kosong atau tidak valid.")
+def build_table_sql(doc: Dict[str, Any], yaml_path: str, schema: str, owner: Optional[str],
+                    default_varchar_len: int, tablespace: Optional[str], extensions: List[str]) -> List[str]:
+    entity = doc.get("entity") or {}
+    fields = doc.get("fields") or []
+    constraints = doc.get("constraints") or []
+    indexes = doc.get("indexes") or []
 
-    # Collect enum usage and build column lines
-    col_lines: List[str] = []
-    col_comments: List[Tuple[str, str]] = []
-    for c in columns:
-        line, comment = column_line(c, default_varchar_len)
-        # If enum::<name> appears, ensure we record it and replace with schema-qualified name:
-        if "enum::" in line:
-            m = re.search(r"enum::([a-zA-Z0-9_]+)", line)
-            if m:
-                enum_name = m.group(1)
-                enum_needed.append(enum_name)
-                # Replace placeholder with schema-qualified enum
-                line = line.replace(f"enum::{enum_name}", f"{qident(sch)}.{qident(enum_name)}")
-        col_lines.append(line)
-        if comment:
-            col_comments.append((c.get("name", ""), comment))
+    if not isinstance(fields, list) or not fields:
+        raise ValueError("List 'fields' wajib dan tidak boleh kosong")
 
-    # Primary key
-    pk_cols = []
-    explicit_pk = obj.get("primary_key")
-    if explicit_pk:
-        if isinstance(explicit_pk, list):
-            pk_cols = explicit_pk
-        else:
-            raise ValueError(f"Tabel {tname}: 'primary_key' harus list.")
-    else:
-        # per-column pk
-        for c in columns:
-            if to_bool(c.get("primary_key", False), False):
-                pk_cols.append(c["name"])
+    table_schema = entity.get("schema") or schema
+    table_name = detect_table_name(yaml_path, entity)
+    table_comment = entity.get("comment")
 
-    # Uniques
-    uniques = obj.get("uniques") or []
-    unique_groups: List[List[str]] = []
-    for u in uniques:
-        if isinstance(u, list):
-            unique_groups.append(u)
-        elif isinstance(u, str):
-            unique_groups.append([u])
-        else:
-            raise ValueError(f"Tabel {tname}: elemen 'uniques' tidak valid.")
+    uuid_func = uuid_default_function(extensions)
 
-    # Checks
-    checks = obj.get("checks") or []
-    check_lines: List[str] = []
-    for ch in checks:
-        # raw SQL expression for CHECK
-        check_lines.append(f"CHECK ({ch})")
+    # columns
+    col_defs = []
+    primary_cols = []
+    fk_defs = []
+    col_comments = {}
 
-    # Foreign keys
-    fks = obj.get("foreign_keys") or obj.get("references") or []
-    fk_lines: List[str] = []
-    for idx, fk in enumerate(fks, start=1):
-        cols = fk.get("columns") or []
-        ref_table = fk.get("ref_table")
-        ref_cols = fk.get("ref_columns") or []
-        if not cols or not ref_table:
-            raise ValueError(f"Tabel {tname}: foreign key ke-{idx} tidak valid (butuh 'columns' dan 'ref_table').")
-        ref_schema = fk.get("ref_schema") or sch  # default sama schema
-        line = f"FOREIGN KEY ({', '.join(qident(c) for c in cols)}) REFERENCES {qident(ref_schema)}.{qident(ref_table)}"
-        if ref_cols:
-            line += f" ({', '.join(qident(c) for c in ref_cols)})"
-        on_delete = fk.get("on_delete")
-        on_update = fk.get("on_update")
-        if on_delete:
-            line += f" ON DELETE {on_delete.upper()}"
-        if on_update:
-            line += f" ON UPDATE {on_update.upper()}"
-        if to_bool(fk.get("deferrable", False), False):
-            line += " DEFERRABLE"
-            if to_bool(fk.get("initially_deferred", False), False):
-                line += " INITIALLY DEFERRED"
-        fk_lines.append(line)
+    for f in fields:
+        rendered = render_column(f, default_varchar_len, uuid_func)
+        col_defs.append(rendered["sql"])
+        if rendered["pk"]:
+            primary_cols.append(rendered["name"])
+        if rendered["fk"]:
+            fk = rendered["fk"] or {}
+            ref_table = fk.get("ref_table")
+            ref_field = fk.get("ref_field", "id")
+            if not ref_table:
+                raise ValueError(f"Field {rendered['name']}: fk.ref_table wajib")
+            fk_sql = f"FOREIGN KEY ({qident(rendered['name'])}) REFERENCES {qident(ref_table)}({qident(ref_field)})"
+            if fk.get("on_delete"):
+                fk_sql += f" ON DELETE {fk['on_delete'].upper()}"
+            if fk.get("on_update"):
+                fk_sql += f" ON UPDATE {fk['on_update'].upper()}"
+            if fk.get("deferrable"):
+                fk_sql += f" {fk['deferrable'].upper()}"
+            fk_defs.append(fk_sql)
+        if rendered["comment"]:
+            col_comments[rendered["name"]] = rendered["comment"]
 
-    # Compose CREATE TABLE
-    pre = []
-    if with_drop:
-        pre.append(gen_drop_stmt("TABLE", fqname))
+    if len(primary_cols) > 1:
+        raise ValueError(f"PK lebih dari satu kolom: {primary_cols}")
 
-    body_parts: List[str] = []
-    body_parts.extend(col_lines)
+    # Table DDL
+    lines = []
+    # Extensions
+    if extensions:
+        for ext in extensions:
+            ext = ext.strip()
+            if ext:
+                lines.append(f"CREATE EXTENSION IF NOT EXISTS {qident(ext)};")
 
-    if pk_cols:
-        body_parts.append(f"PRIMARY KEY ({', '.join(qident(c) for c in pk_cols)})")
+    # DROP
+    lines.append(f"DROP TABLE IF EXISTS {qident(table_schema)}.{qident(table_name)} CASCADE;")
 
-    for ug in unique_groups:
-        body_parts.append(f"UNIQUE ({', '.join(qident(c) for c in ug)})")
+    # CREATE
+    ddl_cols = []
+    ddl_cols.extend(col_defs)
+    if primary_cols:
+        cols = ", ".join(qident(c) for c in primary_cols)
+        ddl_cols.append(f"PRIMARY KEY ({cols})")
+    ddl_cols.extend(fk_defs)
 
-    body_parts.extend(check_lines)
-    body_parts.extend(fk_lines)
+    tbl = f"CREATE TABLE {qident(table_schema)}.{qident(table_name)} (\n    " + ",\n    ".join(ddl_cols) + "\n);"
+    lines.append(tbl)
 
-    create_line = f"CREATE TABLE {fqname} (\n    " + ",\n    ".join(body_parts) + "\n)"
     if tablespace:
-        create_line += f" TABLESPACE {qident(tablespace)}"
-    create_line += ";"
+        lines.append(f"ALTER TABLE {qident(table_schema)}.{qident(table_name)} SET TABLESPACE {qident(tablespace)};")
 
-    stmts: List[str] = []
-    stmts.extend(pre)
-    stmts.append(create_line)
+    if owner:
+        lines.append(f"ALTER TABLE {qident(table_schema)}.{qident(table_name)} OWNER TO {qident(owner)};")
 
-    # Comments
-    t_comment = obj.get("comment")
-    if t_comment:
-        stmts.append(f"COMMENT ON TABLE {fqname} IS {qliteral(t_comment)};")
-    for col_name, cmt in col_comments:
-        stmts.append(f"COMMENT ON COLUMN {fqname}.{qident(col_name)} IS {qliteral(cmt)};")
+    # constraints (raw)
+    for c in constraints:
+        cname = c.get("name")
+        expr = c.get("expression")
+        if cname and expr:
+            lines.append(f"ALTER TABLE {qident(table_schema)}.{qident(table_name)} ADD CONSTRAINT {qident(cname)} {expr};")
 
-    # Indexes
-    indexes = obj.get("indexes") or []
-    for i, idx in enumerate(indexes, start=1):
+    # indexes
+    for idx in indexes:
+        iname = idx.get("name")
         cols = idx.get("columns") or []
-        if not cols:
+        unique = to_bool(idx.get("unique"))
+        method = idx.get("method")
+        where = idx.get("where")
+        if not iname or not cols:
             continue
-        iname = idx.get("name") or f"{tname}_{i}_idx"
-        using = idx.get("using")
-        unique = to_bool(idx.get("unique", False), False)
-        line = "CREATE "
-        if unique:
-            line += "UNIQUE "
-        line += f"INDEX {qident(iname)} ON {fqname}"
-        if using:
-            line += f" USING {using}"
-        line += f" ({', '.join(qident(c) for c in cols)});"
-        if tablespace:
-            line = line[:-1] + f" TABLESPACE {qident(tablespace)};"
-        stmts.append(line)
+        uniq = "UNIQUE " if unique else ""
+        meth = f"USING {method.upper()} " if method else ""
+        col_list = ", ".join(qident(c) for c in cols)
+        where_sql = f" WHERE {where}" if where else ""
+        lines.append(f"CREATE {uniq}INDEX {qident(iname)} ON {qident(table_schema)}.{qident(table_name)} {meth}({col_list}){where_sql};")
 
-    # Owner
-    if owner:
-        stmts.append(f"ALTER TABLE {fqname} OWNER TO {qident(owner)};")
+    # comments
+    if table_comment:
+        lines.append(f"COMMENT ON TABLE {qident(table_schema)}.{qident(table_name)} IS {qliteral(table_comment)};")
+    for cname, cmt in col_comments.items():
+        lines.append(f"COMMENT ON COLUMN {qident(table_schema)}.{qident(table_name)}.{qident(cname)} IS {qliteral(cmt)};")
 
-    return "\n".join(stmts), enum_needed
+    return lines
 
-def gen_view_sql(obj: Dict[str, Any], schema: str, owner: Optional[str], with_drop: bool, materialized: bool) -> str:
-    sch = (obj.get("schema") or schema).strip()
-    name = obj.get("name")
-    if not name:
-        raise ValueError("Objek view tanpa 'name'.")
-    fqname = f"{qident(sch)}.{qident(name)}"
-    sql_text = obj.get("sql") or obj.get("definition")
-    if not sql_text:
-        raise ValueError(f"View {name}: butuh field 'sql' atau 'definition'.")
-
-    pre = []
-    if with_drop:
-        drop_kw = "MATERIALIZED VIEW" if materialized else "VIEW"
-        pre.append(gen_drop_stmt(drop_kw, fqname))
-
-    create_kw = "CREATE MATERIALIZED VIEW" if materialized else "CREATE VIEW"
-    stmt = f"{create_kw} {fqname} AS\n{sql_text.strip()};"
-
-    post = []
-    if owner:
-        if materialized:
-            post.append(f"ALTER MATERIALIZED VIEW {fqname} OWNER TO {qident(owner)};")
-        else:
-            post.append(f"ALTER VIEW {fqname} OWNER TO {qident(owner)};")
-
-    comment = obj.get("comment")
-    if comment:
-        target = "MATERIALIZED VIEW" if materialized else "VIEW"
-        post.append(f"COMMENT ON {target} {fqname} IS {qliteral(comment)};")
-
-    return "\n".join(pre + [stmt] + post)
-
-# ---------------------------------------------------------------------------
-# Main compiler
-# ---------------------------------------------------------------------------
-
-def main() -> None:
-    parser = argparse.ArgumentParser(description="Generate build.sql from struktur_data YAML")
-    parser.add_argument("--struktur-dir", required=True, help="Direktori akar struktur_data")
-    parser.add_argument("--out", required=True, help="Output SQL file path (build.sql)")
-    parser.add_argument("--schema", default="public", help="Schema default")
-    parser.add_argument("--owner", default="", help="Owner default (opsional)")
-    parser.add_argument("--with-drop", default="true", help="Sertakan DROP IF EXISTS")
-    parser.add_argument("--default-varchar-length", default="255", help="Panjang default varchar")
-    parser.add_argument("--tablespace", default="", help="Tablespace default (opsional)")
-    parser.add_argument("--create-extensions", default="", help="Daftar ekstensi yang perlu dibuat (comma-separated)")
-    parser.add_argument("--strict", default="false", help="Jika true, error YAML akan menghentikan proses")
-
-    args = parser.parse_args()
+def main():
+    ap = argparse.ArgumentParser(description="Generate SQL dari struktur_data (panduan_struktur_data.md)")
+    ap.add_argument("--struktur-dir", default="struktur_data")
+    ap.add_argument("--out", default="build.sql")
+    ap.add_argument("--schema", default="public")
+    ap.add_argument("--owner", default="")
+    ap.add_argument("--with-drop", default="false")
+    ap.add_argument("--default-varchar-length", default="255")
+    ap.add_argument("--tablespace", default="")
+    ap.add_argument("--create-extensions", default="")
+    ap.add_argument("--strict", action="store_true", help="Stop saat ada kesalahan")
+    args = ap.parse_args()
 
     struktur_dir = args.struktur_dir
     out_path = args.out
-    default_schema = args.schema.strip() or "public"
-    owner = args.owner.strip() or None
-    with_drop = to_bool(args.with_drop, True)
-    try:
-        default_varchar_len = int(args.default_varchar_length)
-    except Exception:
-        default_varchar_len = 255
-    tablespace = args.tablespace.strip() or None
-    create_extensions = [x.strip() for x in (args.create_extensions or "").split(",") if x.strip()]
-    strict_mode = to_bool(args.strict, False)
+    schema = args.schema or "public"
+    owner = args.owner or None
+    with_drop = to_bool(args.with_drop)
+    default_varchar_len = int(args.default_varchar_length)
+    tablespace = args.tablespace or None
+    extensions = [x.strip() for x in (args.create_extensions.split(",") if args.create_extensions else []) if x.strip()]
 
-    files = collect_yaml_files(struktur_dir)
-    if not files:
-        print(f"Tidak ditemukan file YAML di {struktur_dir}", file=sys.stderr)
-        if strict_mode:
-            sys.exit(1)
+    yaml_paths = sorted(glob.glob(os.path.join(struktur_dir, "*.yml")) + glob.glob(os.path.join(struktur_dir, "*.yaml")))
+    if not yaml_paths:
+        print(f"Tidak ada file YAML di {struktur_dir}", file=sys.stderr)
+        sys.exit(1)
 
-    # Accumulate
-    enum_registry: Dict[str, List[str]] = {}  # enum_name -> values
-    table_objs: List[Dict[str, Any]] = []
-    view_objs: List[Tuple[Dict[str, Any], bool]] = []  # (obj, is_materialized)
+    all_lines: List[str] = []
 
-    errors: List[str] = []
-
-    for path in files:
+    for yp in yaml_paths:
         try:
-            data = parse_yaml_file(path)
-            if not isinstance(data, dict):
-                raise ValueError("YAML harus berupa mapping/object.")
+            doc = load_yaml(yp)
+            # transisi: dukung format lama -> map ke format panduan minimal
+            if "entity" not in doc and "fields" not in doc and "columns" in doc:
+                # konversi kasar
+                entity_block = {
+                    "technical_name": doc.get("table") or os.path.splitext(os.path.basename(yp))[0],
+                    "comment": doc.get("description",""),
+                }
+                new_fields = []
+                for col in doc.get("columns") or []:
+                    f = {
+                        "name": col.get("label") or col.get("name"),
+                        "technical_name": col.get("name"),
+                        "type": str(col.get("type","")).lower(),
+                        "not_null": not bool(col.get("nullable", True)),
+                        "unique": bool(col.get("unique", False)),
+                        "pk": bool(col.get("primary_key", False)),
+                        "default": col.get("default"),
+                        "comment": col.get("comment"),
+                    }
+                    # map FK dari constraints/foreign key sederhana jika tersedia
+                    # dan/atau ref_table pada format lain
+                    if "ref_table" in col:
+                        f["fk"] = {"ref_table": col["ref_table"], "ref_field": col.get("ref_field","id")}
+                    new_fields.append(f)
+                doc = {
+                    "entity": entity_block,
+                    "fields": new_fields,
+                    "constraints": doc.get("constraints") or [],
+                    "indexes": [],
+                }
 
-            kind = (data.get("kind") or data.get("type") or "table").strip().lower()
-            # Normalisasi penamaan bidang umum
-            if kind in {"table", "tabel"}:
-                table_objs.append(data)
-            elif kind in {"view"}:
-                view_objs.append((data, False))
-            elif kind in {"materialized_view", "mview", "mv"}:
-                view_objs.append((data, True))
-            elif kind in {"enum"}:
-                ename = data.get("name")
-                evals = data.get("values") or data.get("items")
-                if not ename or not isinstance(evals, list) or not evals:
-                    raise ValueError(f"Enum di {path} tidak valid (butuh 'name' dan 'values').")
-                enum_registry[ename] = [str(v) for v in evals]
-            else:
-                # Jika ada skema lain, abaikan (tidak fatal)
-                pass
+            lines = build_table_sql(doc, yp, schema=schema, owner=owner,
+                                    default_varchar_len=default_varchar_len,
+                                    tablespace=tablespace, extensions=extensions)
+
+            # with_drop is already applied inside build_table_sql by default; if user disabled, we can strip it
+            if not with_drop:
+                lines = [ln for ln in lines if not ln.startswith("DROP TABLE IF EXISTS ")]
+
+            all_lines.extend(lines)
+            all_lines.append("")
 
         except Exception as e:
-            msg = f"[ERROR] {path}: {e}"
-            errors.append(msg)
-
-    if errors:
-        for m in errors:
-            print(m, file=sys.stderr)
-        if strict_mode:
-            sys.exit(1)
-
-    # Build SQL
-    output: List[str] = []
-    output.append("-- Auto-generated by scripts/generate_sql_from_yaml.py")
-    output.append("-- Do not edit manually.")
-    output.append("SET client_min_messages = WARNING;")
-    output.append("")
-
-    # CREATE EXTENSIONS (idempotent)
-    for ext in create_extensions:
-        output.append(f"CREATE EXTENSION IF NOT EXISTS {qident(ext)};")
-
-    # Ensure default schema exists
-    output.append(f"CREATE SCHEMA IF NOT EXISTS {qident(default_schema)};")
-    if owner:
-        output.append(f"ALTER SCHEMA {qident(default_schema)} OWNER TO {qident(owner)};")
-    output.append("")
-
-    # Enums from registry
-    if enum_registry:
-        for ename, vals in enum_registry.items():
-            output.append(gen_create_enum(ename, vals, with_drop, default_schema, owner))
-            output.append("")
-
-    # Tables
-    # Note: if a table uses enum::<name> that is NOT defined in registry, we still proceed,
-    # assuming the enum exists or is defined elsewhere; strict mode would have already failed earlier if desired.
-    for obj in table_objs:
-        try:
-            sql, _ = gen_table_sql(
-                obj=obj,
-                schema=default_schema,
-                owner=owner,
-                with_drop=with_drop,
-                default_varchar_len=default_varchar_len,
-                tablespace=tablespace,
-            )
-            output.append(sql)
-            output.append("")
-        except Exception as e:
-            msg = f"[TABLE ERROR] {obj.get('name','<unknown>')}: {e}"
-            print(msg, file=sys.stderr)
-            if strict_mode:
+            print(f"[ERROR] {os.path.basename(yp)}: {e}", file=sys.stderr)
+            if args.strict:
                 sys.exit(1)
 
-    # Views & Materialized Views
-    for obj, is_mv in view_objs:
-        try:
-            v_sql = gen_view_sql(
-                obj=obj,
-                schema=default_schema,
-                owner=owner,
-                with_drop=with_drop,
-                materialized=is_mv,
-            )
-            output.append(v_sql)
-            output.append("")
-        except Exception as e:
-            msg = f"[VIEW ERROR] {obj.get('name','<unknown>')}: {e}"
-            print(msg, file=sys.stderr)
-            if strict_mode:
-                sys.exit(1)
-
-    # Write out
     with open(out_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(output).strip() + "\n")
+        f.write("\n".join(all_lines).rstrip() + "\n")
 
     print(f"Selesai. SQL ditulis ke {out_path} (total baris: {sum(1 for _ in open(out_path,'r',encoding='utf-8'))}).")
 

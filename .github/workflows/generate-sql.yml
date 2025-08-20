@@ -1,41 +1,36 @@
-name: Generate SQL from struktur_data
+name: Generate SQL (panduan_struktur_data)
 
 on:
   workflow_dispatch:
     inputs:
-      db_schema:
-        description: "Nama schema target (jika tidak ditentukan di YAML)"
+      schema:
+        description: "Nama schema target (default: public)"
         required: false
         default: "public"
-      db_owner:
+      owner:
         description: "Owner default untuk objek (opsional)"
         required: false
         default: ""
-      with_drop_statements:
-        description: "Sertakan DROP TABLE/TYPE/VIEW IF EXISTS sebelum CREATE"
+      with_drop:
+        description: "Sisipkan DROP IF EXISTS sebelum CREATE"
         required: false
-        default: "true"
+        default: "false"
       default_varchar_length:
-        description: "Panjang default untuk kolom tipe varchar jika tidak ditentukan"
+        description: "Panjang default VARCHAR jika tidak ditentukan"
         required: false
         default: "255"
       tablespace:
-        description: "Tablespace default (kosongkan jika tidak dipakai)"
+        description: "Tablespace (opsional)"
         required: false
         default: ""
       create_extensions:
-        description: "Comma-separated list ekstensi yang perlu dibuat (mis. 'uuid-ossp,pg_trgm')"
+        description: "Daftar ekstensi yang akan dibuat (comma-separated), mis. 'pgcrypto,uuid-ossp'"
         required: false
         default: ""
-      strict_mode:
-        description: "Gagal (exit 1) jika ada file YAML tidak valid"
-        required: false
-        default: "false"
 
 jobs:
-  build-sql:
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,33 +40,24 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
+      - name: Install deps
         run: |
           python -m pip install --upgrade pip
           pip install pyyaml
 
-      - name: Generate build.sql
-        env:
-          INPUT_DB_SCHEMA: ${{ github.event.inputs.db_schema }}
-          INPUT_DB_OWNER: ${{ github.event.inputs.db_owner }}
-          INPUT_WITH_DROP: ${{ github.event.inputs.with_drop_statements }}
-          INPUT_DEFAULT_VARCHAR_LENGTH: ${{ github.event.inputs.default_varchar_length }}
-          INPUT_TABLESPACE: ${{ github.event.inputs.tablespace }}
-          INPUT_CREATE_EXTENSIONS: ${{ github.event.inputs.create_extensions }}
-          INPUT_STRICT_MODE: ${{ github.event.inputs.strict_mode }}
+      - name: Generate SQL
         run: |
           python scripts/generate_sql_from_yaml.py \
             --struktur-dir "struktur_data" \
             --out "build.sql" \
-            --schema "${INPUT_DB_SCHEMA}" \
-            --owner "${INPUT_DB_OWNER}" \
-            --with-drop "${INPUT_WITH_DROP}" \
-            --default-varchar-length "${INPUT_DEFAULT_VARCHAR_LENGTH}" \
-            --tablespace "${INPUT_TABLESPACE}" \
-            --create-extensions "${INPUT_CREATE_EXTENSIONS}" \
-            --strict "${INPUT_STRICT_MODE}"
+            --schema "${{ github.event.inputs.schema }}" \
+            --owner "${{ github.event.inputs.owner }}" \
+            --with-drop "${{ github.event.inputs.with_drop }}" \
+            --default-varchar-length "${{ github.event.inputs.default_varchar_length }}" \
+            --tablespace "${{ github.event.inputs.tablespace }}" \
+            --create-extensions "${{ github.event.inputs.create_extensions }}"
 
-      - name: Upload build.sql artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: build-sql
@@ -81,9 +67,9 @@ jobs:
         if: always()
         run: |
           echo "### Generate SQL Summary" >> $GITHUB_STEP_SUMMARY
-          echo "- Schema: \`${{ github.event.inputs.db_schema }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "- Owner: \`${{ github.event.inputs.db_owner || 'N/A' }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "- With DROP: \`${{ github.event.inputs.with_drop_statements }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Schema: \`${{ github.event.inputs.schema }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Owner: \`${{ github.event.inputs.owner || 'N/A' }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- With DROP: \`${{ github.event.inputs.with_drop }}\`" >> $GITHUB_STEP_SUMMARY
           echo "- Default varchar length: \`${{ github.event.inputs.default_varchar_length }}\`" >> $GITHUB_STEP_SUMMARY
           echo "- Tablespace: \`${{ github.event.inputs.tablespace || 'N/A' }}\`" >> $GITHUB_STEP_SUMMARY
           echo "- Create extensions: \`${{ github.event.inputs.create_extensions || 'N/A' }}\`" >> $GITHUB_STEP_SUMMARY
