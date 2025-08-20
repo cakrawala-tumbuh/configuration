@@ -1,36 +1,3 @@
-# 📘 Cantum Configuration
-
-🚀 **Cantum Configuration** adalah project referensi untuk implementasi orkestrasi menggunakan **n8n**.  
-Project ini digunakan sebagai acuan dalam mengelola data, workflow otomatis, dan analitik untuk jasa konsultasi pendidikan.
-
----
-
-## 🧩 Technology Stack
-
-Project ini menggunakan kombinasi teknologi open-source dan layanan cloud:
-
-| Teknologi       | Fungsi Utama                                      |
-|-----------------|--------------------------------------------------|
-| 🐘 PostgreSQL   | Basis data per project                            |
-| 🔄 n8n          | Orkestrasi workflow & otomasi integrasi           |
-| 🌐 Traefik      | Reverse proxy & routing service                   |
-| 📊 Superset     | Business Intelligence & visualisasi data          |
-| 🛠️ Portainer    | Manajemen container                               |
-| ☁️ Object Store | Penyimpanan dokumen (Biznet Object Storage/MinIO) |
-
----
-
-## 📂 Project Structure
-
-Struktur direktori utama:
-
-```
-.
-├── struktur_data/      # Definisi skema database per entitas
-├── charts/             # Konfigurasi chart Superset
-├── materialized_view/  # View analitik untuk BI
-└── README.md
-```
 
 ---
 
@@ -84,3 +51,28 @@ Peran utama **n8n** dalam project ini:
 - **Contributor:** Andhitia Rama <andhitia.r@gmail.com>  
 
 ---
+
+## 🔀 End-to-End Flow Baseline Study
+
+Alur implementasi orkestrasi di Cantum mengikuti langkah-langkah berikut:
+
+1. **Pilih Analisa dari Daftar Jasa**  
+   Dari setiap project baseline studi, Cantum menentukan analisa apa saja yang akan diberikan kepada klien.  
+   - Sumber referensi: `daftar_jasa.yaml`.
+
+2. **Provision Database di PostgreSQL**  
+   Orkestrasi otomatis membuat satu database khusus di PostgreSQL untuk setiap project.  
+   - Struktur tabel dihasilkan dari `struktur_data/`.
+
+3. **Generate Tampilan di Appsmith**  
+   Secara otomatis dibuat tampilan di Appsmith yang terhubung ke database project yang baru.
+
+4. **Bangun Materialized View**  
+   Materialized View dibuat berdasarkan informasi `materialized_view/`.  
+   - Definisi SQL MV ada pada direktori `/materialized_view`.
+
+5. **Generate Chart di Superset**  
+   Chart BI dibuat di Superset berdasarkan MV yang tersedia.  
+   - Definisi chart dapat dilihat di direktori `/charts`.
+
+Dengan alur ini, setiap project baseline studi dapat dengan cepat diproyeksikan menjadi sistem analitik lengkap: dari data mentah → database → MV → dashboard.
