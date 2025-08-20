@@ -55,3 +55,4 @@ indexes:
   - pegawai_id
   unique: false
 comment: Data penggajian pegawai per periode
+spec_version: '1.0'

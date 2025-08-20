@@ -39,3 +39,4 @@ indexes:
   - kurikulum_id
   unique: false
 comment: Data mata pelajaran yang diajarkan di sekolah
+spec_version: '1.0'

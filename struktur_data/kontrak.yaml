@@ -45,3 +45,4 @@ indexes:
   - pegawai_id
   unique: false
 comment: Informasi kontrak kerja pegawai
+spec_version: '1.0'

@@ -39,3 +39,4 @@ indexes:
   - pegawai_id
   unique: false
 comment: Catatan kehadiran guru dan karyawan
+spec_version: '1.0'

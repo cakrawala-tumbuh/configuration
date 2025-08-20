@@ -45,3 +45,4 @@ indexes:
   - akun_id
   unique: false
 comment: Pencatatan jurnal akuntansi
+spec_version: '1.0'

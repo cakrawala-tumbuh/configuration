@@ -73,3 +73,4 @@ indexes:
   - kelas_id
   unique: false
 comment: Jadwal guru mengajar di kelas
+spec_version: '1.0'

@@ -39,3 +39,4 @@ indexes:
   - pendaftar_id
   unique: false
 comment: Data formulir yang diisi oleh calon siswa saat melakukan pendaftaran
+spec_version: '1.0'

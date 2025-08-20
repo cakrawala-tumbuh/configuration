@@ -39,3 +39,4 @@ indexes:
   - siswa_id
   unique: false
 comment: Catatan kehadiran siswa dalam kegiatan belajar mengajar
+spec_version: '1.0'

@@ -54,3 +54,4 @@ indexes:
   - posisi_id
   unique: false
 comment: Data karyawan non-guru di lingkungan sekolah
+spec_version: '1.0'

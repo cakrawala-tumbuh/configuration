@@ -45,3 +45,4 @@ indexes:
   - invoice_id
   unique: false
 comment: Pencatatan pembayaran dari invoice
+spec_version: '1.0'

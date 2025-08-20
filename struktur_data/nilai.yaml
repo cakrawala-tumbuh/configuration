@@ -63,3 +63,4 @@ indexes:
   - ujian_id
   unique: false
 comment: Data nilai siswa dari berbagai mata pelajaran dan ujian
+spec_version: '1.0'

@@ -45,3 +45,4 @@ indexes:
   - pegawai_id
   unique: false
 comment: Rekam penilaian kinerja pegawai per periode
+spec_version: '1.0'
