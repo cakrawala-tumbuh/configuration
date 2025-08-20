@@ -1,0 +1,71 @@
+*** a/struktur_data/kehadiran_pegawai.yaml
+--- b/struktur_data/kehadiran_pegawai.yaml
+***************
+*** 1,9999 ****
+--- 1,9999 ----
++@@
++ fields:
++   - name: pegawai_id
++     type: integer
++ +   ref_table: karyawan
++@@
+
+*** a/struktur_data/kontrak.yaml
+--- b/struktur_data/kontrak.yaml
+***************
+*** 1,9999 ****
+--- 1,9999 ----
++@@
++ fields:
++   - name: pegawai_id
++     type: integer
++ +   ref_table: karyawan
++@@
+
+*** a/struktur_data/payroll.yaml
+--- b/struktur_data/payroll.yaml
+***************
+*** 1,9999 ****
+--- 1,9999 ----
++@@
++ fields:
++   - name: pegawai_id
++     type: integer
++ +   ref_table: karyawan
++@@
+
+*** a/struktur_data/penilaian_kinerja.yaml
+--- b/struktur_data/penilaian_kinerja.yaml
+***************
+*** 1,9999 ****
+--- 1,9999 ----
++@@
++ fields:
++   - name: pegawai_id
++     type: integer
++ +   ref_table: karyawan
++@@
+
+*** a/struktur_data/kelas.yaml
+--- b/struktur_data/kelas.yaml
+***************
+*** 1,9999 ****
+--- 1,9999 ----
++@@
++ fields:
++   - name: wali_kelas_id
++     type: integer
++ +   ref_table: guru
++@@
+
+*** a/struktur_data/scholarship.yaml
+--- b/struktur_data/scholarship.yaml
+***************
+*** 1,9999 ****
+--- 1,9999 ----
++@@
++ fields:
++   - name: penerima_id
++     type: integer
++ +   ref_table: siswa
++@@

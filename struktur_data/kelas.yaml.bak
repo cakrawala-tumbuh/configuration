@@ -28,7 +28,6 @@ columns:
   nullable: true
   unique: false
   comment: Relasi ke Guru yang menjadi wali kelas
-  ref_table: guru
 indexes:
 - name: idx_kelas_wali_kelas_id
   columns:

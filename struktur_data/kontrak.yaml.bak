@@ -16,7 +16,6 @@ columns:
   nullable: true
   unique: false
   comment: Relasi ke entitas Guru/Karyawan
-  ref_table: karyawan
 - name: jenis_kontrak
   type: varchar(100)
   primary_key: false

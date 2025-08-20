@@ -22,7 +22,6 @@ columns:
   nullable: true
   unique: false
   comment: Relasi ke akun
-  ref_table: akun
 - name: debit
   type: numeric(12,2)
   primary_key: false

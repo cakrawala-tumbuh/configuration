@@ -28,7 +28,6 @@ columns:
   nullable: true
   unique: false
   comment: Relasi ke siswa penerima beasiswa
-  ref_table: siswa
 indexes:
 - name: idx_scholarship_penerima_id
   columns:

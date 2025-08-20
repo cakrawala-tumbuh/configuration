@@ -16,6 +16,7 @@ columns:
   nullable: true
   unique: false
   comment: Relasi ke entitas Guru/Karyawan
+  ref_table: karyawan
 - name: periode
   type: text
   primary_key: false

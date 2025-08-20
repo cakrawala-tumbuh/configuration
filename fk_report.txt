@@ -1,0 +1,52 @@
+FK REPORT
+================================================================================
+Total tables detected : 36
+Total FK candidates   : 32
+Missing FK targets    : 6
+================================================================================
+
+Missing targets detail:
+  1. [kehadiran_pegawai] pegawai_id -> pegawai (file: struktur_data/kehadiran_pegawai.yaml)
+  2. [kelas] wali_kelas_id -> wali_kelas (file: struktur_data/kelas.yaml)
+  3. [kontrak] pegawai_id -> pegawai (file: struktur_data/kontrak.yaml)
+  4. [payroll] pegawai_id -> pegawai (file: struktur_data/payroll.yaml)
+  5. [penilaian_kinerja] pegawai_id -> pegawai (file: struktur_data/penilaian_kinerja.yaml)
+  6. [scholarship] penerima_id -> penerima (file: struktur_data/scholarship.yaml)
+
+Tables (sorted):
+ - absensi_siswa
+ - akun
+ - budget
+ - cashflow
+ - departemen
+ - donation
+ - expense
+ - formulir_pendaftaran
+ - guru
+ - invoice
+ - jadwal_mengajar
+ - journal_entry
+ - kanal_promosi
+ - karyawan
+ - kehadiran_pegawai
+ - kelas
+ - kompetensi
+ - komponen_biaya
+ - kontrak
+ - kurikulum
+ - laporan_keuangan
+ - mata_pelajaran
+ - nilai
+ - orang_tua
+ - payment
+ - payroll
+ - pelatihan
+ - pendaftar
+ - penilaian_kinerja
+ - posisi
+ - scholarship
+ - sekolah_asal
+ - siswa
+ - sumber_dana
+ - transaksi_keuangan
+ - ujian
