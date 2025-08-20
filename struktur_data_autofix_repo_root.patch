@@ -1,0 +1,360 @@
+--- a/struktur_data/absensi_siswa.yaml
++++ b/struktur_data/absensi_siswa.yaml
+@@ -40,3 +40,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/account.yaml
++++ b/struktur_data/account.yaml
+@@ -34,3 +34,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/budget.yaml
++++ b/struktur_data/budget.yaml
+@@ -34,3 +34,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/cashflow.yaml
++++ b/struktur_data/cashflow.yaml
+@@ -34,3 +34,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/departemen.yaml
++++ b/struktur_data/departemen.yaml
+@@ -28,3 +28,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/donation.yaml
++++ b/struktur_data/donation.yaml
+@@ -34,3 +34,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/expense.yaml
++++ b/struktur_data/expense.yaml
+@@ -40,3 +40,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/formulir_pendaftaran.yaml
++++ b/struktur_data/formulir_pendaftaran.yaml
+@@ -40,3 +40,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/guru.yaml
++++ b/struktur_data/guru.yaml
+@@ -64,3 +64,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/invoice.yaml
++++ b/struktur_data/invoice.yaml
+@@ -35,3 +35,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/jadwal_mengajar.yaml
++++ b/struktur_data/jadwal_mengajar.yaml
+@@ -70,3 +70,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/journal_entry.yaml
++++ b/struktur_data/journal_entry.yaml
+@@ -47,3 +47,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/kanal_promosi.yaml
++++ b/struktur_data/kanal_promosi.yaml
+@@ -29,3 +29,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/karyawan.yaml
++++ b/struktur_data/karyawan.yaml
+@@ -52,3 +52,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/kehadiran_pegawai.yaml
++++ b/struktur_data/kehadiran_pegawai.yaml
+@@ -41,3 +41,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/kelas.yaml
++++ b/struktur_data/kelas.yaml
+@@ -41,3 +41,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/kompetensi.yaml
++++ b/struktur_data/kompetensi.yaml
+@@ -28,3 +28,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/komponen_biaya.yaml
++++ b/struktur_data/komponen_biaya.yaml
+@@ -34,3 +34,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/kontrak.yaml
++++ b/struktur_data/kontrak.yaml
+@@ -47,3 +47,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/kurikulum.yaml
++++ b/struktur_data/kurikulum.yaml
+@@ -28,3 +28,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/laporan_keuangan.yaml
++++ b/struktur_data/laporan_keuangan.yaml
+@@ -40,3 +40,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/mata_pelajaran.yaml
++++ b/struktur_data/mata_pelajaran.yaml
+@@ -40,3 +40,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/nilai.yaml
++++ b/struktur_data/nilai.yaml
+@@ -58,3 +58,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/orang_tua.yaml
++++ b/struktur_data/orang_tua.yaml
+@@ -40,3 +40,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/payment.yaml
++++ b/struktur_data/payment.yaml
+@@ -46,3 +46,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/payroll.yaml
++++ b/struktur_data/payroll.yaml
+@@ -59,3 +59,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/pelatihan.yaml
++++ b/struktur_data/pelatihan.yaml
+@@ -40,3 +40,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/pendaftar.yaml
++++ b/struktur_data/pendaftar.yaml
+@@ -72,3 +72,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/penilaian_kinerja.yaml
++++ b/struktur_data/penilaian_kinerja.yaml
+@@ -47,3 +47,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/posisi.yaml
++++ b/struktur_data/posisi.yaml
+@@ -28,3 +28,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/scholarship.yaml
++++ b/struktur_data/scholarship.yaml
+@@ -41,3 +41,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/sekolah_asal.yaml
++++ b/struktur_data/sekolah_asal.yaml
+@@ -34,3 +34,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/siswa.yaml
++++ b/struktur_data/siswa.yaml
+@@ -64,3 +64,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/sumber_dana.yaml
++++ b/struktur_data/sumber_dana.yaml
+@@ -28,3 +28,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/transaksi_keuangan.yaml
++++ b/struktur_data/transaksi_keuangan.yaml
+@@ -40,3 +40,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true
+--- a/struktur_data/ujian.yaml
++++ b/struktur_data/ujian.yaml
+@@ -34,3 +34,7 @@
+   enabled: false
+   rows: []
+ tags: []
++fields:
++- name: id
++  type: bigserial
++  pk: true

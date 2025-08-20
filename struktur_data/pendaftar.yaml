@@ -72,3 +72,7 @@ seed_data:
   enabled: false
   rows: []
 tags: []
+fields:
+- name: id
+  type: bigserial
+  pk: true
