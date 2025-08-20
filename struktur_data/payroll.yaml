@@ -10,7 +10,7 @@ columns:
   unique: false
   comment: ID unik payroll
   default: generated always as identity
-- name: pegawai_id
+- name: karyawan_id
   type: bigint
   primary_key: false
   nullable: true
