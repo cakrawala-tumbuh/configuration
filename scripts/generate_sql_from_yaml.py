@@ -126,4 +126,5 @@ def render_table(data: Dict[str, Any], args) -> str:
         col_defs.append(coldef)
 
         if "comment" in f:
-            comments.append(f"COMMENT ON COLUMN {fqtn}.\"{
+            cmt = sql_literal(f["comment"])
+            comments.append(f'COMMENT ON COLUMN {fqtn}."{col}" IS {cmt};')
