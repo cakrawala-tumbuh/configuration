@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: departemen
 fields:
@@ -8,8 +9,6 @@ fields:
   unique: false
   not_null: true
   default: generated always as identity
-  not_null: true
-  default: generated always as identity
   comment: ID unik departemen
 - name: Nama departemen
   technical_name: nama
@@ -17,17 +16,14 @@ fields:
   not_null: false
   pk: false
   unique: false
-  not_null: false
   comment: Nama departemen
 - name: Kode singkat departemen
   technical_name: kode
   not_null: false
   type: text
-constraints: []
   pk: false
   unique: false
-  not_null: false
   comment: Kode singkat departemen
 constraints: []
 indexes: []
-comment: Unit organisasi yang menaungi guru dan karyawan
+comment: ID unik departemen

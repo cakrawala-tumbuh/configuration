@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: kanal_promosi
 fields:
@@ -8,8 +9,6 @@ fields:
   unique: false
   not_null: true
   default: generated always as identity
-  not_null: true
-  default: generated always as identity
   comment: ID unik kanal promosi
 - name: Nama kanal promosi
   technical_name: nama_kanal
@@ -17,19 +16,14 @@ fields:
   not_null: false
   pk: false
   unique: false
-  not_null: false
   comment: Nama kanal promosi
-- name: 'Jenis kanal promosi | Pilihan: Media Sosial, Iklan Offline, Rekomendasi,
-    Website, Event, Lainnya'
+- name: '''Jenis kanal promosi | Pilihan: Media Sosial, Iklan Offline, Rekomendasi,'
   technical_name: jenis_kanal
   not_null: false
   type: varchar(100)
   pk: false
-constraints: []
   unique: false
-  not_null: false
-  comment: 'Jenis kanal promosi | Pilihan: Media Sosial, Iklan Offline, Rekomendasi,
-    Website, Event, Lainnya'
+  comment: '''Jenis kanal promosi | Pilihan: Media Sosial, Iklan Offline, Rekomendasi,'
 constraints: []
 indexes: []
-comment: Sumber atau kanal promosi yang diketahui calon siswa
+comment: ID unik kanal promosi

@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: sekolah_asal
 fields:
@@ -8,8 +9,6 @@ fields:
   unique: false
   not_null: true
   default: generated always as identity
-  not_null: true
-  default: generated always as identity
   comment: ID unik sekolah asal
 - name: Nama sekolah asal
   technical_name: nama_sekolah
@@ -17,7 +16,6 @@ fields:
   not_null: false
   pk: false
   unique: false
-  not_null: false
   comment: Nama sekolah asal
 - name: Alamat sekolah asal
   technical_name: alamat
@@ -25,17 +23,14 @@ fields:
   type: text
   pk: false
   unique: false
-  not_null: false
   comment: Alamat sekolah asal
 - name: 'Jenjang sekolah asal | Pilihan: TK, SD, SMP, SMA, Lainnya'
   not_null: false
   technical_name: jenjang
-constraints: []
   type: varchar(100)
   pk: false
   unique: false
-  not_null: false
   comment: 'Jenjang sekolah asal | Pilihan: TK, SD, SMP, SMA, Lainnya'
 constraints: []
 indexes: []
-comment: Data sekolah asal dari calon siswa
+comment: ID unik sekolah asal

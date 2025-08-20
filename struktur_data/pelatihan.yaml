@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: pelatihan
 fields:
@@ -8,8 +9,6 @@ fields:
   unique: false
   not_null: true
   default: generated always as identity
-  not_null: true
-  default: generated always as identity
   comment: ID unik pelatihan
 - name: Nama program pelatihan
   technical_name: nama_pelatihan
@@ -17,7 +16,6 @@ fields:
   not_null: false
   pk: false
   unique: false
-  not_null: false
   comment: Nama program pelatihan
 - name: Penyelenggara pelatihan
   technical_name: penyelenggara
@@ -25,7 +23,6 @@ fields:
   type: text
   pk: false
   unique: false
-  not_null: false
   comment: Penyelenggara pelatihan
 - name: Tanggal mulai pelatihan
   not_null: false
@@ -33,11 +30,8 @@ fields:
   type: date
   pk: false
   unique: false
-  not_null: false
   comment: Tanggal mulai pelatihan
-  not_null: false
 - name: Tanggal selesai pelatihan
-constraints: []
   technical_name: tanggal_selesai
   type: date
   pk: false
@@ -46,4 +40,4 @@ constraints: []
   comment: Tanggal selesai pelatihan
 constraints: []
 indexes: []
-comment: Program pelatihan yang diikuti pegawai
+comment: ID unik pelatihan

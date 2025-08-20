@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: siswa
 fields:
@@ -8,8 +9,6 @@ fields:
   unique: false
   not_null: true
   default: generated always as identity
-  not_null: true
-  default: generated always as identity
   comment: ID unik siswa
 - name: Nama lengkap siswa
   technical_name: nama_lengkap
@@ -17,7 +16,6 @@ fields:
   not_null: false
   pk: false
   unique: false
-  not_null: false
   comment: Nama lengkap siswa
 - name: Tanggal lahir siswa
   technical_name: tanggal_lahir
@@ -25,7 +23,6 @@ fields:
   type: date
   pk: false
   unique: false
-  not_null: false
   comment: Tanggal lahir siswa
 - name: 'Jenis kelamin siswa | Pilihan: Laki-laki, Perempuan'
   not_null: false
@@ -33,15 +30,12 @@ fields:
   type: varchar(100)
   pk: false
   unique: false
-  not_null: false
   comment: 'Jenis kelamin siswa | Pilihan: Laki-laki, Perempuan'
-  not_null: false
 - name: Alamat rumah siswa
   technical_name: alamat
   type: text
   pk: false
   unique: false
-  not_null: false
   not_null: false
   comment: Alamat rumah siswa
 - name: Relasi ke entitas Orang Tua
@@ -51,40 +45,7 @@ fields:
   unique: false
   not_null: false
   comment: Relasi ke entitas Orang Tua
-  fk:
-  not_null: false
-    ref_table: orang_tua
-  fk:
-    ref_table: kelas
-    ref_field: id
-constraints:
-- name: fk_siswa_orang_tua
-  expression: foreign key (orang_tua_id) references orang_tua(id)
-- name: fk_siswa_kelas
-  expression: foreign key (kelas_id) references kelas(id)
-    ref_field: id
-- name: Relasi ke entitas Kelas
-  technical_name: kelas_id
-  type: bigint
-  pk: false
-  unique: false
-  not_null: false
-  comment: Relasi ke entitas Kelas
-  fk:
-    ref_table: kelas
-    ref_field: id
-constraints:
-- name: fk_siswa_orang_tua
-  expression: foreign key (orang_tua_id) references orang_tua(id)
-- name: fk_siswa_kelas
-  expression: foreign key (kelas_id) references kelas(id)
-indexes:
-- name: idx_siswa_orang_tua_id
-  columns:
-  - orang_tua_id
-  unique: false
-- name: idx_siswa_kelas_id
-  columns:
-  - kelas_id
-  unique: false
-comment: Data siswa yang sudah resmi terdaftar dan aktif bersekolah
+  fk: ''
+constraints: []
+indexes: []
+comment: ID unik siswa

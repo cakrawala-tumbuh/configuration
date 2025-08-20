@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: kelas
 fields:
@@ -8,8 +9,6 @@ fields:
   unique: false
   not_null: true
   default: generated always as identity
-  not_null: true
-  default: generated always as identity
   comment: ID unik kelas
 - name: Nama kelas
   technical_name: nama_kelas
@@ -17,7 +16,6 @@ fields:
   not_null: false
   pk: false
   unique: false
-  not_null: false
   comment: Nama kelas
 - name: Tingkat kelas (misalnya 1, 2, 3)
   technical_name: tingkat
@@ -25,7 +23,6 @@ fields:
   type: int
   pk: false
   unique: false
-  not_null: false
   comment: Tingkat kelas (misalnya 1, 2, 3)
 - name: Relasi ke Guru yang menjadi wali kelas
   not_null: false
@@ -33,22 +30,8 @@ fields:
   type: bigint
   pk: false
   unique: false
-  not_null: false
   comment: Relasi ke Guru yang menjadi wali kelas
-  fk:
-  fk:
-    ref_table: guru
-    ref_field: id
-constraints:
-- name: fk_kelas_wali_kelas
-  expression: foreign key (wali_kelas_id) references wali_kelas(id)
-    ref_field: id
-constraints:
-- name: fk_kelas_wali_kelas
-  expression: foreign key (wali_kelas_id) references wali_kelas(id)
-indexes:
-- name: idx_kelas_wali_kelas_id
-  columns:
-  - wali_kelas_id
-  unique: false
-comment: Data kelas tempat siswa belajar
+  fk: ''
+constraints: []
+indexes: []
+comment: ID unik kelas

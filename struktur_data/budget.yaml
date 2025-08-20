@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: budget
 fields:
@@ -8,8 +9,6 @@ fields:
   unique: false
   not_null: true
   default: generated always as identity
-  not_null: true
-  default: generated always as identity
   comment: ID unik anggaran
 - name: Tahun anggaran
   technical_name: tahun
@@ -17,7 +16,6 @@ fields:
   not_null: false
   pk: false
   unique: false
-  not_null: false
   comment: Tahun anggaran
 - name: Jumlah total anggaran
   technical_name: total_anggaran
@@ -25,17 +23,14 @@ fields:
   type: numeric(12,2)
   pk: false
   unique: false
-  not_null: false
   comment: Jumlah total anggaran
 - name: Rincian anggaran
   not_null: false
   technical_name: rincian
-constraints: []
   type: text
   pk: false
   unique: false
-  not_null: false
   comment: Rincian anggaran
 constraints: []
 indexes: []
-comment: Anggaran keuangan sekolah
+comment: ID unik anggaran

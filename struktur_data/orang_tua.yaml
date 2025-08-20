@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: orang_tua
 fields:
@@ -8,8 +9,6 @@ fields:
   unique: false
   not_null: true
   default: generated always as identity
-  not_null: true
-  default: generated always as identity
   comment: ID unik orang tua
 - name: Nama orang tua
   technical_name: nama
@@ -17,7 +16,6 @@ fields:
   not_null: false
   pk: false
   unique: false
-  not_null: false
   comment: Nama orang tua
 - name: 'Hubungan dengan calon siswa | Pilihan: Ayah, Ibu, Wali'
   technical_name: hubungan
@@ -25,7 +23,6 @@ fields:
   type: varchar(100)
   pk: false
   unique: false
-  not_null: false
   comment: 'Hubungan dengan calon siswa | Pilihan: Ayah, Ibu, Wali'
 - name: Pekerjaan orang tua
   not_null: false
@@ -33,11 +30,8 @@ fields:
   type: text
   pk: false
   unique: false
-  not_null: false
   comment: Pekerjaan orang tua
-  not_null: false
 - name: Nomor telepon atau email
-constraints: []
   technical_name: kontak
   type: text
   pk: false
@@ -46,4 +40,4 @@ constraints: []
   comment: Nomor telepon atau email
 constraints: []
 indexes: []
-comment: Data orang tua calon siswa
+comment: ID unik orang tua

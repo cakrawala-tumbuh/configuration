@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: pendaftar
 fields:
@@ -8,8 +9,6 @@ fields:
   unique: false
   not_null: true
   default: generated always as identity
-  not_null: true
-  default: generated always as identity
   comment: ID unik pendaftar
 - name: Nama lengkap calon siswa
   technical_name: nama_lengkap
@@ -17,7 +16,6 @@ fields:
   not_null: false
   pk: false
   unique: false
-  not_null: false
   comment: Nama lengkap calon siswa
 - name: Tanggal lahir calon siswa
   technical_name: tanggal_lahir
@@ -25,7 +23,6 @@ fields:
   type: date
   pk: false
   unique: false
-  not_null: false
   comment: Tanggal lahir calon siswa
 - name: 'Jenis kelamin calon siswa | Pilihan: Laki-laki, Perempuan'
   not_null: false
@@ -33,9 +30,7 @@ fields:
   type: varchar(100)
   pk: false
   unique: false
-  not_null: false
   comment: 'Jenis kelamin calon siswa | Pilihan: Laki-laki, Perempuan'
-  not_null: false
 - name: Relasi ke entitas Sekolah Asal
   technical_name: sekolah_asal_id
   type: bigint
@@ -43,10 +38,7 @@ fields:
   unique: false
   not_null: false
   comment: Relasi ke entitas Sekolah Asal
-  fk:
-    ref_table: sekolah_asal
-  not_null: false
-    ref_field: id
+  fk: ''
 - name: Relasi ke entitas Kanal Promosi
   technical_name: kanal_promosi_id
   type: bigint
@@ -54,44 +46,13 @@ fields:
   unique: false
   not_null: false
   comment: Relasi ke entitas Kanal Promosi
-  fk:
-  not_null: false
-    ref_table: kanal_promosi
-    ref_field: id
+  fk: ''
 - name: Tahun ajaran pendaftaran
   technical_name: tahun_ajaran
   type: text
   pk: false
   not_null: false
   unique: false
-  not_null: false
-constraints:
-- name: fk_pendaftar_sekolah_asal
-  expression: foreign key (sekolah_asal_id) references sekolah_asal(id)
-- name: fk_pendaftar_kanal_promosi
-  expression: foreign key (kanal_promosi_id) references kanal_promosi(id)
-  comment: Tahun ajaran pendaftaran
-- name: 'Status proses pendaftaran calon siswa | Pilihan: Daftar, Tes, Diterima, Ditolak'
-  technical_name: status_pendaftaran
-  type: varchar(100)
-  pk: false
-  unique: false
-  not_null: false
-  comment: 'Status proses pendaftaran calon siswa | Pilihan: Daftar, Tes, Diterima,
-    Ditolak'
-constraints:
-- name: fk_pendaftar_sekolah_asal
-  expression: foreign key (sekolah_asal_id) references sekolah_asal(id)
-- name: fk_pendaftar_kanal_promosi
-  expression: foreign key (kanal_promosi_id) references kanal_promosi(id)
-indexes:
-- name: idx_pendaftar_sekolah_asal_id
-  columns:
-  - sekolah_asal_id
-  unique: false
-- name: idx_pendaftar_kanal_promosi_id
-  columns:
-  - kanal_promosi_id
-  unique: false
-comment: Data calon siswa yang mendaftar ke sekolah, berisi informasi identitas, asal
-  sekolah, dan jalur pendaftaran
+constraints: []
+indexes: []
+comment: ID unik pendaftar

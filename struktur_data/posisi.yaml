@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: posisi
 fields:
@@ -8,8 +9,6 @@ fields:
   unique: false
   not_null: true
   default: generated always as identity
-  not_null: true
-  default: generated always as identity
   comment: ID unik posisi
 - name: Nama posisi
   technical_name: nama
@@ -17,17 +16,14 @@ fields:
   not_null: false
   pk: false
   unique: false
-  not_null: false
   comment: Nama posisi
 - name: 'Tipe posisi | Pilihan: Struktural, Fungsional'
   technical_name: tipe
   not_null: false
   type: varchar(100)
-constraints: []
   pk: false
   unique: false
-  not_null: false
   comment: 'Tipe posisi | Pilihan: Struktural, Fungsional'
 constraints: []
 indexes: []
-comment: Jabatan struktural atau fungsional pegawai
+comment: ID unik posisi

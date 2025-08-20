@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: scholarship
 fields:
@@ -8,8 +9,6 @@ fields:
   unique: false
   not_null: true
   default: generated always as identity
-  not_null: true
-  default: generated always as identity
   comment: ID unik beasiswa
 - name: Nama beasiswa
   technical_name: nama
@@ -17,7 +16,6 @@ fields:
   not_null: false
   pk: false
   unique: false
-  not_null: false
   comment: Nama beasiswa
 - name: Jumlah beasiswa
   technical_name: jumlah
@@ -25,7 +23,6 @@ fields:
   type: numeric(12,2)
   pk: false
   unique: false
-  not_null: false
   comment: Jumlah beasiswa
 - name: Relasi ke siswa penerima beasiswa
   not_null: false
@@ -33,22 +30,8 @@ fields:
   type: bigint
   pk: false
   unique: false
-  not_null: false
   comment: Relasi ke siswa penerima beasiswa
-  fk:
-  fk:
-    ref_table: siswa
-    ref_field: id
-constraints:
-- name: fk_scholarship_penerima
-  expression: foreign key (penerima_id) references penerima(id)
-    ref_field: id
-constraints:
-- name: fk_scholarship_penerima
-  expression: foreign key (penerima_id) references penerima(id)
-indexes:
-- name: idx_scholarship_penerima_id
-  columns:
-  - penerima_id
-  unique: false
-comment: Beasiswa yang diberikan kepada siswa
+  fk: ''
+constraints: []
+indexes: []
+comment: ID unik beasiswa

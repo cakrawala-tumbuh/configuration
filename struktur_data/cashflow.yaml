@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: cashflow
 fields:
@@ -8,8 +9,6 @@ fields:
   unique: false
   not_null: true
   default: generated always as identity
-  not_null: true
-  default: generated always as identity
   comment: ID unik arus kas
 - name: Periode arus kas
   technical_name: periode
@@ -17,7 +16,6 @@ fields:
   not_null: false
   pk: false
   unique: false
-  not_null: false
   comment: Periode arus kas
 - name: Total kas masuk
   technical_name: kas_masuk
@@ -25,17 +23,14 @@ fields:
   type: numeric(12,2)
   pk: false
   unique: false
-  not_null: false
   comment: Total kas masuk
 - name: Total kas keluar
   not_null: false
   technical_name: kas_keluar
-constraints: []
   type: numeric(12,2)
   pk: false
   unique: false
-  not_null: false
   comment: Total kas keluar
 constraints: []
 indexes: []
-comment: Arus kas masuk dan keluar sekolah
+comment: ID unik arus kas

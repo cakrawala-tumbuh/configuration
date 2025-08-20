@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: donation
 fields:
@@ -8,8 +9,6 @@ fields:
   unique: false
   not_null: true
   default: generated always as identity
-  not_null: true
-  default: generated always as identity
   comment: ID unik donasi
 - name: Tanggal donasi diterima
   technical_name: tanggal
@@ -17,7 +16,6 @@ fields:
   not_null: false
   pk: false
   unique: false
-  not_null: false
   comment: Tanggal donasi diterima
 - name: Nama donatur
   technical_name: donor
@@ -25,17 +23,14 @@ fields:
   type: text
   pk: false
   unique: false
-  not_null: false
   comment: Nama donatur
 - name: Jumlah donasi
   not_null: false
   technical_name: jumlah
-constraints: []
   type: numeric(12,2)
   pk: false
   unique: false
-  not_null: false
   comment: Jumlah donasi
 constraints: []
 indexes: []
-comment: Catatan donasi yang diterima sekolah
+comment: ID unik donasi

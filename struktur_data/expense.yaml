@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: expense
 fields:
@@ -8,8 +9,6 @@ fields:
   unique: false
   not_null: true
   default: generated always as identity
-  not_null: true
-  default: generated always as identity
   comment: ID unik expense
 - name: Tanggal pengeluaran
   technical_name: tanggal
@@ -17,7 +16,6 @@ fields:
   not_null: false
   pk: false
   unique: false
-  not_null: false
   comment: Tanggal pengeluaran
 - name: Kategori pengeluaran
   technical_name: kategori
@@ -25,7 +23,6 @@ fields:
   type: text
   pk: false
   unique: false
-  not_null: false
   comment: Kategori pengeluaran
 - name: Jumlah pengeluaran
   not_null: false
@@ -33,11 +30,8 @@ fields:
   type: numeric(12,2)
   pk: false
   unique: false
-  not_null: false
   comment: Jumlah pengeluaran
-  not_null: false
 - name: Penjelasan pengeluaran
-constraints: []
   technical_name: deskripsi
   type: text
   pk: false
@@ -46,4 +40,4 @@ constraints: []
   comment: Penjelasan pengeluaran
 constraints: []
 indexes: []
-comment: Pengeluaran sekolah
+comment: ID unik expense

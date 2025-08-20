@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: sumber_dana
 fields:
@@ -8,8 +9,6 @@ fields:
   unique: false
   not_null: true
   default: generated always as identity
-  not_null: true
-  default: generated always as identity
   comment: ID unik sumber dana
 - name: Nama sumber dana
   technical_name: nama
@@ -17,17 +16,14 @@ fields:
   not_null: false
   pk: false
   unique: false
-  not_null: false
   comment: Nama sumber dana
 - name: 'Jenis sumber dana | Pilihan: Pemerintah, Donatur, Yayasan, Orang Tua'
   technical_name: jenis
   not_null: false
   type: varchar(100)
-constraints: []
   pk: false
   unique: false
-  not_null: false
   comment: 'Jenis sumber dana | Pilihan: Pemerintah, Donatur, Yayasan, Orang Tua'
 constraints: []
 indexes: []
-comment: Daftar sumber dana sekolah
+comment: ID unik sumber dana

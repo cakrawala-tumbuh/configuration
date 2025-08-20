@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: laporan_keuangan
 fields:
@@ -8,8 +9,6 @@ fields:
   unique: false
   not_null: true
   default: generated always as identity
-  not_null: true
-  default: generated always as identity
   comment: ID unik laporan
 - name: Periode laporan (misalnya Januari 2025)
   technical_name: periode
@@ -17,7 +16,6 @@ fields:
   not_null: false
   pk: false
   unique: false
-  not_null: false
   comment: Periode laporan (misalnya Januari 2025)
 - name: Jumlah pendapatan total
   technical_name: total_pendapatan
@@ -25,7 +23,6 @@ fields:
   type: numeric(12,2)
   pk: false
   unique: false
-  not_null: false
   comment: Jumlah pendapatan total
 - name: Jumlah pengeluaran total
   not_null: false
@@ -33,11 +30,8 @@ fields:
   type: numeric(12,2)
   pk: false
   unique: false
-  not_null: false
   comment: Jumlah pengeluaran total
-  not_null: false
 - name: Selisih antara pendapatan dan pengeluaran
-constraints: []
   technical_name: surplus_defisit
   type: numeric(12,2)
   pk: false
@@ -46,4 +40,4 @@ constraints: []
   comment: Selisih antara pendapatan dan pengeluaran
 constraints: []
 indexes: []
-comment: Ringkasan kondisi keuangan sekolah per periode
+comment: ID unik laporan

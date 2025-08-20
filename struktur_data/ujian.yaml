@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: ujian
 fields:
@@ -8,8 +9,6 @@ fields:
   unique: false
   not_null: true
   default: generated always as identity
-  not_null: true
-  default: generated always as identity
   comment: ID unik ujian
 - name: Nama ujian
   technical_name: nama_ujian
@@ -17,7 +16,6 @@ fields:
   not_null: false
   pk: false
   unique: false
-  not_null: false
   comment: Nama ujian
 - name: 'Jenis ujian | Pilihan: Harian, Tengah Semester, Akhir Semester, Nasional'
   technical_name: jenis_ujian
@@ -25,17 +23,14 @@ fields:
   type: varchar(100)
   pk: false
   unique: false
-  not_null: false
   comment: 'Jenis ujian | Pilihan: Harian, Tengah Semester, Akhir Semester, Nasional'
 - name: Tanggal ujian
   not_null: false
   technical_name: tanggal
-constraints: []
   type: date
   pk: false
   unique: false
-  not_null: false
   comment: Tanggal ujian
 constraints: []
 indexes: []
-comment: Data ujian yang diadakan sekolah
+comment: ID unik ujian

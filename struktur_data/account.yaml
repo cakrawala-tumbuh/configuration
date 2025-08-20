@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: account
 fields:
@@ -8,8 +9,6 @@ fields:
   unique: false
   not_null: true
   default: generated always as identity
-  not_null: true
-  default: generated always as identity
   comment: ID unik akun
 - name: Kode akun
   technical_name: kode
@@ -17,7 +16,6 @@ fields:
   not_null: false
   pk: false
   unique: false
-  not_null: false
   comment: Kode akun
 - name: Nama akun
   technical_name: nama
@@ -25,17 +23,14 @@ fields:
   type: text
   pk: false
   unique: false
-  not_null: false
   comment: Nama akun
 - name: 'Tipe akun | Pilihan: Aset, Liabilitas, Modal, Pendapatan, Beban'
   not_null: false
   technical_name: tipe
-constraints: []
   type: varchar(100)
   pk: false
   unique: false
-  not_null: false
   comment: 'Tipe akun | Pilihan: Aset, Liabilitas, Modal, Pendapatan, Beban'
 constraints: []
 indexes: []
-comment: Daftar akun keuangan
+comment: ID unik akun

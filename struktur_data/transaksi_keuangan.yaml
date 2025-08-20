@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: transaksi_keuangan
 fields:
@@ -8,8 +9,6 @@ fields:
   unique: false
   not_null: true
   default: generated always as identity
-  not_null: true
-  default: generated always as identity
   comment: ID unik transaksi
 - name: Tanggal transaksi
   technical_name: tanggal
@@ -17,7 +16,6 @@ fields:
   not_null: false
   pk: false
   unique: false
-  not_null: false
   comment: Tanggal transaksi
 - name: 'Jenis transaksi | Pilihan: Pendapatan, Pengeluaran'
   technical_name: jenis_transaksi
@@ -25,7 +23,6 @@ fields:
   type: varchar(100)
   pk: false
   unique: false
-  not_null: false
   comment: 'Jenis transaksi | Pilihan: Pendapatan, Pengeluaran'
 - name: Nilai transaksi
   not_null: false
@@ -33,11 +30,8 @@ fields:
   type: numeric(12,2)
   pk: false
   unique: false
-  not_null: false
   comment: Nilai transaksi
-  not_null: false
 - name: Penjelasan singkat transaksi
-constraints: []
   technical_name: deskripsi
   type: text
   pk: false
@@ -46,4 +40,4 @@ constraints: []
   comment: Penjelasan singkat transaksi
 constraints: []
 indexes: []
-comment: Catatan setiap transaksi keuangan sekolah
+comment: ID unik transaksi

@@ -1,3 +1,4 @@
+spec_version: '1.0'
 entity:
   technical_name: invoice
 fields:
@@ -8,8 +9,6 @@ fields:
   unique: false
   not_null: true
   default: generated always as identity
-  not_null: true
-  default: generated always as identity
   comment: ID unik invoice
 - name: Tanggal invoice diterbitkan
   technical_name: tanggal
@@ -17,7 +16,6 @@ fields:
   not_null: false
   pk: false
   unique: false
-  not_null: false
   comment: Tanggal invoice diterbitkan
 - name: Jumlah tagihan
   technical_name: jumlah
@@ -25,18 +23,14 @@ fields:
   type: numeric(12,2)
   pk: false
   unique: false
-  not_null: false
   comment: Jumlah tagihan
 - name: 'Status pembayaran invoice | Pilihan: Belum Dibayar, Sebagian Dibayar, Lunas'
   not_null: false
   technical_name: status
   type: varchar(100)
-constraints: []
   pk: false
   unique: false
-  not_null: false
-  comment: 'Status pembayaran invoice | Pilihan: Belum Dibayar, Sebagian Dibayar,
-    Lunas'
+  comment: '''Status pembayaran invoice | Pilihan: Belum Dibayar, Sebagian Dibayar,'
 constraints: []
 indexes: []
-comment: Tagihan yang diterbitkan kepada orang tua siswa atau pihak lain
+comment: ID unik invoice
