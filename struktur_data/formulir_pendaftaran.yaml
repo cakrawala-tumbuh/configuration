@@ -1,20 +1,42 @@
-nama_entitas: Formulir Pendaftaran
-nama_teknis: formulir_pendaftaran
-penjelasan: Data formulir yang diisi oleh calon siswa saat melakukan pendaftaran
-fields:
-- nama_field: id
-  penjelasan: ID unik formulir
-  tipe_field: integer
-- nama_field: pendaftar_id
-  penjelasan: Relasi ke Pendaftar
-  tipe_field: foreign_key
-- nama_field: tanggal_pengisian
-  penjelasan: Tanggal formulir diisi
-  tipe_field: date
-- nama_field: status_formulir
-  penjelasan: Status formulir
-  tipe_field: selection
-  pilihan:
-  - Draft
-  - Lengkap
-  - Diverifikasi
+name: formulir_pendaftaran
+table: formulir_pendaftaran
+label: Formulir Pendaftaran
+description: Data formulir yang diisi oleh calon siswa saat melakukan pendaftaran
+columns:
+- name: id
+  type: bigint
+  primary_key: true
+  nullable: false
+  unique: false
+  comment: ID unik formulir
+  default: generated always as identity
+- name: pendaftar_id
+  type: bigint
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Relasi ke Pendaftar
+- name: tanggal_pengisian
+  type: date
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Tanggal formulir diisi
+- name: status_formulir
+  type: varchar(100)
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: 'Status formulir | Pilihan: Draft, Lengkap, Diverifikasi'
+indexes:
+- name: idx_formulir_pendaftaran_pendaftar_id
+  columns:
+  - pendaftar_id
+  unique: false
+constraints:
+- name: fk_formulir_pendaftaran_pendaftar
+  expression: foreign key (pendaftar_id) references pendaftar(id)
+seed_data:
+  enabled: false
+  rows: []
+tags: []

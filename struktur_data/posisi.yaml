@@ -1,16 +1,30 @@
-nama_entitas: Jabatan/Posisi
-nama_teknis: posisi
-penjelasan: Jabatan struktural atau fungsional pegawai
-fields:
-  - nama_field: id
-    penjelasan: ID unik posisi
-    tipe_field: integer
-  - nama_field: nama
-    penjelasan: Nama posisi
-    tipe_field: string
-  - nama_field: tipe
-    penjelasan: Tipe posisi
-    tipe_field: selection
-    pilihan:
-      - Struktural
-      - Fungsional
+name: posisi
+table: posisi
+label: Jabatan/Posisi
+description: Jabatan struktural atau fungsional pegawai
+columns:
+- name: id
+  type: bigint
+  primary_key: true
+  nullable: false
+  unique: false
+  comment: ID unik posisi
+  default: generated always as identity
+- name: nama
+  type: text
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Nama posisi
+- name: tipe
+  type: varchar(100)
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: 'Tipe posisi | Pilihan: Struktural, Fungsional'
+indexes: []
+constraints: []
+seed_data:
+  enabled: false
+  rows: []
+tags: []

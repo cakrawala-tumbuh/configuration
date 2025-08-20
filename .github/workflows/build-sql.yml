@@ -1,0 +1,37 @@
+name: Build SQL (manual)
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  build-sql:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Generate
+        run: |
+          python tools/normalize_struktur_data.py --input ./struktur_data --out ./out
+
+      - name: Upload normalized YAML
+        uses: actions/upload-artifact@v4
+        with:
+          name: struktur_data-normalized
+          path: out/normalized
+
+      - name: Upload build.sql
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-sql
+          path: out/sql/build.sql

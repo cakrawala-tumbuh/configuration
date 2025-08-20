@@ -1,23 +1,42 @@
-nama_entitas: Orang Tua
-nama_teknis: orang_tua
-penjelasan: Data orang tua calon siswa
-fields:
-- nama_field: id
-  penjelasan: ID unik orang tua
-  tipe_field: integer
-- nama_field: nama
-  penjelasan: Nama orang tua
-  tipe_field: string
-- nama_field: hubungan
-  penjelasan: Hubungan dengan calon siswa
-  tipe_field: selection
-  pilihan:
-  - Ayah
-  - Ibu
-  - Wali
-- nama_field: pekerjaan
-  penjelasan: Pekerjaan orang tua
-  tipe_field: string
-- nama_field: kontak
-  penjelasan: Nomor telepon atau email
-  tipe_field: string
+name: orang_tua
+table: orang_tua
+label: Orang Tua
+description: Data orang tua calon siswa
+columns:
+- name: id
+  type: bigint
+  primary_key: true
+  nullable: false
+  unique: false
+  comment: ID unik orang tua
+  default: generated always as identity
+- name: nama
+  type: text
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Nama orang tua
+- name: hubungan
+  type: varchar(100)
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: 'Hubungan dengan calon siswa | Pilihan: Ayah, Ibu, Wali'
+- name: pekerjaan
+  type: text
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Pekerjaan orang tua
+- name: kontak
+  type: text
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Nomor telepon atau email
+indexes: []
+constraints: []
+seed_data:
+  enabled: false
+  rows: []
+tags: []

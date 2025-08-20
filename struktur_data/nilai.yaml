@@ -1,19 +1,60 @@
-nama_entitas: Nilai
-nama_teknis: nilai
-penjelasan: Data nilai siswa dari berbagai mata pelajaran dan ujian
-fields:
-  - nama_field: id
-    penjelasan: ID unik nilai
-    tipe_field: integer
-  - nama_field: siswa_id
-    penjelasan: Relasi ke entitas Siswa
-    tipe_field: foreign_key
-  - nama_field: mata_pelajaran_id
-    penjelasan: Relasi ke entitas Mata Pelajaran
-    tipe_field: foreign_key
-  - nama_field: ujian_id
-    penjelasan: Relasi ke entitas Ujian
-    tipe_field: foreign_key
-  - nama_field: nilai
-    penjelasan: Nilai yang diperoleh siswa
-    tipe_field: float
+name: nilai
+table: nilai
+label: Nilai
+description: Data nilai siswa dari berbagai mata pelajaran dan ujian
+columns:
+- name: id
+  type: bigint
+  primary_key: true
+  nullable: false
+  unique: false
+  comment: ID unik nilai
+  default: generated always as identity
+- name: siswa_id
+  type: bigint
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Relasi ke entitas Siswa
+- name: mata_pelajaran_id
+  type: bigint
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Relasi ke entitas Mata Pelajaran
+- name: ujian_id
+  type: bigint
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Relasi ke entitas Ujian
+- name: nilai
+  type: numeric(12,2)
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Nilai yang diperoleh siswa
+indexes:
+- name: idx_nilai_siswa_id
+  columns:
+  - siswa_id
+  unique: false
+- name: idx_nilai_mata_pelajaran_id
+  columns:
+  - mata_pelajaran_id
+  unique: false
+- name: idx_nilai_ujian_id
+  columns:
+  - ujian_id
+  unique: false
+constraints:
+- name: fk_nilai_siswa
+  expression: foreign key (siswa_id) references siswa(id)
+- name: fk_nilai_mata_pelajaran
+  expression: foreign key (mata_pelajaran_id) references mata_pelajaran(id)
+- name: fk_nilai_ujian
+  expression: foreign key (ujian_id) references ujian(id)
+seed_data:
+  enabled: false
+  rows: []
+tags: []

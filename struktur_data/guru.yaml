@@ -1,33 +1,66 @@
-nama_entitas: Guru
-nama_teknis: guru
-penjelasan: Data guru pengajar yang terlibat dalam kegiatan belajar mengajar
-fields:
-  - nama_field: id
-    penjelasan: ID unik guru
-    tipe_field: integer
-  - nama_field: nama_lengkap
-    penjelasan: Nama lengkap guru
-    tipe_field: string
-  - nama_field: nip
-    penjelasan: Nomor induk pegawai (jika ada)
-    tipe_field: string
-  - nama_field: pendidikan_terakhir
-    penjelasan: Pendidikan terakhir guru
-    tipe_field: selection
-    pilihan:
-      - D3
-      - S1
-      - S2
-      - S3
-  - nama_field: sertifikasi_guru
-    penjelasan: Status sertifikasi guru
-    tipe_field: selection
-    pilihan:
-      - Tersertifikasi
-      - Belum Tersertifikasi
-  - nama_field: departemen_id
-    penjelasan: Relasi ke Departemen
-    tipe_field: foreign_key
-  - nama_field: posisi_id
-    penjelasan: Relasi ke Jabatan/Posisi
-    tipe_field: foreign_key
+name: guru
+table: guru
+label: Guru
+description: Data guru pengajar yang terlibat dalam kegiatan belajar mengajar
+columns:
+- name: id
+  type: bigint
+  primary_key: true
+  nullable: false
+  unique: false
+  comment: ID unik guru
+  default: generated always as identity
+- name: nama_lengkap
+  type: text
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Nama lengkap guru
+- name: nip
+  type: text
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Nomor induk pegawai (jika ada)
+- name: pendidikan_terakhir
+  type: varchar(100)
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: 'Pendidikan terakhir guru | Pilihan: D3, S1, S2, S3'
+- name: sertifikasi_guru
+  type: varchar(100)
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: 'Status sertifikasi guru | Pilihan: Tersertifikasi, Belum Tersertifikasi'
+- name: departemen_id
+  type: bigint
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Relasi ke Departemen
+- name: posisi_id
+  type: bigint
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Relasi ke Jabatan/Posisi
+indexes:
+- name: idx_guru_departemen_id
+  columns:
+  - departemen_id
+  unique: false
+- name: idx_guru_posisi_id
+  columns:
+  - posisi_id
+  unique: false
+constraints:
+- name: fk_guru_departemen
+  expression: foreign key (departemen_id) references departemen(id)
+- name: fk_guru_posisi
+  expression: foreign key (posisi_id) references posisi(id)
+seed_data:
+  enabled: false
+  rows: []
+tags: []

@@ -1,20 +1,31 @@
-nama_entitas: Kanal Promosi
-nama_teknis: kanal_promosi
-penjelasan: Sumber atau kanal promosi yang diketahui calon siswa
-fields:
-- nama_field: id
-  penjelasan: ID unik kanal promosi
-  tipe_field: integer
-- nama_field: nama_kanal
-  penjelasan: Nama kanal promosi
-  tipe_field: string
-- nama_field: jenis_kanal
-  penjelasan: Jenis kanal promosi
-  tipe_field: selection
-  pilihan:
-  - Media Sosial
-  - Iklan Offline
-  - Rekomendasi
-  - Website
-  - Event
-  - Lainnya
+name: kanal_promosi
+table: kanal_promosi
+label: Kanal Promosi
+description: Sumber atau kanal promosi yang diketahui calon siswa
+columns:
+- name: id
+  type: bigint
+  primary_key: true
+  nullable: false
+  unique: false
+  comment: ID unik kanal promosi
+  default: generated always as identity
+- name: nama_kanal
+  type: text
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Nama kanal promosi
+- name: jenis_kanal
+  type: varchar(100)
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: 'Jenis kanal promosi | Pilihan: Media Sosial, Iklan Offline, Rekomendasi,
+    Website, Event, Lainnya'
+indexes: []
+constraints: []
+seed_data:
+  enabled: false
+  rows: []
+tags: []

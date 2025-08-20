@@ -1,16 +1,42 @@
-nama_entitas: Mata Pelajaran
-nama_teknis: mata_pelajaran
-penjelasan: Data mata pelajaran yang diajarkan di sekolah
-fields:
-  - nama_field: id
-    penjelasan: ID unik mata pelajaran
-    tipe_field: integer
-  - nama_field: nama_mapel
-    penjelasan: Nama mata pelajaran
-    tipe_field: string
-  - nama_field: kode_mapel
-    penjelasan: Kode singkat mata pelajaran
-    tipe_field: string
-  - nama_field: kurikulum_id
-    penjelasan: Relasi ke entitas Kurikulum
-    tipe_field: foreign_key
+name: mata_pelajaran
+table: mata_pelajaran
+label: Mata Pelajaran
+description: Data mata pelajaran yang diajarkan di sekolah
+columns:
+- name: id
+  type: bigint
+  primary_key: true
+  nullable: false
+  unique: false
+  comment: ID unik mata pelajaran
+  default: generated always as identity
+- name: nama_mapel
+  type: text
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Nama mata pelajaran
+- name: kode_mapel
+  type: text
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Kode singkat mata pelajaran
+- name: kurikulum_id
+  type: bigint
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Relasi ke entitas Kurikulum
+indexes:
+- name: idx_mata_pelajaran_kurikulum_id
+  columns:
+  - kurikulum_id
+  unique: false
+constraints:
+- name: fk_mata_pelajaran_kurikulum
+  expression: foreign key (kurikulum_id) references kurikulum(id)
+seed_data:
+  enabled: false
+  rows: []
+tags: []

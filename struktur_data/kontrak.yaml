@@ -1,23 +1,48 @@
-nama_entitas: Kontrak
-nama_teknis: kontrak
-penjelasan: Informasi kontrak kerja pegawai
-fields:
-  - nama_field: id
-    penjelasan: ID unik kontrak
-    tipe_field: integer
-  - nama_field: pegawai_id
-    penjelasan: Relasi ke entitas Guru/Karyawan
-    tipe_field: foreign_key
-  - nama_field: jenis_kontrak
-    penjelasan: Jenis kontrak kerja
-    tipe_field: selection
-    pilihan:
-      - Tetap
-      - Kontrak
-      - Paruh Waktu
-  - nama_field: tanggal_mulai
-    penjelasan: Tanggal mulai kontrak
-    tipe_field: date
-  - nama_field: tanggal_selesai
-    penjelasan: Tanggal selesai kontrak (jika ada)
-    tipe_field: date
+name: kontrak
+table: kontrak
+label: Kontrak
+description: Informasi kontrak kerja pegawai
+columns:
+- name: id
+  type: bigint
+  primary_key: true
+  nullable: false
+  unique: false
+  comment: ID unik kontrak
+  default: generated always as identity
+- name: pegawai_id
+  type: bigint
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Relasi ke entitas Guru/Karyawan
+- name: jenis_kontrak
+  type: varchar(100)
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: 'Jenis kontrak kerja | Pilihan: Tetap, Kontrak, Paruh Waktu'
+- name: tanggal_mulai
+  type: date
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Tanggal mulai kontrak
+- name: tanggal_selesai
+  type: date
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Tanggal selesai kontrak (jika ada)
+indexes:
+- name: idx_kontrak_pegawai_id
+  columns:
+  - pegawai_id
+  unique: false
+constraints:
+- name: fk_kontrak_karyawan
+  expression: foreign key (pegawai_id) references karyawan(id)
+seed_data:
+  enabled: false
+  rows: []
+tags: []

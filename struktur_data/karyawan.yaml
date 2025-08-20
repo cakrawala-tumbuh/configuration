@@ -1,19 +1,54 @@
-nama_entitas: Karyawan
-nama_teknis: karyawan
-penjelasan: Data karyawan non-guru di lingkungan sekolah
-fields:
-  - nama_field: id
-    penjelasan: ID unik karyawan
-    tipe_field: integer
-  - nama_field: nama_lengkap
-    penjelasan: Nama lengkap karyawan
-    tipe_field: string
-  - nama_field: nik
-    penjelasan: Nomor induk karyawan (jika ada)
-    tipe_field: string
-  - nama_field: departemen_id
-    penjelasan: Relasi ke Departemen
-    tipe_field: foreign_key
-  - nama_field: posisi_id
-    penjelasan: Relasi ke Jabatan/Posisi
-    tipe_field: foreign_key
+name: karyawan
+table: karyawan
+label: Karyawan
+description: Data karyawan non-guru di lingkungan sekolah
+columns:
+- name: id
+  type: bigint
+  primary_key: true
+  nullable: false
+  unique: false
+  comment: ID unik karyawan
+  default: generated always as identity
+- name: nama_lengkap
+  type: text
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Nama lengkap karyawan
+- name: nik
+  type: text
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Nomor induk karyawan (jika ada)
+- name: departemen_id
+  type: bigint
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Relasi ke Departemen
+- name: posisi_id
+  type: bigint
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Relasi ke Jabatan/Posisi
+indexes:
+- name: idx_karyawan_departemen_id
+  columns:
+  - departemen_id
+  unique: false
+- name: idx_karyawan_posisi_id
+  columns:
+  - posisi_id
+  unique: false
+constraints:
+- name: fk_karyawan_departemen
+  expression: foreign key (departemen_id) references departemen(id)
+- name: fk_karyawan_posisi
+  expression: foreign key (posisi_id) references posisi(id)
+seed_data:
+  enabled: false
+  rows: []
+tags: []

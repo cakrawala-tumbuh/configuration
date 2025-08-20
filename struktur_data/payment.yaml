@@ -1,23 +1,48 @@
-nama_entitas: Payment
-nama_teknis: payment
-penjelasan: Pencatatan pembayaran dari invoice
-fields:
-  - nama_field: id
-    penjelasan: ID unik pembayaran
-    tipe_field: integer
-  - nama_field: invoice_id
-    penjelasan: Relasi ke invoice terkait
-    tipe_field: foreign_key
-  - nama_field: tanggal
-    penjelasan: Tanggal pembayaran
-    tipe_field: date
-  - nama_field: jumlah
-    penjelasan: Jumlah yang dibayar
-    tipe_field: float
-  - nama_field: metode
-    penjelasan: Metode pembayaran
-    tipe_field: selection
-    pilihan:
-      - Transfer Bank
-      - Tunai
-      - Virtual Account
+name: payment
+table: payment
+label: Payment
+description: Pencatatan pembayaran dari invoice
+columns:
+- name: id
+  type: bigint
+  primary_key: true
+  nullable: false
+  unique: false
+  comment: ID unik pembayaran
+  default: generated always as identity
+- name: invoice_id
+  type: bigint
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Relasi ke invoice terkait
+- name: tanggal
+  type: date
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Tanggal pembayaran
+- name: jumlah
+  type: numeric(12,2)
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Jumlah yang dibayar
+- name: metode
+  type: varchar(100)
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: 'Metode pembayaran | Pilihan: Transfer Bank, Tunai, Virtual Account'
+indexes:
+- name: idx_payment_invoice_id
+  columns:
+  - invoice_id
+  unique: false
+constraints:
+- name: fk_payment_invoice
+  expression: foreign key (invoice_id) references invoice(id)
+seed_data:
+  enabled: false
+  rows: []
+tags: []

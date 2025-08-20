@@ -1,16 +1,42 @@
-nama_entitas: Scholarship
-nama_teknis: scholarship
-penjelasan: Beasiswa yang diberikan kepada siswa
-fields:
-  - nama_field: id
-    penjelasan: ID unik beasiswa
-    tipe_field: integer
-  - nama_field: nama
-    penjelasan: Nama beasiswa
-    tipe_field: string
-  - nama_field: jumlah
-    penjelasan: Jumlah beasiswa
-    tipe_field: float
-  - nama_field: penerima_id
-    penjelasan: Relasi ke siswa penerima beasiswa
-    tipe_field: foreign_key
+name: scholarship
+table: scholarship
+label: Scholarship
+description: Beasiswa yang diberikan kepada siswa
+columns:
+- name: id
+  type: bigint
+  primary_key: true
+  nullable: false
+  unique: false
+  comment: ID unik beasiswa
+  default: generated always as identity
+- name: nama
+  type: text
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Nama beasiswa
+- name: jumlah
+  type: numeric(12,2)
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Jumlah beasiswa
+- name: penerima_id
+  type: bigint
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Relasi ke siswa penerima beasiswa
+indexes:
+- name: idx_scholarship_penerima_id
+  columns:
+  - penerima_id
+  unique: false
+constraints:
+- name: fk_scholarship_penerima
+  expression: foreign key (penerima_id) references penerima(id)
+seed_data:
+  enabled: false
+  rows: []
+tags: []

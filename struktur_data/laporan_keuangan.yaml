@@ -1,19 +1,42 @@
-nama_entitas: Laporan Keuangan
-nama_teknis: laporan_keuangan
-penjelasan: Ringkasan kondisi keuangan sekolah per periode
-fields:
-  - nama_field: id
-    penjelasan: ID unik laporan
-    tipe_field: integer
-  - nama_field: periode
-    penjelasan: Periode laporan (misalnya Januari 2025)
-    tipe_field: string
-  - nama_field: total_pendapatan
-    penjelasan: Jumlah pendapatan total
-    tipe_field: float
-  - nama_field: total_pengeluaran
-    penjelasan: Jumlah pengeluaran total
-    tipe_field: float
-  - nama_field: surplus_defisit
-    penjelasan: Selisih antara pendapatan dan pengeluaran
-    tipe_field: float
+name: laporan_keuangan
+table: laporan_keuangan
+label: Laporan Keuangan
+description: Ringkasan kondisi keuangan sekolah per periode
+columns:
+- name: id
+  type: bigint
+  primary_key: true
+  nullable: false
+  unique: false
+  comment: ID unik laporan
+  default: generated always as identity
+- name: periode
+  type: text
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Periode laporan (misalnya Januari 2025)
+- name: total_pendapatan
+  type: numeric(12,2)
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Jumlah pendapatan total
+- name: total_pengeluaran
+  type: numeric(12,2)
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Jumlah pengeluaran total
+- name: surplus_defisit
+  type: numeric(12,2)
+  primary_key: false
+  nullable: true
+  unique: false
+  comment: Selisih antara pendapatan dan pengeluaran
+indexes: []
+constraints: []
+seed_data:
+  enabled: false
+  rows: []
+tags: []
