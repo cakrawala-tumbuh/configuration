@@ -1,40 +1,41 @@
-name: ujian
-table: ujian
-label: Ujian
-description: Data ujian yang diadakan sekolah
-columns:
-- name: id
-  type: bigint
-  primary_key: true
-  nullable: false
-  unique: false
-  comment: ID unik ujian
-  default: generated always as identity
-- name: nama_ujian
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Nama ujian
-- name: jenis_ujian
-  type: varchar(100)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: 'Jenis ujian | Pilihan: Harian, Tengah Semester, Akhir Semester, Nasional'
-- name: tanggal
-  type: date
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Tanggal ujian
-indexes: []
-constraints: []
-seed_data:
-  enabled: false
-  rows: []
-tags: []
+entity:
+  technical_name: ujian
 fields:
-- name: id
-  type: bigserial
+- name: ID unik ujian
+  technical_name: id
+  type: bigint
   pk: true
+  unique: false
+  not_null: true
+  default: generated always as identity
+  not_null: true
+  default: generated always as identity
+  comment: ID unik ujian
+- name: Nama ujian
+  technical_name: nama_ujian
+  type: text
+  not_null: false
+  pk: false
+  unique: false
+  not_null: false
+  comment: Nama ujian
+- name: 'Jenis ujian | Pilihan: Harian, Tengah Semester, Akhir Semester, Nasional'
+  technical_name: jenis_ujian
+  not_null: false
+  type: varchar(100)
+  pk: false
+  unique: false
+  not_null: false
+  comment: 'Jenis ujian | Pilihan: Harian, Tengah Semester, Akhir Semester, Nasional'
+- name: Tanggal ujian
+  not_null: false
+  technical_name: tanggal
+constraints: []
+  type: date
+  pk: false
+  unique: false
+  not_null: false
+  comment: Tanggal ujian
+constraints: []
+indexes: []
+comment: Data ujian yang diadakan sekolah

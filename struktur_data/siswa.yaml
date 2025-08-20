@@ -1,51 +1,83 @@
-name: siswa
-table: siswa
-label: Siswa
-description: Data siswa yang sudah resmi terdaftar dan aktif bersekolah
-columns:
-- name: id
+entity:
+  technical_name: siswa
+fields:
+- name: ID unik siswa
+  technical_name: id
   type: bigint
-  primary_key: true
-  nullable: false
+  pk: true
   unique: false
-  comment: ID unik siswa
+  not_null: true
   default: generated always as identity
-- name: nama_lengkap
+  not_null: true
+  default: generated always as identity
+  comment: ID unik siswa
+- name: Nama lengkap siswa
+  technical_name: nama_lengkap
   type: text
-  primary_key: false
-  nullable: true
+  not_null: false
+  pk: false
   unique: false
+  not_null: false
   comment: Nama lengkap siswa
-- name: tanggal_lahir
+- name: Tanggal lahir siswa
+  technical_name: tanggal_lahir
+  not_null: false
   type: date
-  primary_key: false
-  nullable: true
+  pk: false
   unique: false
+  not_null: false
   comment: Tanggal lahir siswa
-- name: jenis_kelamin
+- name: 'Jenis kelamin siswa | Pilihan: Laki-laki, Perempuan'
+  not_null: false
+  technical_name: jenis_kelamin
   type: varchar(100)
-  primary_key: false
-  nullable: true
+  pk: false
   unique: false
+  not_null: false
   comment: 'Jenis kelamin siswa | Pilihan: Laki-laki, Perempuan'
-- name: alamat
+  not_null: false
+- name: Alamat rumah siswa
+  technical_name: alamat
   type: text
-  primary_key: false
-  nullable: true
+  pk: false
   unique: false
+  not_null: false
+  not_null: false
   comment: Alamat rumah siswa
-- name: orang_tua_id
+- name: Relasi ke entitas Orang Tua
+  technical_name: orang_tua_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
   unique: false
+  not_null: false
   comment: Relasi ke entitas Orang Tua
-- name: kelas_id
+  fk:
+  not_null: false
+    ref_table: orang_tua
+  fk:
+    ref_table: kelas
+    ref_field: id
+constraints:
+- name: fk_siswa_orang_tua
+  expression: foreign key (orang_tua_id) references orang_tua(id)
+- name: fk_siswa_kelas
+  expression: foreign key (kelas_id) references kelas(id)
+    ref_field: id
+- name: Relasi ke entitas Kelas
+  technical_name: kelas_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
   unique: false
+  not_null: false
   comment: Relasi ke entitas Kelas
+  fk:
+    ref_table: kelas
+    ref_field: id
+constraints:
+- name: fk_siswa_orang_tua
+  expression: foreign key (orang_tua_id) references orang_tua(id)
+- name: fk_siswa_kelas
+  expression: foreign key (kelas_id) references kelas(id)
 indexes:
 - name: idx_siswa_orang_tua_id
   columns:
@@ -55,16 +87,4 @@ indexes:
   columns:
   - kelas_id
   unique: false
-constraints:
-- name: fk_siswa_orang_tua
-  expression: foreign key (orang_tua_id) references orang_tua(id)
-- name: fk_siswa_kelas
-  expression: foreign key (kelas_id) references kelas(id)
-seed_data:
-  enabled: false
-  rows: []
-tags: []
-fields:
-- name: id
-  type: bigserial
-  pk: true
+comment: Data siswa yang sudah resmi terdaftar dan aktif bersekolah

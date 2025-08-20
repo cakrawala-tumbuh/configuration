@@ -1,53 +1,47 @@
-name: journal_entry
-table: journal_entry
-label: Journal Entry
-description: Pencatatan jurnal akuntansi
-columns:
-- name: id
+entity:
+  technical_name: journal_entry
+fields:
+- name: ID unik jurnal
+  technical_name: id
   type: bigint
-  primary_key: true
-  nullable: false
+  pk: true
+  not_null: true
   unique: false
-  comment: ID unik jurnal
   default: generated always as identity
-- name: tanggal
+  comment: ID unik jurnal
+- name: Tanggal pencatatan jurnal
+  technical_name: tanggal
   type: date
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Tanggal pencatatan jurnal
-- name: akun_id
+- name: Relasi ke akun
+  technical_name: akun_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Relasi ke akun
-  ref_table: akun
-- name: debit
+  fk:
+    ref_table: akun
+    ref_field: id
+- name: Jumlah debit
+  technical_name: debit
   type: numeric(12,2)
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Jumlah debit
-- name: kredit
-  type: numeric(12,2)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Jumlah kredit
+- name: Jumlah kredit
+  technical_name: jumlah_kredit
+  type: text
+constraints:
+- name: fk_journal_entry_akun
+  expression: foreign key (akun_id) references akun(id)
 indexes:
 - name: idx_journal_entry_akun_id
   columns:
   - akun_id
   unique: false
-constraints:
-- name: fk_journal_entry_akun
-  expression: foreign key (akun_id) references akun(id)
-seed_data:
-  enabled: false
-  rows: []
-tags: []
-fields:
-- name: id
-  type: bigserial
-  pk: true
+comment: Pencatatan jurnal akuntansi

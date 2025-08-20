@@ -1,40 +1,41 @@
-name: budget
-table: budget
-label: Budget
-description: Anggaran keuangan sekolah
-columns:
-- name: id
-  type: bigint
-  primary_key: true
-  nullable: false
-  unique: false
-  comment: ID unik anggaran
-  default: generated always as identity
-- name: tahun
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Tahun anggaran
-- name: total_anggaran
-  type: numeric(12,2)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Jumlah total anggaran
-- name: rincian
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Rincian anggaran
-indexes: []
-constraints: []
-seed_data:
-  enabled: false
-  rows: []
-tags: []
+entity:
+  technical_name: budget
 fields:
-- name: id
-  type: bigserial
+- name: ID unik anggaran
+  technical_name: id
+  type: bigint
   pk: true
+  unique: false
+  not_null: true
+  default: generated always as identity
+  not_null: true
+  default: generated always as identity
+  comment: ID unik anggaran
+- name: Tahun anggaran
+  technical_name: tahun
+  type: text
+  not_null: false
+  pk: false
+  unique: false
+  not_null: false
+  comment: Tahun anggaran
+- name: Jumlah total anggaran
+  technical_name: total_anggaran
+  not_null: false
+  type: numeric(12,2)
+  pk: false
+  unique: false
+  not_null: false
+  comment: Jumlah total anggaran
+- name: Rincian anggaran
+  not_null: false
+  technical_name: rincian
+constraints: []
+  type: text
+  pk: false
+  unique: false
+  not_null: false
+  comment: Rincian anggaran
+constraints: []
+indexes: []
+comment: Anggaran keuangan sekolah

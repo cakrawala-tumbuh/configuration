@@ -1,46 +1,41 @@
-name: absensi_siswa
-table: absensi_siswa
-label: Absensi Siswa
-description: Catatan kehadiran siswa dalam kegiatan belajar mengajar
-columns:
-- name: id
+entity:
+  technical_name: absensi_siswa
+fields:
+- name: ID unik absensi
+  technical_name: id
   type: bigint
-  primary_key: true
-  nullable: false
+  pk: true
+  not_null: true
   unique: false
-  comment: ID unik absensi
   default: generated always as identity
-- name: siswa_id
+  comment: ID unik absensi
+- name: Relasi ke entitas Siswa
+  technical_name: siswa_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Relasi ke entitas Siswa
-- name: tanggal
+  fk:
+    ref_table: siswa
+    ref_field: id
+- name: Tanggal absensi
+  technical_name: tanggal
   type: date
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Tanggal absensi
-- name: status
-  type: varchar(100)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: 'Status kehadiran siswa | Pilihan: Hadir, Izin, Sakit, Alfa'
+- name: 'Status kehadiran siswa | Pilihan: Hadir, Izin, Sakit, Alfa'
+  technical_name: status
+  type: text
+  not_null: false
+constraints:
+- name: fk_absensi_siswa_siswa
+  expression: foreign key (siswa_id) references siswa(id)
 indexes:
 - name: idx_absensi_siswa_siswa_id
   columns:
   - siswa_id
   unique: false
-constraints:
-- name: fk_absensi_siswa_siswa
-  expression: foreign key (siswa_id) references siswa(id)
-seed_data:
-  enabled: false
-  rows: []
-tags: []
-fields:
-- name: id
-  type: bigserial
-  pk: true
+comment: Catatan kehadiran siswa dalam kegiatan belajar mengajar

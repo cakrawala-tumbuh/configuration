@@ -1,40 +1,41 @@
-name: komponen_biaya
-table: komponen_biaya
-label: Komponen Biaya
-description: Struktur komponen biaya sekolah
-columns:
-- name: id
-  type: bigint
-  primary_key: true
-  nullable: false
-  unique: false
-  comment: ID unik komponen biaya
-  default: generated always as identity
-- name: nama
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Nama komponen biaya
-- name: kategori
-  type: varchar(100)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: 'Kategori biaya | Pilihan: SPP, Ujian, Ekstrakurikuler, Lain-lain'
-- name: jumlah
-  type: numeric(12,2)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Besaran biaya
-indexes: []
-constraints: []
-seed_data:
-  enabled: false
-  rows: []
-tags: []
+entity:
+  technical_name: komponen_biaya
 fields:
-- name: id
-  type: bigserial
+- name: ID unik komponen biaya
+  technical_name: id
+  type: bigint
   pk: true
+  unique: false
+  not_null: true
+  default: generated always as identity
+  not_null: true
+  default: generated always as identity
+  comment: ID unik komponen biaya
+- name: Nama komponen biaya
+  technical_name: nama
+  type: text
+  not_null: false
+  pk: false
+  unique: false
+  not_null: false
+  comment: Nama komponen biaya
+- name: 'Kategori biaya | Pilihan: SPP, Ujian, Ekstrakurikuler, Lain-lain'
+  technical_name: kategori
+  not_null: false
+  type: varchar(100)
+  pk: false
+  unique: false
+  not_null: false
+  comment: 'Kategori biaya | Pilihan: SPP, Ujian, Ekstrakurikuler, Lain-lain'
+- name: Besaran biaya
+  not_null: false
+  technical_name: jumlah
+constraints: []
+  type: numeric(12,2)
+  pk: false
+  unique: false
+  not_null: false
+  comment: Besaran biaya
+constraints: []
+indexes: []
+comment: Struktur komponen biaya sekolah

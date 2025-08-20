@@ -1,47 +1,54 @@
-name: kelas
-table: kelas
-label: Kelas
-description: Data kelas tempat siswa belajar
-columns:
-- name: id
+entity:
+  technical_name: kelas
+fields:
+- name: ID unik kelas
+  technical_name: id
   type: bigint
-  primary_key: true
-  nullable: false
+  pk: true
   unique: false
-  comment: ID unik kelas
+  not_null: true
   default: generated always as identity
-- name: nama_kelas
+  not_null: true
+  default: generated always as identity
+  comment: ID unik kelas
+- name: Nama kelas
+  technical_name: nama_kelas
   type: text
-  primary_key: false
-  nullable: true
+  not_null: false
+  pk: false
   unique: false
+  not_null: false
   comment: Nama kelas
-- name: tingkat
+- name: Tingkat kelas (misalnya 1, 2, 3)
+  technical_name: tingkat
+  not_null: false
   type: int
-  primary_key: false
-  nullable: true
+  pk: false
   unique: false
+  not_null: false
   comment: Tingkat kelas (misalnya 1, 2, 3)
-- name: wali_kelas_id
+- name: Relasi ke Guru yang menjadi wali kelas
+  not_null: false
+  technical_name: wali_kelas_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
   unique: false
+  not_null: false
   comment: Relasi ke Guru yang menjadi wali kelas
-  ref_table: guru
+  fk:
+  fk:
+    ref_table: guru
+    ref_field: id
+constraints:
+- name: fk_kelas_wali_kelas
+  expression: foreign key (wali_kelas_id) references wali_kelas(id)
+    ref_field: id
+constraints:
+- name: fk_kelas_wali_kelas
+  expression: foreign key (wali_kelas_id) references wali_kelas(id)
 indexes:
 - name: idx_kelas_wali_kelas_id
   columns:
   - wali_kelas_id
   unique: false
-constraints:
-- name: fk_kelas_wali_kelas
-  expression: foreign key (wali_kelas_id) references wali_kelas(id)
-seed_data:
-  enabled: false
-  rows: []
-tags: []
-fields:
-- name: id
-  type: bigserial
-  pk: true
+comment: Data kelas tempat siswa belajar

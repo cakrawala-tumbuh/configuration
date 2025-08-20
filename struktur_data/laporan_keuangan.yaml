@@ -1,46 +1,49 @@
-name: laporan_keuangan
-table: laporan_keuangan
-label: Laporan Keuangan
-description: Ringkasan kondisi keuangan sekolah per periode
-columns:
-- name: id
-  type: bigint
-  primary_key: true
-  nullable: false
-  unique: false
-  comment: ID unik laporan
-  default: generated always as identity
-- name: periode
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Periode laporan (misalnya Januari 2025)
-- name: total_pendapatan
-  type: numeric(12,2)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Jumlah pendapatan total
-- name: total_pengeluaran
-  type: numeric(12,2)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Jumlah pengeluaran total
-- name: surplus_defisit
-  type: numeric(12,2)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Selisih antara pendapatan dan pengeluaran
-indexes: []
-constraints: []
-seed_data:
-  enabled: false
-  rows: []
-tags: []
+entity:
+  technical_name: laporan_keuangan
 fields:
-- name: id
-  type: bigserial
+- name: ID unik laporan
+  technical_name: id
+  type: bigint
   pk: true
+  unique: false
+  not_null: true
+  default: generated always as identity
+  not_null: true
+  default: generated always as identity
+  comment: ID unik laporan
+- name: Periode laporan (misalnya Januari 2025)
+  technical_name: periode
+  type: text
+  not_null: false
+  pk: false
+  unique: false
+  not_null: false
+  comment: Periode laporan (misalnya Januari 2025)
+- name: Jumlah pendapatan total
+  technical_name: total_pendapatan
+  not_null: false
+  type: numeric(12,2)
+  pk: false
+  unique: false
+  not_null: false
+  comment: Jumlah pendapatan total
+- name: Jumlah pengeluaran total
+  not_null: false
+  technical_name: total_pengeluaran
+  type: numeric(12,2)
+  pk: false
+  unique: false
+  not_null: false
+  comment: Jumlah pengeluaran total
+  not_null: false
+- name: Selisih antara pendapatan dan pengeluaran
+constraints: []
+  technical_name: surplus_defisit
+  type: numeric(12,2)
+  pk: false
+  unique: false
+  not_null: false
+  comment: Selisih antara pendapatan dan pengeluaran
+constraints: []
+indexes: []
+comment: Ringkasan kondisi keuangan sekolah per periode

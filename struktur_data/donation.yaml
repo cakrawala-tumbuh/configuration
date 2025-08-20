@@ -1,40 +1,41 @@
-name: donation
-table: donation
-label: Donation
-description: Catatan donasi yang diterima sekolah
-columns:
-- name: id
-  type: bigint
-  primary_key: true
-  nullable: false
-  unique: false
-  comment: ID unik donasi
-  default: generated always as identity
-- name: tanggal
-  type: date
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Tanggal donasi diterima
-- name: donor
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Nama donatur
-- name: jumlah
-  type: numeric(12,2)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Jumlah donasi
-indexes: []
-constraints: []
-seed_data:
-  enabled: false
-  rows: []
-tags: []
+entity:
+  technical_name: donation
 fields:
-- name: id
-  type: bigserial
+- name: ID unik donasi
+  technical_name: id
+  type: bigint
   pk: true
+  unique: false
+  not_null: true
+  default: generated always as identity
+  not_null: true
+  default: generated always as identity
+  comment: ID unik donasi
+- name: Tanggal donasi diterima
+  technical_name: tanggal
+  type: date
+  not_null: false
+  pk: false
+  unique: false
+  not_null: false
+  comment: Tanggal donasi diterima
+- name: Nama donatur
+  technical_name: donor
+  not_null: false
+  type: text
+  pk: false
+  unique: false
+  not_null: false
+  comment: Nama donatur
+- name: Jumlah donasi
+  not_null: false
+  technical_name: jumlah
+constraints: []
+  type: numeric(12,2)
+  pk: false
+  unique: false
+  not_null: false
+  comment: Jumlah donasi
+constraints: []
+indexes: []
+comment: Catatan donasi yang diterima sekolah

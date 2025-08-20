@@ -1,40 +1,41 @@
-name: akun
-table: account
-label: Account
-description: Daftar akun keuangan
-columns:
-- name: id
-  type: bigint
-  primary_key: true
-  nullable: false
-  unique: false
-  comment: ID unik akun
-  default: generated always as identity
-- name: kode
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Kode akun
-- name: nama
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Nama akun
-- name: tipe
-  type: varchar(100)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: 'Tipe akun | Pilihan: Aset, Liabilitas, Modal, Pendapatan, Beban'
-indexes: []
-constraints: []
-seed_data:
-  enabled: false
-  rows: []
-tags: []
+entity:
+  technical_name: account
 fields:
-- name: id
-  type: bigserial
+- name: ID unik akun
+  technical_name: id
+  type: bigint
   pk: true
+  unique: false
+  not_null: true
+  default: generated always as identity
+  not_null: true
+  default: generated always as identity
+  comment: ID unik akun
+- name: Kode akun
+  technical_name: kode
+  type: text
+  not_null: false
+  pk: false
+  unique: false
+  not_null: false
+  comment: Kode akun
+- name: Nama akun
+  technical_name: nama
+  not_null: false
+  type: text
+  pk: false
+  unique: false
+  not_null: false
+  comment: Nama akun
+- name: 'Tipe akun | Pilihan: Aset, Liabilitas, Modal, Pendapatan, Beban'
+  not_null: false
+  technical_name: tipe
+constraints: []
+  type: varchar(100)
+  pk: false
+  unique: false
+  not_null: false
+  comment: 'Tipe akun | Pilihan: Aset, Liabilitas, Modal, Pendapatan, Beban'
+constraints: []
+indexes: []
+comment: Daftar akun keuangan

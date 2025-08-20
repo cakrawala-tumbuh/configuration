@@ -1,65 +1,57 @@
-name: payroll
-table: payroll
-label: Payroll
-description: Data penggajian pegawai per periode
-columns:
-- name: id
+entity:
+  technical_name: payroll
+fields:
+- name: ID unik payroll
+  technical_name: id
   type: bigint
-  primary_key: true
-  nullable: false
+  pk: true
+  not_null: true
   unique: false
-  comment: ID unik payroll
   default: generated always as identity
-- name: karyawan_id
+  comment: ID unik payroll
+- name: Relasi ke entitas Guru/Karyawan
+  technical_name: karyawan_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Relasi ke entitas Guru/Karyawan
-  ref_table: karyawan
-- name: periode
+  fk:
+    ref_table: karyawan
+    ref_field: id
+- name: Periode penggajian
+  technical_name: periode
   type: text
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Periode penggajian
-- name: gaji_pokok
+- name: Gaji pokok
+  technical_name: gaji_pokok
   type: numeric(12,2)
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Gaji pokok
-- name: tunjangan
+- name: Total tunjangan
+  technical_name: tunjangan
   type: numeric(12,2)
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Total tunjangan
-- name: potongan
+- name: Total potongan
+  technical_name: potongan
   type: numeric(12,2)
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
-  comment: Total potongan
-- name: dibayarkan
-  type: numeric(12,2)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Jumlah bersih yang dibayarkan
+constraints:
+- name: fk_payroll_karyawan
+  expression: foreign key (pegawai_id) references karyawan(id)
 indexes:
 - name: idx_payroll_pegawai_id
   columns:
   - pegawai_id
   unique: false
-constraints:
-- name: fk_payroll_karyawan
-  expression: foreign key (pegawai_id) references karyawan(id)
-seed_data:
-  enabled: false
-  rows: []
-tags: []
-fields:
-- name: id
-  type: bigserial
-  pk: true
+comment: Data penggajian pegawai per periode

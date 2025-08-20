@@ -1,46 +1,49 @@
-name: orang_tua
-table: orang_tua
-label: Orang Tua
-description: Data orang tua calon siswa
-columns:
-- name: id
-  type: bigint
-  primary_key: true
-  nullable: false
-  unique: false
-  comment: ID unik orang tua
-  default: generated always as identity
-- name: nama
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Nama orang tua
-- name: hubungan
-  type: varchar(100)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: 'Hubungan dengan calon siswa | Pilihan: Ayah, Ibu, Wali'
-- name: pekerjaan
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Pekerjaan orang tua
-- name: kontak
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Nomor telepon atau email
-indexes: []
-constraints: []
-seed_data:
-  enabled: false
-  rows: []
-tags: []
+entity:
+  technical_name: orang_tua
 fields:
-- name: id
-  type: bigserial
+- name: ID unik orang tua
+  technical_name: id
+  type: bigint
   pk: true
+  unique: false
+  not_null: true
+  default: generated always as identity
+  not_null: true
+  default: generated always as identity
+  comment: ID unik orang tua
+- name: Nama orang tua
+  technical_name: nama
+  type: text
+  not_null: false
+  pk: false
+  unique: false
+  not_null: false
+  comment: Nama orang tua
+- name: 'Hubungan dengan calon siswa | Pilihan: Ayah, Ibu, Wali'
+  technical_name: hubungan
+  not_null: false
+  type: varchar(100)
+  pk: false
+  unique: false
+  not_null: false
+  comment: 'Hubungan dengan calon siswa | Pilihan: Ayah, Ibu, Wali'
+- name: Pekerjaan orang tua
+  not_null: false
+  technical_name: pekerjaan
+  type: text
+  pk: false
+  unique: false
+  not_null: false
+  comment: Pekerjaan orang tua
+  not_null: false
+- name: Nomor telepon atau email
+constraints: []
+  technical_name: kontak
+  type: text
+  pk: false
+  unique: false
+  not_null: false
+  comment: Nomor telepon atau email
+constraints: []
+indexes: []
+comment: Data orang tua calon siswa

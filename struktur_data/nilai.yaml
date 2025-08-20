@@ -1,39 +1,54 @@
-name: nilai
-table: nilai
-label: Nilai
-description: Data nilai siswa dari berbagai mata pelajaran dan ujian
-columns:
-- name: id
+entity:
+  technical_name: nilai
+fields:
+- name: ID unik nilai
+  technical_name: id
   type: bigint
-  primary_key: true
-  nullable: false
+  pk: true
+  not_null: true
   unique: false
-  comment: ID unik nilai
   default: generated always as identity
-- name: siswa_id
+  comment: ID unik nilai
+- name: Relasi ke entitas Siswa
+  technical_name: siswa_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Relasi ke entitas Siswa
-- name: mata_pelajaran_id
+  fk:
+    ref_table: siswa
+    ref_field: id
+- name: Relasi ke entitas Mata Pelajaran
+  technical_name: mata_pelajaran_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Relasi ke entitas Mata Pelajaran
-- name: ujian_id
+  fk:
+    ref_table: mata_pelajaran
+    ref_field: id
+- name: Relasi ke entitas Ujian
+  technical_name: ujian_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Relasi ke entitas Ujian
-- name: nilai
-  type: numeric(12,2)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Nilai yang diperoleh siswa
+  fk:
+    ref_table: ujian
+    ref_field: id
+- name: Nilai yang diperoleh siswa
+  technical_name: nilai_yang_diperoleh_siswa
+  type: text
+constraints:
+- name: fk_nilai_siswa
+  expression: foreign key (siswa_id) references siswa(id)
+- name: fk_nilai_mata_pelajaran
+  expression: foreign key (mata_pelajaran_id) references mata_pelajaran(id)
+- name: fk_nilai_ujian
+  expression: foreign key (ujian_id) references ujian(id)
 indexes:
 - name: idx_nilai_siswa_id
   columns:
@@ -47,18 +62,4 @@ indexes:
   columns:
   - ujian_id
   unique: false
-constraints:
-- name: fk_nilai_siswa
-  expression: foreign key (siswa_id) references siswa(id)
-- name: fk_nilai_mata_pelajaran
-  expression: foreign key (mata_pelajaran_id) references mata_pelajaran(id)
-- name: fk_nilai_ujian
-  expression: foreign key (ujian_id) references ujian(id)
-seed_data:
-  enabled: false
-  rows: []
-tags: []
-fields:
-- name: id
-  type: bigserial
-  pk: true
+comment: Data nilai siswa dari berbagai mata pelajaran dan ujian

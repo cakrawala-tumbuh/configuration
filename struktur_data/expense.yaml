@@ -1,46 +1,49 @@
-name: expense
-table: expense
-label: Expense
-description: Pengeluaran sekolah
-columns:
-- name: id
-  type: bigint
-  primary_key: true
-  nullable: false
-  unique: false
-  comment: ID unik expense
-  default: generated always as identity
-- name: tanggal
-  type: date
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Tanggal pengeluaran
-- name: kategori
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Kategori pengeluaran
-- name: jumlah
-  type: numeric(12,2)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Jumlah pengeluaran
-- name: deskripsi
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Penjelasan pengeluaran
-indexes: []
-constraints: []
-seed_data:
-  enabled: false
-  rows: []
-tags: []
+entity:
+  technical_name: expense
 fields:
-- name: id
-  type: bigserial
+- name: ID unik expense
+  technical_name: id
+  type: bigint
   pk: true
+  unique: false
+  not_null: true
+  default: generated always as identity
+  not_null: true
+  default: generated always as identity
+  comment: ID unik expense
+- name: Tanggal pengeluaran
+  technical_name: tanggal
+  type: date
+  not_null: false
+  pk: false
+  unique: false
+  not_null: false
+  comment: Tanggal pengeluaran
+- name: Kategori pengeluaran
+  technical_name: kategori
+  not_null: false
+  type: text
+  pk: false
+  unique: false
+  not_null: false
+  comment: Kategori pengeluaran
+- name: Jumlah pengeluaran
+  not_null: false
+  technical_name: jumlah
+  type: numeric(12,2)
+  pk: false
+  unique: false
+  not_null: false
+  comment: Jumlah pengeluaran
+  not_null: false
+- name: Penjelasan pengeluaran
+constraints: []
+  technical_name: deskripsi
+  type: text
+  pk: false
+  unique: false
+  not_null: false
+  comment: Penjelasan pengeluaran
+constraints: []
+indexes: []
+comment: Pengeluaran sekolah

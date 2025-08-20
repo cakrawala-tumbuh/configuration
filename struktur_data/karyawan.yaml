@@ -1,39 +1,49 @@
-name: karyawan
-table: karyawan
-label: Karyawan
-description: Data karyawan non-guru di lingkungan sekolah
-columns:
-- name: id
+entity:
+  technical_name: karyawan
+fields:
+- name: ID unik karyawan
+  technical_name: id
   type: bigint
-  primary_key: true
-  nullable: false
+  pk: true
+  not_null: true
   unique: false
-  comment: ID unik karyawan
   default: generated always as identity
-- name: nama_lengkap
+  comment: ID unik karyawan
+- name: Nama lengkap karyawan
+  technical_name: nama_lengkap
   type: text
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Nama lengkap karyawan
-- name: nik
+- name: Nomor induk karyawan (jika ada)
+  technical_name: nik
   type: text
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Nomor induk karyawan (jika ada)
-- name: departemen_id
+- name: Relasi ke Departemen
+  technical_name: departemen_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Relasi ke Departemen
-- name: posisi_id
-  type: bigint
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Relasi ke Jabatan/Posisi
+  fk:
+    ref_table: departemen
+    ref_field: id
+- name: Relasi ke Jabatan/Posisi
+  technical_name: relasi_ke_jabatan_posisi
+  type: text
+  fk:
+    ref_table: posisi
+    ref_field: id
+constraints:
+- name: fk_karyawan_departemen
+  expression: foreign key (departemen_id) references departemen(id)
+- name: fk_karyawan_posisi
+  expression: foreign key (posisi_id) references posisi(id)
 indexes:
 - name: idx_karyawan_departemen_id
   columns:
@@ -43,16 +53,4 @@ indexes:
   columns:
   - posisi_id
   unique: false
-constraints:
-- name: fk_karyawan_departemen
-  expression: foreign key (departemen_id) references departemen(id)
-- name: fk_karyawan_posisi
-  expression: foreign key (posisi_id) references posisi(id)
-seed_data:
-  enabled: false
-  rows: []
-tags: []
-fields:
-- name: id
-  type: bigserial
-  pk: true
+comment: Data karyawan non-guru di lingkungan sekolah

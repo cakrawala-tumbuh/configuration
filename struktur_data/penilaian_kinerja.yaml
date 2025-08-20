@@ -1,53 +1,47 @@
-name: penilaian_kinerja
-table: penilaian_kinerja
-label: Penilaian Kinerja
-description: Rekam penilaian kinerja pegawai per periode
-columns:
-- name: id
+entity:
+  technical_name: penilaian_kinerja
+fields:
+- name: ID unik penilaian
+  technical_name: id
   type: bigint
-  primary_key: true
-  nullable: false
+  pk: true
+  not_null: true
   unique: false
-  comment: ID unik penilaian
   default: generated always as identity
-- name: karyawan_id
+  comment: ID unik penilaian
+- name: Relasi ke entitas Guru/Karyawan
+  technical_name: karyawan_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Relasi ke entitas Guru/Karyawan
-  ref_table: karyawan
-- name: periode
+  fk:
+    ref_table: karyawan
+    ref_field: id
+- name: Periode penilaian (misal Semester 1/2025)
+  technical_name: periode
   type: text
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Periode penilaian (misal Semester 1/2025)
-- name: skor
+- name: Skor penilaian total
+  technical_name: skor
   type: numeric(12,2)
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Skor penilaian total
-- name: kategori
-  type: varchar(100)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: 'Kategori hasil penilaian | Pilihan: Sangat Baik, Baik, Cukup, Perlu Perbaikan'
+- name: 'Kategori hasil penilaian | Pilihan: Sangat Baik, Baik, Cukup, Perlu Perbaikan'
+  technical_name: kategori_hasil_penilaian_pilihan_sangat_baik_baik_cukup_perlu_perbaikan
+  type: text
+constraints:
+- name: fk_penilaian_kinerja_karyawan
+  expression: foreign key (pegawai_id) references karyawan(id)
 indexes:
 - name: idx_penilaian_kinerja_pegawai_id
   columns:
   - pegawai_id
   unique: false
-constraints:
-- name: fk_penilaian_kinerja_karyawan
-  expression: foreign key (pegawai_id) references karyawan(id)
-seed_data:
-  enabled: false
-  rows: []
-tags: []
-fields:
-- name: id
-  type: bigserial
-  pk: true
+comment: Rekam penilaian kinerja pegawai per periode

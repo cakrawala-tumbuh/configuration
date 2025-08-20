@@ -1,34 +1,33 @@
-name: kompetensi
-table: kompetensi
-label: Kompetensi
-description: Daftar kompetensi yang relevan untuk pegawai
-columns:
-- name: id
-  type: bigint
-  primary_key: true
-  nullable: false
-  unique: false
-  comment: ID unik kompetensi
-  default: generated always as identity
-- name: nama
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Nama kompetensi
-- name: level
-  type: varchar(100)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: 'Level kompetensi | Pilihan: Dasar, Menengah, Lanjutan'
-indexes: []
-constraints: []
-seed_data:
-  enabled: false
-  rows: []
-tags: []
+entity:
+  technical_name: kompetensi
 fields:
-- name: id
-  type: bigserial
+- name: ID unik kompetensi
+  technical_name: id
+  type: bigint
   pk: true
+  unique: false
+  not_null: true
+  default: generated always as identity
+  not_null: true
+  default: generated always as identity
+  comment: ID unik kompetensi
+- name: Nama kompetensi
+  technical_name: nama
+  type: text
+  not_null: false
+  pk: false
+  unique: false
+  not_null: false
+  comment: Nama kompetensi
+- name: 'Level kompetensi | Pilihan: Dasar, Menengah, Lanjutan'
+  technical_name: level
+  not_null: false
+  type: varchar(100)
+constraints: []
+  pk: false
+  unique: false
+  not_null: false
+  comment: 'Level kompetensi | Pilihan: Dasar, Menengah, Lanjutan'
+constraints: []
+indexes: []
+comment: Daftar kompetensi yang relevan untuk pegawai

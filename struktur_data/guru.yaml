@@ -1,51 +1,83 @@
-name: guru
-table: guru
-label: Guru
-description: Data guru pengajar yang terlibat dalam kegiatan belajar mengajar
-columns:
-- name: id
+entity:
+  technical_name: guru
+fields:
+- name: ID unik guru
+  technical_name: id
   type: bigint
-  primary_key: true
-  nullable: false
+  pk: true
   unique: false
-  comment: ID unik guru
+  not_null: true
   default: generated always as identity
-- name: nama_lengkap
+  not_null: true
+  default: generated always as identity
+  comment: ID unik guru
+- name: Nama lengkap guru
+  technical_name: nama_lengkap
   type: text
-  primary_key: false
-  nullable: true
+  not_null: false
+  pk: false
   unique: false
+  not_null: false
   comment: Nama lengkap guru
-- name: nip
+- name: Nomor induk pegawai (jika ada)
+  technical_name: nip
+  not_null: false
   type: text
-  primary_key: false
-  nullable: true
+  pk: false
   unique: false
+  not_null: false
   comment: Nomor induk pegawai (jika ada)
-- name: pendidikan_terakhir
+- name: 'Pendidikan terakhir guru | Pilihan: D3, S1, S2, S3'
+  not_null: false
+  technical_name: pendidikan_terakhir
   type: varchar(100)
-  primary_key: false
-  nullable: true
+  pk: false
   unique: false
+  not_null: false
   comment: 'Pendidikan terakhir guru | Pilihan: D3, S1, S2, S3'
-- name: sertifikasi_guru
+  not_null: false
+- name: 'Status sertifikasi guru | Pilihan: Tersertifikasi, Belum Tersertifikasi'
+  technical_name: sertifikasi_guru
   type: varchar(100)
-  primary_key: false
-  nullable: true
+  pk: false
   unique: false
+  not_null: false
+  not_null: false
   comment: 'Status sertifikasi guru | Pilihan: Tersertifikasi, Belum Tersertifikasi'
-- name: departemen_id
+- name: Relasi ke Departemen
+  technical_name: departemen_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
   unique: false
+  not_null: false
   comment: Relasi ke Departemen
-- name: posisi_id
+  fk:
+  not_null: false
+    ref_table: departemen
+  fk:
+    ref_table: posisi
+    ref_field: id
+constraints:
+- name: fk_guru_departemen
+  expression: foreign key (departemen_id) references departemen(id)
+- name: fk_guru_posisi
+  expression: foreign key (posisi_id) references posisi(id)
+    ref_field: id
+- name: Relasi ke Jabatan/Posisi
+  technical_name: posisi_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
   unique: false
+  not_null: false
   comment: Relasi ke Jabatan/Posisi
+  fk:
+    ref_table: posisi
+    ref_field: id
+constraints:
+- name: fk_guru_departemen
+  expression: foreign key (departemen_id) references departemen(id)
+- name: fk_guru_posisi
+  expression: foreign key (posisi_id) references posisi(id)
 indexes:
 - name: idx_guru_departemen_id
   columns:
@@ -55,16 +87,4 @@ indexes:
   columns:
   - posisi_id
   unique: false
-constraints:
-- name: fk_guru_departemen
-  expression: foreign key (departemen_id) references departemen(id)
-- name: fk_guru_posisi
-  expression: foreign key (posisi_id) references posisi(id)
-seed_data:
-  enabled: false
-  rows: []
-tags: []
-fields:
-- name: id
-  type: bigserial
-  pk: true
+comment: Data guru pengajar yang terlibat dalam kegiatan belajar mengajar

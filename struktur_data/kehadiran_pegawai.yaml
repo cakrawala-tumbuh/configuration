@@ -1,47 +1,41 @@
-name: kehadiran_pegawai
-table: kehadiran_pegawai
-label: Kehadiran Pegawai
-description: Catatan kehadiran guru dan karyawan
-columns:
-- name: id
+entity:
+  technical_name: kehadiran_pegawai
+fields:
+- name: ID unik kehadiran
+  technical_name: id
   type: bigint
-  primary_key: true
-  nullable: false
+  pk: true
+  not_null: true
   unique: false
-  comment: ID unik kehadiran
   default: generated always as identity
-- name: karyawan_id
+  comment: ID unik kehadiran
+- name: Relasi ke entitas Guru/Karyawan
+  technical_name: karyawan_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Relasi ke entitas Guru/Karyawan
-  ref_table: karyawan
-- name: tanggal
+  fk:
+    ref_table: karyawan
+    ref_field: id
+- name: Tanggal kehadiran
+  technical_name: tanggal
   type: date
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Tanggal kehadiran
-- name: status
-  type: varchar(100)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: 'Status kehadiran | Pilihan: Hadir, Izin, Sakit, Alfa, Cuti'
+- name: 'Status kehadiran | Pilihan: Hadir, Izin, Sakit, Alfa, Cuti'
+  technical_name: status
+  type: text
+  not_null: false
+constraints:
+- name: fk_kehadiran_pegawai_karyawan
+  expression: foreign key (pegawai_id) references karyawan(id)
 indexes:
 - name: idx_kehadiran_pegawai_pegawai_id
   columns:
   - pegawai_id
   unique: false
-constraints:
-- name: fk_kehadiran_pegawai_karyawan
-  expression: foreign key (pegawai_id) references karyawan(id)
-seed_data:
-  enabled: false
-  rows: []
-tags: []
-fields:
-- name: id
-  type: bigserial
-  pk: true
+comment: Catatan kehadiran guru dan karyawan

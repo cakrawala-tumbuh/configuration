@@ -1,46 +1,41 @@
-name: formulir_pendaftaran
-table: formulir_pendaftaran
-label: Formulir Pendaftaran
-description: Data formulir yang diisi oleh calon siswa saat melakukan pendaftaran
-columns:
-- name: id
+entity:
+  technical_name: formulir_pendaftaran
+fields:
+- name: ID unik formulir
+  technical_name: id
   type: bigint
-  primary_key: true
-  nullable: false
+  pk: true
+  not_null: true
   unique: false
-  comment: ID unik formulir
   default: generated always as identity
-- name: pendaftar_id
+  comment: ID unik formulir
+- name: Relasi ke Pendaftar
+  technical_name: pendaftar_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Relasi ke Pendaftar
-- name: tanggal_pengisian
+  fk:
+    ref_table: pendaftar
+    ref_field: id
+- name: Tanggal formulir diisi
+  technical_name: tanggal_pengisian
   type: date
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Tanggal formulir diisi
-- name: status_formulir
-  type: varchar(100)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: 'Status formulir | Pilihan: Draft, Lengkap, Diverifikasi'
+- name: 'Status formulir | Pilihan: Draft, Lengkap, Diverifikasi'
+  technical_name: status_formulir
+  type: text
+  not_null: false
+constraints:
+- name: fk_formulir_pendaftaran_pendaftar
+  expression: foreign key (pendaftar_id) references pendaftar(id)
 indexes:
 - name: idx_formulir_pendaftaran_pendaftar_id
   columns:
   - pendaftar_id
   unique: false
-constraints:
-- name: fk_formulir_pendaftaran_pendaftar
-  expression: foreign key (pendaftar_id) references pendaftar(id)
-seed_data:
-  enabled: false
-  rows: []
-tags: []
-fields:
-- name: id
-  type: bigserial
-  pk: true
+comment: Data formulir yang diisi oleh calon siswa saat melakukan pendaftaran

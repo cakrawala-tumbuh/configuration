@@ -1,40 +1,41 @@
-name: cashflow
-table: cashflow
-label: Cashflow
-description: Arus kas masuk dan keluar sekolah
-columns:
-- name: id
-  type: bigint
-  primary_key: true
-  nullable: false
-  unique: false
-  comment: ID unik arus kas
-  default: generated always as identity
-- name: periode
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Periode arus kas
-- name: kas_masuk
-  type: numeric(12,2)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Total kas masuk
-- name: kas_keluar
-  type: numeric(12,2)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Total kas keluar
-indexes: []
-constraints: []
-seed_data:
-  enabled: false
-  rows: []
-tags: []
+entity:
+  technical_name: cashflow
 fields:
-- name: id
-  type: bigserial
+- name: ID unik arus kas
+  technical_name: id
+  type: bigint
   pk: true
+  unique: false
+  not_null: true
+  default: generated always as identity
+  not_null: true
+  default: generated always as identity
+  comment: ID unik arus kas
+- name: Periode arus kas
+  technical_name: periode
+  type: text
+  not_null: false
+  pk: false
+  unique: false
+  not_null: false
+  comment: Periode arus kas
+- name: Total kas masuk
+  technical_name: kas_masuk
+  not_null: false
+  type: numeric(12,2)
+  pk: false
+  unique: false
+  not_null: false
+  comment: Total kas masuk
+- name: Total kas keluar
+  not_null: false
+  technical_name: kas_keluar
+constraints: []
+  type: numeric(12,2)
+  pk: false
+  unique: false
+  not_null: false
+  comment: Total kas keluar
+constraints: []
+indexes: []
+comment: Arus kas masuk dan keluar sekolah

@@ -1,34 +1,33 @@
-name: kurikulum
-table: kurikulum
-label: Kurikulum
-description: Data kurikulum yang digunakan sekolah
-columns:
-- name: id
-  type: bigint
-  primary_key: true
-  nullable: false
-  unique: false
-  comment: ID unik kurikulum
-  default: generated always as identity
-- name: nama_kurikulum
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Nama kurikulum
-- name: tahun
-  type: int
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Tahun kurikulum mulai digunakan
-indexes: []
-constraints: []
-seed_data:
-  enabled: false
-  rows: []
-tags: []
+entity:
+  technical_name: kurikulum
 fields:
-- name: id
-  type: bigserial
+- name: ID unik kurikulum
+  technical_name: id
+  type: bigint
   pk: true
+  unique: false
+  not_null: true
+  default: generated always as identity
+  not_null: true
+  default: generated always as identity
+  comment: ID unik kurikulum
+- name: Nama kurikulum
+  technical_name: nama_kurikulum
+  type: text
+  not_null: false
+  pk: false
+  unique: false
+  not_null: false
+  comment: Nama kurikulum
+- name: Tahun kurikulum mulai digunakan
+  technical_name: tahun
+  not_null: false
+  type: int
+constraints: []
+  pk: false
+  unique: false
+  not_null: false
+  comment: Tahun kurikulum mulai digunakan
+constraints: []
+indexes: []
+comment: Data kurikulum yang digunakan sekolah

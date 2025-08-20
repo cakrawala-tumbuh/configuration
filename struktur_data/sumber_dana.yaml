@@ -1,34 +1,33 @@
-name: sumber_dana
-table: sumber_dana
-label: Sumber Dana
-description: Daftar sumber dana sekolah
-columns:
-- name: id
-  type: bigint
-  primary_key: true
-  nullable: false
-  unique: false
-  comment: ID unik sumber dana
-  default: generated always as identity
-- name: nama
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Nama sumber dana
-- name: jenis
-  type: varchar(100)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: 'Jenis sumber dana | Pilihan: Pemerintah, Donatur, Yayasan, Orang Tua'
-indexes: []
-constraints: []
-seed_data:
-  enabled: false
-  rows: []
-tags: []
+entity:
+  technical_name: sumber_dana
 fields:
-- name: id
-  type: bigserial
+- name: ID unik sumber dana
+  technical_name: id
+  type: bigint
   pk: true
+  unique: false
+  not_null: true
+  default: generated always as identity
+  not_null: true
+  default: generated always as identity
+  comment: ID unik sumber dana
+- name: Nama sumber dana
+  technical_name: nama
+  type: text
+  not_null: false
+  pk: false
+  unique: false
+  not_null: false
+  comment: Nama sumber dana
+- name: 'Jenis sumber dana | Pilihan: Pemerintah, Donatur, Yayasan, Orang Tua'
+  technical_name: jenis
+  not_null: false
+  type: varchar(100)
+constraints: []
+  pk: false
+  unique: false
+  not_null: false
+  comment: 'Jenis sumber dana | Pilihan: Pemerintah, Donatur, Yayasan, Orang Tua'
+constraints: []
+indexes: []
+comment: Daftar sumber dana sekolah

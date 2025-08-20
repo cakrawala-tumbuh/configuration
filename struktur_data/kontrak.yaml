@@ -1,53 +1,47 @@
-name: kontrak
-table: kontrak
-label: Kontrak
-description: Informasi kontrak kerja pegawai
-columns:
-- name: id
+entity:
+  technical_name: kontrak
+fields:
+- name: ID unik kontrak
+  technical_name: id
   type: bigint
-  primary_key: true
-  nullable: false
+  pk: true
+  not_null: true
   unique: false
-  comment: ID unik kontrak
   default: generated always as identity
-- name: karyawan_id
+  comment: ID unik kontrak
+- name: Relasi ke entitas Guru/Karyawan
+  technical_name: karyawan_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Relasi ke entitas Guru/Karyawan
-  ref_table: karyawan
-- name: jenis_kontrak
+  fk:
+    ref_table: karyawan
+    ref_field: id
+- name: 'Jenis kontrak kerja | Pilihan: Tetap, Kontrak, Paruh Waktu'
+  technical_name: jenis_kontrak
   type: varchar(100)
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: 'Jenis kontrak kerja | Pilihan: Tetap, Kontrak, Paruh Waktu'
-- name: tanggal_mulai
+- name: Tanggal mulai kontrak
+  technical_name: tanggal_mulai
   type: date
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Tanggal mulai kontrak
-- name: tanggal_selesai
-  type: date
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Tanggal selesai kontrak (jika ada)
+- name: Tanggal selesai kontrak (jika ada)
+  technical_name: tanggal_selesai_kontrak_jika_ada
+  type: text
+constraints:
+- name: fk_kontrak_karyawan
+  expression: foreign key (pegawai_id) references karyawan(id)
 indexes:
 - name: idx_kontrak_pegawai_id
   columns:
   - pegawai_id
   unique: false
-constraints:
-- name: fk_kontrak_karyawan
-  expression: foreign key (pegawai_id) references karyawan(id)
-seed_data:
-  enabled: false
-  rows: []
-tags: []
-fields:
-- name: id
-  type: bigserial
-  pk: true
+comment: Informasi kontrak kerja pegawai

@@ -1,46 +1,41 @@
-name: mata_pelajaran
-table: mata_pelajaran
-label: Mata Pelajaran
-description: Data mata pelajaran yang diajarkan di sekolah
-columns:
-- name: id
+entity:
+  technical_name: mata_pelajaran
+fields:
+- name: ID unik mata pelajaran
+  technical_name: id
   type: bigint
-  primary_key: true
-  nullable: false
+  pk: true
+  not_null: true
   unique: false
-  comment: ID unik mata pelajaran
   default: generated always as identity
-- name: nama_mapel
+  comment: ID unik mata pelajaran
+- name: Nama mata pelajaran
+  technical_name: nama_mapel
   type: text
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Nama mata pelajaran
-- name: kode_mapel
+- name: Kode singkat mata pelajaran
+  technical_name: kode_mapel
   type: text
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Kode singkat mata pelajaran
-- name: kurikulum_id
-  type: bigint
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Relasi ke entitas Kurikulum
+- name: Relasi ke entitas Kurikulum
+  technical_name: kurikulum_id
+  type: text
+  not_null: false
+  fk:
+    ref_table: kurikulum
+    ref_field: id
+constraints:
+- name: fk_mata_pelajaran_kurikulum
+  expression: foreign key (kurikulum_id) references kurikulum(id)
 indexes:
 - name: idx_mata_pelajaran_kurikulum_id
   columns:
   - kurikulum_id
   unique: false
-constraints:
-- name: fk_mata_pelajaran_kurikulum
-  expression: foreign key (kurikulum_id) references kurikulum(id)
-seed_data:
-  enabled: false
-  rows: []
-tags: []
-fields:
-- name: id
-  type: bigserial
-  pk: true
+comment: Data mata pelajaran yang diajarkan di sekolah

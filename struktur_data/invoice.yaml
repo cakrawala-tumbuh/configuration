@@ -1,41 +1,42 @@
-name: invoice
-table: invoice
-label: Invoice
-description: Tagihan yang diterbitkan kepada orang tua siswa atau pihak lain
-columns:
-- name: id
+entity:
+  technical_name: invoice
+fields:
+- name: ID unik invoice
+  technical_name: id
   type: bigint
-  primary_key: true
-  nullable: false
+  pk: true
   unique: false
-  comment: ID unik invoice
+  not_null: true
   default: generated always as identity
-- name: tanggal
+  not_null: true
+  default: generated always as identity
+  comment: ID unik invoice
+- name: Tanggal invoice diterbitkan
+  technical_name: tanggal
   type: date
-  primary_key: false
-  nullable: true
+  not_null: false
+  pk: false
   unique: false
+  not_null: false
   comment: Tanggal invoice diterbitkan
-- name: jumlah
+- name: Jumlah tagihan
+  technical_name: jumlah
+  not_null: false
   type: numeric(12,2)
-  primary_key: false
-  nullable: true
+  pk: false
   unique: false
+  not_null: false
   comment: Jumlah tagihan
-- name: status
+- name: 'Status pembayaran invoice | Pilihan: Belum Dibayar, Sebagian Dibayar, Lunas'
+  not_null: false
+  technical_name: status
   type: varchar(100)
-  primary_key: false
-  nullable: true
+constraints: []
+  pk: false
   unique: false
+  not_null: false
   comment: 'Status pembayaran invoice | Pilihan: Belum Dibayar, Sebagian Dibayar,
     Lunas'
-indexes: []
 constraints: []
-seed_data:
-  enabled: false
-  rows: []
-tags: []
-fields:
-- name: id
-  type: bigserial
-  pk: true
+indexes: []
+comment: Tagihan yang diterbitkan kepada orang tua siswa atau pihak lain

@@ -1,59 +1,89 @@
-name: pendaftar
-table: pendaftar
-label: Pendaftar
-description: Data calon siswa yang mendaftar ke sekolah, berisi informasi identitas,
-  asal sekolah, dan jalur pendaftaran
-columns:
-- name: id
+entity:
+  technical_name: pendaftar
+fields:
+- name: ID unik pendaftar
+  technical_name: id
   type: bigint
-  primary_key: true
-  nullable: false
+  pk: true
   unique: false
-  comment: ID unik pendaftar
+  not_null: true
   default: generated always as identity
-- name: nama_lengkap
+  not_null: true
+  default: generated always as identity
+  comment: ID unik pendaftar
+- name: Nama lengkap calon siswa
+  technical_name: nama_lengkap
   type: text
-  primary_key: false
-  nullable: true
+  not_null: false
+  pk: false
   unique: false
+  not_null: false
   comment: Nama lengkap calon siswa
-- name: tanggal_lahir
+- name: Tanggal lahir calon siswa
+  technical_name: tanggal_lahir
+  not_null: false
   type: date
-  primary_key: false
-  nullable: true
+  pk: false
   unique: false
+  not_null: false
   comment: Tanggal lahir calon siswa
-- name: jenis_kelamin
+- name: 'Jenis kelamin calon siswa | Pilihan: Laki-laki, Perempuan'
+  not_null: false
+  technical_name: jenis_kelamin
   type: varchar(100)
-  primary_key: false
-  nullable: true
+  pk: false
   unique: false
+  not_null: false
   comment: 'Jenis kelamin calon siswa | Pilihan: Laki-laki, Perempuan'
-- name: sekolah_asal_id
+  not_null: false
+- name: Relasi ke entitas Sekolah Asal
+  technical_name: sekolah_asal_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
   unique: false
+  not_null: false
   comment: Relasi ke entitas Sekolah Asal
-- name: kanal_promosi_id
+  fk:
+    ref_table: sekolah_asal
+  not_null: false
+    ref_field: id
+- name: Relasi ke entitas Kanal Promosi
+  technical_name: kanal_promosi_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
   unique: false
+  not_null: false
   comment: Relasi ke entitas Kanal Promosi
-- name: tahun_ajaran
+  fk:
+  not_null: false
+    ref_table: kanal_promosi
+    ref_field: id
+- name: Tahun ajaran pendaftaran
+  technical_name: tahun_ajaran
   type: text
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
+  not_null: false
+constraints:
+- name: fk_pendaftar_sekolah_asal
+  expression: foreign key (sekolah_asal_id) references sekolah_asal(id)
+- name: fk_pendaftar_kanal_promosi
+  expression: foreign key (kanal_promosi_id) references kanal_promosi(id)
   comment: Tahun ajaran pendaftaran
-- name: status_pendaftaran
+- name: 'Status proses pendaftaran calon siswa | Pilihan: Daftar, Tes, Diterima, Ditolak'
+  technical_name: status_pendaftaran
   type: varchar(100)
-  primary_key: false
-  nullable: true
+  pk: false
   unique: false
+  not_null: false
   comment: 'Status proses pendaftaran calon siswa | Pilihan: Daftar, Tes, Diterima,
     Ditolak'
+constraints:
+- name: fk_pendaftar_sekolah_asal
+  expression: foreign key (sekolah_asal_id) references sekolah_asal(id)
+- name: fk_pendaftar_kanal_promosi
+  expression: foreign key (kanal_promosi_id) references kanal_promosi(id)
 indexes:
 - name: idx_pendaftar_sekolah_asal_id
   columns:
@@ -63,16 +93,5 @@ indexes:
   columns:
   - kanal_promosi_id
   unique: false
-constraints:
-- name: fk_pendaftar_sekolah_asal
-  expression: foreign key (sekolah_asal_id) references sekolah_asal(id)
-- name: fk_pendaftar_kanal_promosi
-  expression: foreign key (kanal_promosi_id) references kanal_promosi(id)
-seed_data:
-  enabled: false
-  rows: []
-tags: []
-fields:
-- name: id
-  type: bigserial
-  pk: true
+comment: Data calon siswa yang mendaftar ke sekolah, berisi informasi identitas, asal
+  sekolah, dan jalur pendaftaran

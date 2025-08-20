@@ -1,40 +1,41 @@
-name: sekolah_asal
-table: sekolah_asal
-label: Sekolah Asal
-description: Data sekolah asal dari calon siswa
-columns:
-- name: id
-  type: bigint
-  primary_key: true
-  nullable: false
-  unique: false
-  comment: ID unik sekolah asal
-  default: generated always as identity
-- name: nama_sekolah
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Nama sekolah asal
-- name: alamat
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Alamat sekolah asal
-- name: jenjang
-  type: varchar(100)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: 'Jenjang sekolah asal | Pilihan: TK, SD, SMP, SMA, Lainnya'
-indexes: []
-constraints: []
-seed_data:
-  enabled: false
-  rows: []
-tags: []
+entity:
+  technical_name: sekolah_asal
 fields:
-- name: id
-  type: bigserial
+- name: ID unik sekolah asal
+  technical_name: id
+  type: bigint
   pk: true
+  unique: false
+  not_null: true
+  default: generated always as identity
+  not_null: true
+  default: generated always as identity
+  comment: ID unik sekolah asal
+- name: Nama sekolah asal
+  technical_name: nama_sekolah
+  type: text
+  not_null: false
+  pk: false
+  unique: false
+  not_null: false
+  comment: Nama sekolah asal
+- name: Alamat sekolah asal
+  technical_name: alamat
+  not_null: false
+  type: text
+  pk: false
+  unique: false
+  not_null: false
+  comment: Alamat sekolah asal
+- name: 'Jenjang sekolah asal | Pilihan: TK, SD, SMP, SMA, Lainnya'
+  not_null: false
+  technical_name: jenjang
+constraints: []
+  type: varchar(100)
+  pk: false
+  unique: false
+  not_null: false
+  comment: 'Jenjang sekolah asal | Pilihan: TK, SD, SMP, SMA, Lainnya'
+constraints: []
+indexes: []
+comment: Data sekolah asal dari calon siswa

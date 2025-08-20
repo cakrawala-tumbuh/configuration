@@ -1,52 +1,47 @@
-name: payment
-table: payment
-label: Payment
-description: Pencatatan pembayaran dari invoice
-columns:
-- name: id
+entity:
+  technical_name: payment
+fields:
+- name: ID unik pembayaran
+  technical_name: id
   type: bigint
-  primary_key: true
-  nullable: false
+  pk: true
+  not_null: true
   unique: false
-  comment: ID unik pembayaran
   default: generated always as identity
-- name: invoice_id
+  comment: ID unik pembayaran
+- name: Relasi ke invoice terkait
+  technical_name: invoice_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Relasi ke invoice terkait
-- name: tanggal
+  fk:
+    ref_table: invoice
+    ref_field: id
+- name: Tanggal pembayaran
+  technical_name: tanggal
   type: date
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Tanggal pembayaran
-- name: jumlah
+- name: Jumlah yang dibayar
+  technical_name: jumlah
   type: numeric(12,2)
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Jumlah yang dibayar
-- name: metode
-  type: varchar(100)
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: 'Metode pembayaran | Pilihan: Transfer Bank, Tunai, Virtual Account'
+- name: 'Metode pembayaran | Pilihan: Transfer Bank, Tunai, Virtual Account'
+  technical_name: metode_pembayaran_pilihan_transfer_bank_tunai_virtual_account
+  type: text
+constraints:
+- name: fk_payment_invoice
+  expression: foreign key (invoice_id) references invoice(id)
 indexes:
 - name: idx_payment_invoice_id
   columns:
   - invoice_id
   unique: false
-constraints:
-- name: fk_payment_invoice
-  expression: foreign key (invoice_id) references invoice(id)
-seed_data:
-  enabled: false
-  rows: []
-tags: []
-fields:
-- name: id
-  type: bigserial
-  pk: true
+comment: Pencatatan pembayaran dari invoice

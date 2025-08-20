@@ -1,34 +1,33 @@
-name: departemen
-table: departemen
-label: Departemen
-description: Unit organisasi yang menaungi guru dan karyawan
-columns:
-- name: id
-  type: bigint
-  primary_key: true
-  nullable: false
-  unique: false
-  comment: ID unik departemen
-  default: generated always as identity
-- name: nama
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Nama departemen
-- name: kode
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Kode singkat departemen
-indexes: []
-constraints: []
-seed_data:
-  enabled: false
-  rows: []
-tags: []
+entity:
+  technical_name: departemen
 fields:
-- name: id
-  type: bigserial
+- name: ID unik departemen
+  technical_name: id
+  type: bigint
   pk: true
+  unique: false
+  not_null: true
+  default: generated always as identity
+  not_null: true
+  default: generated always as identity
+  comment: ID unik departemen
+- name: Nama departemen
+  technical_name: nama
+  type: text
+  not_null: false
+  pk: false
+  unique: false
+  not_null: false
+  comment: Nama departemen
+- name: Kode singkat departemen
+  technical_name: kode
+  not_null: false
+  type: text
+constraints: []
+  pk: false
+  unique: false
+  not_null: false
+  comment: Kode singkat departemen
+constraints: []
+indexes: []
+comment: Unit organisasi yang menaungi guru dan karyawan

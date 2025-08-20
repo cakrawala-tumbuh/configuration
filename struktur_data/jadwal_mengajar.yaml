@@ -1,51 +1,64 @@
-name: jadwal_mengajar
-table: jadwal_mengajar
-label: Jadwal Mengajar
-description: Jadwal guru mengajar di kelas
-columns:
-- name: id
+entity:
+  technical_name: jadwal_mengajar
+fields:
+- name: ID unik jadwal
+  technical_name: id
   type: bigint
-  primary_key: true
-  nullable: false
+  pk: true
+  not_null: true
   unique: false
-  comment: ID unik jadwal
   default: generated always as identity
-- name: guru_id
+  comment: ID unik jadwal
+- name: Relasi ke entitas Guru
+  technical_name: guru_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Relasi ke entitas Guru
-- name: mata_pelajaran_id
+  fk:
+    ref_table: guru
+    ref_field: id
+- name: Relasi ke entitas Mata Pelajaran
+  technical_name: mata_pelajaran_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Relasi ke entitas Mata Pelajaran
-- name: kelas_id
+  fk:
+    ref_table: mata_pelajaran
+    ref_field: id
+- name: Relasi ke entitas Kelas
+  technical_name: kelas_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: Relasi ke entitas Kelas
-- name: hari
+  fk:
+    ref_table: kelas
+    ref_field: id
+- name: 'Hari mengajar | Pilihan: Senin, Selasa, Rabu, Kamis, Jumat, Sabtu'
+  technical_name: hari
   type: varchar(100)
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
   comment: 'Hari mengajar | Pilihan: Senin, Selasa, Rabu, Kamis, Jumat, Sabtu'
-- name: jam_mulai
+- name: Jam mulai pelajaran
+  technical_name: jam_mulai
   type: time
-  primary_key: false
-  nullable: true
+  pk: false
+  not_null: false
   unique: false
-  comment: Jam mulai pelajaran
-- name: jam_selesai
-  type: time
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Jam selesai pelajaran
+constraints:
+- name: fk_jadwal_mengajar_guru
+  expression: foreign key (guru_id) references guru(id)
+- name: fk_jadwal_mengajar_mata_pelajaran
+  expression: foreign key (mata_pelajaran_id) references mata_pelajaran(id)
+- name: fk_jadwal_mengajar_kelas
+  expression: foreign key (kelas_id) references kelas(id)
 indexes:
 - name: idx_jadwal_mengajar_guru_id
   columns:
@@ -59,18 +72,4 @@ indexes:
   columns:
   - kelas_id
   unique: false
-constraints:
-- name: fk_jadwal_mengajar_guru
-  expression: foreign key (guru_id) references guru(id)
-- name: fk_jadwal_mengajar_mata_pelajaran
-  expression: foreign key (mata_pelajaran_id) references mata_pelajaran(id)
-- name: fk_jadwal_mengajar_kelas
-  expression: foreign key (kelas_id) references kelas(id)
-seed_data:
-  enabled: false
-  rows: []
-tags: []
-fields:
-- name: id
-  type: bigserial
-  pk: true
+comment: Jadwal guru mengajar di kelas

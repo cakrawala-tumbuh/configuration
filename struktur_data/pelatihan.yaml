@@ -1,46 +1,49 @@
-name: pelatihan
-table: pelatihan
-label: Pelatihan
-description: Program pelatihan yang diikuti pegawai
-columns:
-- name: id
-  type: bigint
-  primary_key: true
-  nullable: false
-  unique: false
-  comment: ID unik pelatihan
-  default: generated always as identity
-- name: nama_pelatihan
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Nama program pelatihan
-- name: penyelenggara
-  type: text
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Penyelenggara pelatihan
-- name: tanggal_mulai
-  type: date
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Tanggal mulai pelatihan
-- name: tanggal_selesai
-  type: date
-  primary_key: false
-  nullable: true
-  unique: false
-  comment: Tanggal selesai pelatihan
-indexes: []
-constraints: []
-seed_data:
-  enabled: false
-  rows: []
-tags: []
+entity:
+  technical_name: pelatihan
 fields:
-- name: id
-  type: bigserial
+- name: ID unik pelatihan
+  technical_name: id
+  type: bigint
   pk: true
+  unique: false
+  not_null: true
+  default: generated always as identity
+  not_null: true
+  default: generated always as identity
+  comment: ID unik pelatihan
+- name: Nama program pelatihan
+  technical_name: nama_pelatihan
+  type: text
+  not_null: false
+  pk: false
+  unique: false
+  not_null: false
+  comment: Nama program pelatihan
+- name: Penyelenggara pelatihan
+  technical_name: penyelenggara
+  not_null: false
+  type: text
+  pk: false
+  unique: false
+  not_null: false
+  comment: Penyelenggara pelatihan
+- name: Tanggal mulai pelatihan
+  not_null: false
+  technical_name: tanggal_mulai
+  type: date
+  pk: false
+  unique: false
+  not_null: false
+  comment: Tanggal mulai pelatihan
+  not_null: false
+- name: Tanggal selesai pelatihan
+constraints: []
+  technical_name: tanggal_selesai
+  type: date
+  pk: false
+  unique: false
+  not_null: false
+  comment: Tanggal selesai pelatihan
+constraints: []
+indexes: []
+comment: Program pelatihan yang diikuti pegawai

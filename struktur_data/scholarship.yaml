@@ -1,47 +1,54 @@
-name: scholarship
-table: scholarship
-label: Scholarship
-description: Beasiswa yang diberikan kepada siswa
-columns:
-- name: id
+entity:
+  technical_name: scholarship
+fields:
+- name: ID unik beasiswa
+  technical_name: id
   type: bigint
-  primary_key: true
-  nullable: false
+  pk: true
   unique: false
-  comment: ID unik beasiswa
+  not_null: true
   default: generated always as identity
-- name: nama
+  not_null: true
+  default: generated always as identity
+  comment: ID unik beasiswa
+- name: Nama beasiswa
+  technical_name: nama
   type: text
-  primary_key: false
-  nullable: true
+  not_null: false
+  pk: false
   unique: false
+  not_null: false
   comment: Nama beasiswa
-- name: jumlah
+- name: Jumlah beasiswa
+  technical_name: jumlah
+  not_null: false
   type: numeric(12,2)
-  primary_key: false
-  nullable: true
+  pk: false
   unique: false
+  not_null: false
   comment: Jumlah beasiswa
-- name: penerima_id
+- name: Relasi ke siswa penerima beasiswa
+  not_null: false
+  technical_name: penerima_id
   type: bigint
-  primary_key: false
-  nullable: true
+  pk: false
   unique: false
+  not_null: false
   comment: Relasi ke siswa penerima beasiswa
-  ref_table: siswa
+  fk:
+  fk:
+    ref_table: siswa
+    ref_field: id
+constraints:
+- name: fk_scholarship_penerima
+  expression: foreign key (penerima_id) references penerima(id)
+    ref_field: id
+constraints:
+- name: fk_scholarship_penerima
+  expression: foreign key (penerima_id) references penerima(id)
 indexes:
 - name: idx_scholarship_penerima_id
   columns:
   - penerima_id
   unique: false
-constraints:
-- name: fk_scholarship_penerima
-  expression: foreign key (penerima_id) references penerima(id)
-seed_data:
-  enabled: false
-  rows: []
-tags: []
-fields:
-- name: id
-  type: bigserial
-  pk: true
+comment: Beasiswa yang diberikan kepada siswa
