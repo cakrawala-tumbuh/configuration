@@ -1,22 +1,22 @@
-name: Generate SQL (panduan_struktur_data)
+name: generate-sql
 
 on:
   workflow_dispatch:
     inputs:
       schema:
-        description: "Nama schema target (default: public)"
-        required: false
+        description: "Nama schema database"
+        required: true
         default: "public"
       owner:
-        description: "Owner default untuk objek (opsional)"
+        description: "Owner dari table (opsional)"
         required: false
         default: ""
       with_drop:
-        description: "Sisipkan DROP IF EXISTS sebelum CREATE"
+        description: "Drop table jika sudah ada (true/false)"
         required: false
         default: "false"
       default_varchar_length:
-        description: "Panjang default VARCHAR jika tidak ditentukan"
+        description: "Default length untuk kolom varchar/char tanpa length"
         required: false
         default: "255"
       tablespace:
@@ -24,9 +24,12 @@ on:
         required: false
         default: ""
       create_extensions:
-        description: "Daftar ekstensi yang akan dibuat (comma-separated), mis. 'pgcrypto,uuid-ossp'"
+        description: "Ekstensi yang akan dibuat (mis. pgcrypto)"
         required: false
-        default: ""
+        default: "pgcrypto"
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -35,12 +38,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Install deps
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install pyyaml
@@ -48,30 +51,28 @@ jobs:
       - name: Generate SQL
         run: |
           python scripts/generate_sql_from_yaml.py \
-            --struktur-dir "struktur_data" \
-            --out "build.sql" \
+            --src struktur_data \
             --schema "${{ github.event.inputs.schema }}" \
             --owner "${{ github.event.inputs.owner }}" \
             --with-drop "${{ github.event.inputs.with_drop }}" \
             --default-varchar-length "${{ github.event.inputs.default_varchar_length }}" \
             --tablespace "${{ github.event.inputs.tablespace }}" \
-            --create-extensions "${{ github.event.inputs.create_extensions }}"
+            --create-extensions "${{ github.event.inputs.create_extensions }}" \
+            > build.sql
 
-      - name: Upload artifact
+      - name: Upload build.sql
         uses: actions/upload-artifact@v4
         with:
           name: build-sql
           path: build.sql
 
-      - name: Job summary
-        if: always()
+      - name: Tulis ringkasan
         run: |
-          echo "### Generate SQL Summary" >> $GITHUB_STEP_SUMMARY
-          echo "- Schema: \`${{ github.event.inputs.schema }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "- Owner: \`${{ github.event.inputs.owner || 'N/A' }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "- With DROP: \`${{ github.event.inputs.with_drop }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "- Default varchar length: \`${{ github.event.inputs.default_varchar_length }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "- Tablespace: \`${{ github.event.inputs.tablespace || 'N/A' }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "- Create extensions: \`${{ github.event.inputs.create_extensions || 'N/A' }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "### Build SQL sukses ✅" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Artifact **build-sql** berisi file \`build.sql\`." >> $GITHUB_STEP_SUMMARY
+          echo "Schema: ${{ github.event.inputs.schema }}" >> $GITHUB_STEP_SUMMARY
+          echo "Owner: ${{ github.event.inputs.owner }}" >> $GITHUB_STEP_SUMMARY
+          echo "With Drop: ${{ github.event.inputs.with_drop }}" >> $GITHUB_STEP_SUMMARY
+          echo "Default varchar length: ${{ github.event.inputs.default_varchar_length }}" >> $GITHUB_STEP_SUMMARY
+          echo "Tablespace: ${{ github.event.inputs.tablespace }}" >> $GITHUB_STEP_SUMMARY
+          echo "Extensions: ${{ github.event.inputs.create_extensions }}" >> $GITHUB_STEP_SUMMARY
